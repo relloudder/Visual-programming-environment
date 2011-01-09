@@ -1,4 +1,3 @@
-//локальные процедуры модуля рисования
 var DrawingHelpers = (function() {
 
 	colorBall = function (ctx,x0,y0,r,col){
@@ -16,7 +15,6 @@ var DrawingHelpers = (function() {
 })();
 
 
-//глобальные процедуры модуля рисования
 var DrawForVis = (function(){
 
     back = function(ctx,col1,col2,w,h){
@@ -30,13 +28,13 @@ var DrawForVis = (function(){
     }
     
     ball = function(ctx,x0,y0,r,col){
-        ctx.save();  //сохраняем контест рисования
-	    ctx.beginPath(); //создаем начало пути, используется, если нужно рисовать какие-то объекты, красить их
+        ctx.save();
+	    ctx.beginPath();
 	    DrawingHelpers.colorBall(ctx,x0,y0,r,col); //создаем градиент для закраски шарика
 	    ctx.arc(x0,y0,r,0,2*Math.PI,false); //рисуем шарик
-	    ctx.fill(); //закраиваем его тем что установлено в ctx.fillStyle (функция colorBall)
+	    ctx.fill();
 	    ctx.closePath();
-	    ctx.restore(); //восстанавливаем контекст рисования
+	    ctx.restore();
 	}
 	
 	halfBall = function(ctx,x0,y0,r,col){
