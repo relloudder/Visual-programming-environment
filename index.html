@@ -1,0 +1,49 @@
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Visualization</title>
+    <link href="style.css" rel="stylesheet" type="text/css">
+    <script type="text/javascript" src="libraryDraw.js"></script>
+    <script type="text/javascript">
+
+    var canvas, ctx;
+ 
+    function init(){
+        canvas = document.getElementById("firstStep");
+        if(canvas.getContext){
+            ctx = canvas.getContext("2d");
+	    DrawForVis.back(ctx,"#cccccc","#333333",canvas.width,canvas.height);
+        }
+    }
+
+    //рисуем char - 8бит, integer - 16бит, real - 32бит
+    function drawBalls(){
+        var r = 12;
+        var y = 50;
+        var col = "#ff0000";
+        for (var j = 1; j<=3; j++){
+            DrawForVis.ball(ctx,50,y,r,col);
+            var i = -85;
+            var x = 100;
+            while(i < 0){
+                DrawForVis.alphaBall(ctx,x,y,r,col,i);
+                x+=50;
+                i+=5;
+            }
+            DrawForVis.halfBall(ctx,x,y,r,col);
+            r*=1.25;
+            y+=50;
+        } 
+    }
+
+    </script>
+
+</head>
+
+<body onLoad="init();">
+    <canvas id="firstStep" width="1000" height="400" ></canvas>
+    <form>
+        <input type="button" value="draw" onclick="drawBalls()">
+    </form>
+</body>
+</html>
