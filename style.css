@@ -1,7 +1,7 @@
-canvas { 
+canvas {
     border: 1px solid gray;
 }
-	  
+
 canvas:active {
 	cursor: default;
 }
