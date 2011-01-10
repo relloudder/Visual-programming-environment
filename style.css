@@ -1,7 +1,37 @@
-canvas {
+canvas, textarea {
     border: 1px solid gray;
+    background-color: #cccccc;
+    background-image: -webkit-gradient(linear, 0 0, 0 100%, color-stop(.5, rgba(255, 255, 255, .2)), color-stop(.5, transparent), to(transparent));
+    background-image: -moz-linear-gradient(rgba(255, 255, 255, .2) 50%, transparent 50%, transparent);
+    background-image: -o-linear-gradient(rgba(255, 255, 255, .2) 50%, transparent 50%, transparent);
+    background-image: linear-gradient(rgba(255, 255, 255, .2) 50%, transparent 50%, transparent);
+    -webkit-background-size: 50px 50px;
+    -moz-background-size: 50px 50px;
+    background-size: 50px 50px; /* Controls the size of the stripes */
+    -moz-box-shadow: 1px 1px 8px gray;
+    -webkit-box-shadow: 1px 1px 8px gray;
+    box-shadow: 1px 1px 8px gray;
 }
 
 canvas:active {
 	cursor: default;
+}
+
+#wCanvas,#code {
+   float: left;
+   width: 60%;
+   height: 80%;
+   margin: 10px;
+}
+
+#code{
+   float: right;
+   width: 30%;
+   height: 89%;
+   margin: 10px;
+}
+
+textarea{
+    width: 100%;
+    height: 100%;
 }

@@ -11,8 +11,10 @@
     function init(){
         canvas = document.getElementById("firstStep");
         if(canvas.getContext){
-            ctx = canvas.getContext("2d");
-	    DrawForVis.back(ctx,"#cccccc","#333333",canvas.width,canvas.height);
+        ctx = canvas.getContext("2d");
+        canvas.width = document.body.offsetWidth*2/3;
+        canvas.height = document.body.offsetHeight/10*9;
+	    //DrawForVis.back(ctx,"#cccccc","#333333",canvas.width,canvas.height);
         }
     }
 
@@ -41,7 +43,10 @@
 </head>
 
 <body onLoad="init();">
-    <canvas id="firstStep" width="1000" height="400" ></canvas>
+    <div>menu</div>
+    <div>panel</div>
+    <div id="wCanvas"><canvas id="firstStep"></canvas></div>
+    <div id="code"><textarea cols=30 rows=40></textarea></div>
     <form>
         <input type="button" value="draw" onclick="drawBalls()">
     </form>
