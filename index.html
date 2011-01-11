@@ -14,7 +14,7 @@
         ctx = canvas.getContext("2d");
         canvas.width = document.body.offsetWidth*2/3;
         canvas.height = document.body.offsetHeight/10*9;
-	    //DrawForVis.back(ctx,"#cccccc","#333333",canvas.width,canvas.height);
+	    DrawForVis.back(ctx,"#e6fbff","#172322",canvas.width,canvas.height);
         }
     }
 
@@ -43,7 +43,6 @@
 </head>
 
 <body onLoad="init();">
-    <div id="panel">
         <ul id="menu">
             <li class="logo">
                 <img style="float:left;" alt="" src="images/menu_left.png"/>
@@ -147,7 +146,6 @@
         <img style="float:left;" alt="" src="images/menu_right.png"/>
     </div>
     <div style="float:none; clear:both;"></div>
-    </div>
     <div id="wCanvas"><canvas id="firstStep"></canvas></div>
     <div id="code"><textarea cols=30 rows=40></textarea></div>
     <form>
