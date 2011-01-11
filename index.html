@@ -43,8 +43,111 @@
 </head>
 
 <body onLoad="init();">
-    <div>menu</div>
-    <div>panel</div>
+    <div id="panel">
+        <ul id="menu">
+            <li class="logo">
+                <img style="float:left;" alt="" src="images/menu_left.png"/>
+                <ul id="main">
+                    <li>Welcome to <b>Visual programming enviroment</b>!</li>
+                    <li class="last">
+                        <img class="corner_left" alt="" src="images/corner_blue_left.png"/>
+                        <img class="middle" alt="" src="images/dot_blue.png"/>
+                        <img class="corner_right" alt="" src="images/corner_blue_right.png"/>
+                    </li>
+                </ul>
+            </li>
+            <li><a href="#">About</a></li>
+            <li><a href="#">File</a>
+                <ul id="help">
+                    <li>
+                        <img class="corner_inset_left" alt="" src="images/corner_inset_left.png"/>
+                        <a href="#">New</a>
+                        <img class="corner_inset_right" alt="" src="images/corner_inset_right.png"/>
+                    </li>
+                    <li><a href="#">Open</a></li>
+                    <li><a href="#">Save</a></li>
+                    <li><a href="#">Close</a></li>
+                    <li class="last">
+                        <img class="corner_left" alt="" src="images/corner_left.png"/>
+                        <img class="middle" alt="" src="images/dot.gif"/>
+                        <img class="corner_right" alt="" src="images/corner_right.png"/>
+                    </li>
+                </ul>
+            </li>
+            <li><a href="#">Run</a>
+                <ul id="help">
+                    <li>
+                        <img class="corner_inset_left" alt="" src="images/corner_inset_left.png"/>
+                        <a href="#">Run</a>
+                        <img class="corner_inset_right" alt="" src="images/corner_inset_right.png"/>
+                    </li>
+                    <li><a href="#">Step over</a></li>
+                    <li><a href="#">Save</a></li>
+                    <li><a href="#">Pause</a></li>
+                    <li><a href="#">Reset</a></li>
+                    <li class="last">
+                        <img class="corner_left" alt="" src="images/corner_left.png"/>
+                        <img class="middle" alt="" src="images/dot.gif"/>
+                        <img class="corner_right" alt="" src="images/corner_right.png"/>
+                    </li>
+                </ul>
+            </li>
+            <li><a href="#">Tools</a>
+                <ul id="help">
+                    <li>
+                        <img class="corner_inset_left" alt="" src="images/corner_inset_left.png"/>
+                        <a href="#">Speed</a>
+                        <img class="corner_inset_right" alt="" src="images/corner_inset_right.png"/>
+                    </li>
+                    <li class="last">
+                        <img class="corner_left" alt="" src="images/corner_left.png"/>
+                        <img class="middle" alt="" src="images/dot.gif"/>
+                        <img class="corner_right" alt="" src="images/corner_right.png"/>
+                    </li>
+                </ul>
+            </li>
+            <li><a href="#">Window</a>
+                <ul id="help">
+                    <li>
+                        <img class="corner_inset_left" alt="" src="images/corner_inset_left.png"/>
+                        <a href="#">Select</a>
+                        <img class="corner_inset_right" alt="" src="images/corner_inset_right.png"/>
+                    </li>
+                    <li><a href="#">Zoom in</a></li>
+                    <li><a href="#">Zoom out</a></li>
+                    <li><a href="#">Hand</a></li>
+                    <li class="last">
+                        <img class="corner_left" alt="" src="images/corner_left.png"/>
+                        <img class="middle" alt="" src="images/dot.gif"/>
+                        <img class="corner_right" alt="" src="images/corner_right.png"/>
+                    </li>
+                </ul>
+            </li>
+            <li><a href="#">Help</a></li>
+            <li class="searchContainer">
+                <div>
+                <input type="text" id="searchField" />
+                <img src="images/magnifier.png" alt="Search" onclick="alert('You clicked on search button')" /></div>
+                <ul id="search">
+                    <li>
+                        <img class="corner_inset_left" alt="" src="images/corner_inset_left.png"/>
+                        <input id="cbxAll" type="checkbox" />All
+                        <img class="corner_inset_right" alt="" src="images/corner_inset_right.png"/>
+                    </li>
+                    <li><input id="Tutorials" type="checkbox" />Tutorials</li>
+                    <li><input id="Reviews" type="checkbox" />Reviews</li>
+                    <li class="last">
+                        <img class="corner_left" alt="" src="images/corner_left.png"/>
+                        <img class="middle" alt="" src="images/dot.gif"/>
+                        <img class="corner_right" alt="" src="images/corner_right.png"/>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+        <img style="float:left;" alt="" src="images/menu_right.png"/>
+    </div>
+    <div style="float:none; clear:both;"></div>
+    </div>
     <div id="wCanvas"><canvas id="firstStep"></canvas></div>
     <div id="code"><textarea cols=30 rows=40></textarea></div>
     <form>
