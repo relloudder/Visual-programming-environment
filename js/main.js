@@ -1,12 +1,12 @@
 var ctx;
 
 $(document).ready(function(){
-    initAplication();
+    initApplication();
     runInterface();
 });
 
 function runInterface(){
-    $('#play').click(function(){
+    $('#playMenu, #play').click(function(){
         var r = 12;
         var y = 50;
         var col = "#ff0000";
@@ -24,9 +24,12 @@ function runInterface(){
             y+=50;
         } 
     });
+    $('#stop, #new, #reset').click(function(){
+        initApplication();
+    });
 }
 
-function initAplication(){
+function initApplication(){
     var canvas;
     canvas = document.getElementById("firstStep");
     if(canvas.getContext){
