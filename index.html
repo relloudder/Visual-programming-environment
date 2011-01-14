@@ -3,46 +3,12 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>Visualization</title>
     <link href="style.css" rel="stylesheet" type="text/css">
-    <script type="text/javascript" src="libraryDraw.js"></script>
-    <script type="text/javascript">
-
-    var canvas, ctx;
-
-    function init(){
-        canvas = document.getElementById("firstStep");
-        if(canvas.getContext){
-        ctx = canvas.getContext("2d");
-        canvas.width = document.body.offsetWidth*2/3;
-        canvas.height = document.body.offsetHeight/10*9;
-	    DrawForVis.back(ctx,"#7cb7e3","#cccccc",canvas.width,canvas.height);
-        }
-    }
-
-    //char, integer, real
-    function drawBalls(){
-        var r = 12;
-        var y = 50;
-        var col = "#ff0000";
-        for (var j = 1; j<=3; j++){
-            DrawForVis.ball(ctx,50,y,r,col);
-            var i = -85;
-            var x = 100;
-            while(i < 0){
-                DrawForVis.alphaBall(ctx,x,y,r,col,i);
-                x+=50;
-                i+=10;
-            }
-            DrawForVis.halfBall(ctx,x,y,r,col);
-            r*=1.25;
-            y+=50;
-        } 
-    }
-
-    </script>
-
+    <script type="text/javascript" src="js/libraryDraw.js"></script>
+    <script type="text/javascript" src="js/jquery-1.4.3.min.js"></script>
+	<script type="text/javascript" src="js/main.js"></script>
 </head>
 
-<body onLoad="init();">
+<body>
     <ul id="menu">
         <li class="logo">
             <img style="float:left;" alt="" src="images/menu_left.png"/>
@@ -146,7 +112,7 @@
 
     <ul id="panel">
         <img style="float:left;" alt="" src="images/panel_left.png"/>
-        <li><img src="images/play.png"></li>
+        <li id="play"><img src="images/play.png"></li>
         <li><img src="images/pause.png"></li>
         <li><img src="images/stop.png"></li>
         <img style="float:right;" alt="" src="images/panel_right.png"/>
@@ -155,8 +121,6 @@
     <div style="float:none; clear:both;"></div>
     <div id="wCanvas"><canvas id="firstStep"></canvas></div>
     <div id="code"><textarea cols=30 rows=40></textarea></div>
-    <form>
-        <input type="button" value="draw" onclick="drawBalls()">
-    </form>
+
 </body>
 </html>
