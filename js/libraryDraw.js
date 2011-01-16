@@ -1,4 +1,4 @@
-var DrawingHelpers = (function() {
+var DrawForVis = (function(){
 
     colorBall = function (ctx,x0,y0,r,col){
         var gradient = ctx.createRadialGradient(x0+r/4,y0-r*1/3,r/15,x0,y0,r);
@@ -8,14 +8,12 @@ var DrawingHelpers = (function() {
         ctx.strokeStyle = col;
     }
 
-    return {
-        colorBall : colorBall
-    };
-
-})();
-
-
-var DrawForVis = (function(){
+    colorText = function (ctx,x0,y0,r,col){
+	    var gradient = ctx.createRadialGradient(x0+r/4,y0-r*1/3,r/15,x0,y0,r);
+	    gradient.addColorStop(0,'#fff');
+	    gradient.addColorStop(0.42,col);
+	    ctx.fillStyle = gradient;
+    }
 
     back = function(ctx,col1,col2,w,h){
         ctx.save();
@@ -30,7 +28,7 @@ var DrawForVis = (function(){
     ball = function(ctx,x0,y0,r,col){
         ctx.save();
         ctx.beginPath();
-        DrawingHelpers.colorBall(ctx,x0,y0,r,col); //создаем градиент для закраски шарика
+        colorBall(ctx,x0,y0,r,col); //создаем градиент для закраски шарика
         ctx.arc(x0,y0,r,0,2*Math.PI,false); //рисуем шарик
         ctx.fill();
         ctx.closePath();
@@ -39,7 +37,7 @@ var DrawForVis = (function(){
 
     halfBall = function(ctx,x0,y0,r,col){
         ctx.save();
-        DrawingHelpers.colorBall(ctx,x0,y0,r,col);
+        colorBall(ctx,x0,y0,r,col);
         ctx.beginPath(); //передняя стенка
         ctx.arc(x0,y0,r,0,Math.PI,false);
         ctx.fill();
@@ -56,7 +54,7 @@ var DrawForVis = (function(){
 
     alphaBall = function(ctx,x0,y0,r,col,alpha){
         ctx.save();
-        DrawingHelpers.colorBall(ctx,x0,y0,r,col);
+        colorBall(ctx,x0,y0,r,col);
         with (Math) {
             ctx.beginPath();
             ctx.save();
@@ -99,11 +97,36 @@ var DrawForVis = (function(){
         ctx.restore();
     }
 
+    text = function(ctx,val,x0,y0,r,alpha){
+        ctx.save();
+        ctx.translate(x0,y0);
+        ctx.rotate(alpha);
+        colorText(ctx,0,0,r,'#000');
+	    //размещение числового значения в шарике
+	    var stringVal = val.toString(10);
+	    if (stringVal.indexOf('.') >= 0){
+	        val = Math.ceil(val*10)/10;
+		    stringVal = val.toString(10);
+	    }
+	    var lengthVal = stringVal.length;
+	    if (lengthVal > 5){
+	        stringVal = stringVal.substring(0,5);
+	        lengthVal = 5;
+	    }
+	    var arrFont = new Array(0,1,1,4/5,2.5/4,1.5/3);
+	    var arrR = new Array(0,0.35,0.5,0.5,0.6,0.65);
+	    var arrPos = new Array(0,1/2,1/2,1/2,1/4,1/4);
+	    ctx.font = 'bold ' + arrFont[lengthVal]*r + 'px Courier New';
+        ctx.fillText(stringVal,-arrR[lengthVal]*r,arrPos[lengthVal]*r);
+        ctx.restore();
+    }
+
     return {
         back : back,
         ball : ball,
         halfBall : halfBall,
-        alphaBall : alphaBall
+        alphaBall : alphaBall,
+        text : text
     };
 
 })();

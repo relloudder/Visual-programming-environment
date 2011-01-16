@@ -12,6 +12,7 @@ function runInterface(){
         var col = "#ff0000";
         for (var j = 1; j<=3; j++){
             DrawForVis.ball(ctx,50,y,r,col);
+            DrawForVis.text(ctx,Math.ceil(Math.random()*100),50,y,r,0);
             var i = -85;
             var x = 100;
             while(i < 0){
@@ -22,7 +23,7 @@ function runInterface(){
             DrawForVis.halfBall(ctx,x,y,r,col);
             r*=1.25;
             y+=50;
-        } 
+        }
     });
     $('#stop, #new, #reset').click(function(){
         initApplication();
