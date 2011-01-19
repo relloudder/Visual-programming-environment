@@ -25,10 +25,12 @@ function runInterface(){
             r*=1.25;
             y+=50;
         }
-        r = 20;
-        DrawForVis.ball(ctx,200,250,r,'green');
-        DrawForVis.flag(ctx,200-r,250,4,6,'green','max',r,155*Math.PI/180);
-        DrawForVis.text(ctx,Math.ceil(Math.random()*100),200,250,r,0);
+
+        var ballInt = new SymVar('10',200,250,'blue');
+        ballInt.draw(ctx);
+        var ballName = new SymVarName('999',300,300,'green','max');
+        ballName.draw(ctx);
+
     });
     $('#stop, #new, #reset').click(function(){
         initApplication();
