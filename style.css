@@ -15,7 +15,6 @@ textarea{
     background-color: #7cb7e3;
     background-image: -webkit-gradient(linear, 0 0, 0 100%, color-stop(.5, rgba(255, 255, 255, .2)), color-stop(.5, transparent), to(transparent));
     background-image: -moz-linear-gradient(rgba(255, 255, 255, .2) 50%, transparent 50%, transparent);
-    background-image: -o-linear-gradient(rgba(255, 255, 255, .2) 50%, transparent 50%, transparent);
     background-image: linear-gradient(rgba(255, 255, 255, .2) 50%, transparent 50%, transparent);
     -webkit-background-size: 40px 40px;
     -moz-background-size: 40px 40px;

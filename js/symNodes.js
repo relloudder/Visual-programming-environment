@@ -1,10 +1,9 @@
-//реализует наследование
-function extend (Child, Parent) {
-    var F = function() { }
-    F.prototype = Parent.prototype
-    Child.prototype = new F()
-    Child.prototype.constructor = Child
-    Child.superclass = Parent.prototype
+function extend (Child,Parent){
+    var F = function(){}
+    F.prototype = Parent.prototype;
+    Child.prototype = new F();
+    Child.prototype.constructor = Child;
+    Child.superclass = Parent.prototype;
 }
 
 //Symbol
@@ -78,8 +77,8 @@ SymVar.prototype.getColVar = function(){
 
 SymVar.prototype.draw = function(ctx){
     with(this){
-        DrawForVis.ball(ctx, posX, posY, rVar, colVar);
-        if (val != '') DrawForVis.text(ctx, val, posX, posY, rVar, 0);
+        DrawForVis(ctx).ball(posX,posY,rVar,colVar);
+        if (val != '') DrawForVis(ctx).text(val,posX,posY,rVar,0);
     }
 }
 
@@ -99,8 +98,8 @@ SymVarName.prototype.getName = function (){
 
 SymVarName.prototype.draw = function(ctx){
     with(this){
-        DrawForVis.ball(ctx,posX,posY,rVar,colVar);
-        DrawForVis.text(ctx,val,posX,posY,rVar,0);
-        DrawForVis.flag(ctx,posX-rVar,posY-4,4,6,colVar,name,rVar,155*Math.PI/180);
+        DrawForVis(ctx).ball(posX,posY,rVar,colVar);
+        DrawForVis(ctx).text(val,posX,posY,rVar,0);
+        DrawForVis(ctx).flag(posX-rVar,posY-4,4,6,colVar,name,rVar,155*Math.PI/180);
     }
 }
