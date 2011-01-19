@@ -121,12 +121,36 @@ var DrawForVis = (function(){
         ctx.restore();
     }
 
+    flag = function(ctx,x0,y0,rSpring,n,col,name,rFont,alpha){
+	    ctx.save();
+	    ctx.beginPath();
+        ctx.translate(x0,y0);
+        ctx.rotate(alpha);
+	    ctx.moveTo(0,0);
+        for (var k=1; k<n; k++){
+		    ctx.quadraticCurveTo(rSpring,k*rSpring+2/3*rSpring,rSpring,k*rSpring-rSpring/2);
+		    ctx.quadraticCurveTo(rSpring,k*rSpring-2/3*rSpring,0,k*rSpring);
+	    }
+	    ctx.strokeStyle = col;
+	    ctx.stroke();
+ 	    var w = name.length*2/3*rFont + 2;
+        var h = rFont + 2;
+	    ctx.translate(0,n*rSpring-rSpring/2);
+	    this.back(ctx,'#aaa','#fff',w,h);
+	    ctx.rotate(Math.PI);
+	    ctx.font = rFont+'px Courier New';
+	    ctx.fillText(name,-w+2,-rFont/4);
+        ctx.closePath();
+        ctx.restore();
+    }
+
     return {
         back : back,
         ball : ball,
         halfBall : halfBall,
         alphaBall : alphaBall,
-        text : text
+        text : text,
+        flag : flag
     };
 
 })();

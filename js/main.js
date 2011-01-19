@@ -5,6 +5,7 @@ $(document).ready(function(){
     runInterface();
 });
 
+//for example
 function runInterface(){
     $('#playMenu, #play').click(function(){
         var r = 12;
@@ -24,6 +25,10 @@ function runInterface(){
             r*=1.25;
             y+=50;
         }
+        r = 20;
+        DrawForVis.ball(ctx,200,250,r,'green');
+        DrawForVis.flag(ctx,200-r,250,4,6,'green','max',r,155*Math.PI/180);
+        DrawForVis.text(ctx,Math.ceil(Math.random()*100),200,250,r,0);
     });
     $('#stop, #new, #reset').click(function(){
         initApplication();
