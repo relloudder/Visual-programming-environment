@@ -15,6 +15,16 @@ var DrawForVis = function(ctx){
 	    ctx.fillStyle = gradient;
     }
 
+    var backFlag = function(col1,col2,w,h){
+        ctx.save();
+        var g = ctx.createLinearGradient(w/2,0,0,h);
+        g.addColorStop(0,col1);
+        g.addColorStop(1,col2);
+        ctx.fillStyle = g;
+        ctx.fillRect(0,0,w,h);
+        ctx.restore();
+    }
+
     return{
 
         back : function(col1,col2,w,h){
@@ -135,10 +145,14 @@ var DrawForVis = function(ctx){
 	        }
 	        ctx.strokeStyle = col;
 	        ctx.stroke();
- 	        var w = name.length*2/3*rFont + 2;
+			if (name.length > 5){
+			    name = name.substring(0,5);
+				name = name+'~';
+            }
+            var w = name.length*0.6*rFont + 2;
             var h = rFont + 2;
 	        ctx.translate(0,n*rSpring-rSpring/2);
-	        this.back('#aaa','#fff',w,h);
+	        backFlag('#aaa','#fff',w,h);
 	        ctx.rotate(Math.PI);
 	        ctx.font = rFont+'px Courier New';
 	        ctx.fillText(name,-w+2,-rFont/4);

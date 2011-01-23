@@ -49,7 +49,7 @@ SymVar = new Class({
 	draw : function(ctx){
         with(this){
             DrawForVis(ctx).ball(posX,posY,rVar,colVar);
-            if (val != '') DrawForVis(ctx).text(val,posX,posY,rVar,s0);
+            if (val != '') DrawForVis(ctx).text(val,posX,posY,rVar,0);
         }
     }
 });

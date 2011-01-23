@@ -12,7 +12,7 @@ function runInterface(){
         var y = 50;
         var col = "#ff0000";
         for (var j = 1; j<=3; j++){
-            DrawForVis(ctx).ball(50,y,r,col);
+	        DrawForVis(ctx).ball(50,y,r,col);
             DrawForVis(ctx).text(Math.ceil(Math.random()*100),50,y,r,0);
             var i = -85;
             var x = 100;
@@ -26,9 +26,9 @@ function runInterface(){
             y+=50;
         }
 
-        var ballInt = new SymVar('10',200,250,'blue');
+        var ballInt = new SymVar('10',200,250,'blue',20);
         ballInt.draw(ctx);
-        var ballName = new SymVarName('999',300,300,'green','max');
+        var ballName = new SymVarName('999',300,300,'green',18,'max');
         ballName.draw(ctx);
     });
 
