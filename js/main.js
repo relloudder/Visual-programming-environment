@@ -12,7 +12,7 @@ function runInterface(){
         var y = 50;
         var col = "#ff0000";
         for (var j = 1; j<=3; j++){
-	        DrawForVis(ctx).ball(50,y,r,col);
+            DrawForVis(ctx).ball(50,y,r,col);
             DrawForVis(ctx).text(Math.ceil(Math.random()*100),50,y,r,0);
             var i = -85;
             var x = 100;

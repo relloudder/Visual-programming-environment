@@ -145,9 +145,9 @@ var DrawForVis = function(ctx){
 	        }
 	        ctx.strokeStyle = col;
 	        ctx.stroke();
-			if (name.length > 5){
-			    name = name.substring(0,5);
-				name = name+'~';
+            if (name.length > 5){
+                name = name.substring(0,5);
+                name = name+'~';
             }
             var w = name.length*0.6*rFont + 2;
             var h = rFont + 2;
