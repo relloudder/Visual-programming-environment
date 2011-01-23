@@ -5,9 +5,8 @@ Symbol = new Class({
     },
     visible : true,
     transp : 1,
-	draw : function(ctx){
-	},
- 	setVisible : function(vis){
+    draw : function(ctx){},
+    setVisible : function(vis){
         this.visible = vis;
     },
     getVisible : function(){
@@ -24,15 +23,15 @@ Symbol = new Class({
 SymVar = new Class({
     Extends: Symbol,
     initialize: function (v,pX,pY,cVar,cR){
-	    with(this){
+        with(this){
             parent(pX,pY);
-			val = v;
+            val = v;
             colVar = cVar;
             rVar = cR;
-       }
+        }
     },
     getRVar : function(){
-       return this.rVar;
+        return this.rVar;
     },
     setRVar : function(r){
         this.rVar = r;
@@ -46,7 +45,7 @@ SymVar = new Class({
     getColVar : function(){
         return this.colVar;
     },
-	draw : function(ctx){
+    draw : function(ctx){
         with(this){
             DrawForVis(ctx).ball(posX,posY,rVar,colVar);
             if (val != '') DrawForVis(ctx).text(val,posX,posY,rVar,0);
