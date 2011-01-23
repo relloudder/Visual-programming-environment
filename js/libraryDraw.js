@@ -1,27 +1,32 @@
 var DrawForVis = function(ctx){
 
-    var colorBall = function (x0,y0,r,col){
+    var radialGradient = function(x0,y0,r,col,pos){
         var gradient = ctx.createRadialGradient(x0+r/4,y0-r*1/3,r/15,x0,y0,r);
         gradient.addColorStop(0,'#ffffff');
-        gradient.addColorStop(0.85,col);
+        gradient.addColorStop(pos,col);
         ctx.fillStyle = gradient;
+    }
+
+    var linearGradient = function(col1,col2,w,w1,h){
+        var gradient = ctx.createLinearGradient(w1,0,0,h);
+        gradient.addColorStop(0,col1);
+        gradient.addColorStop(1,col2);
+        ctx.fillStyle = gradient;
+        ctx.fillRect(0,0,w,h);
+    }
+
+    var colorBall = function (x0,y0,r,col){
+        radialGradient(x0,y0,r,col,0.85)
         ctx.strokeStyle = col;
     }
 
     var colorText = function (x0,y0,r,col){
-	    var gradient = ctx.createRadialGradient(x0+r/4,y0-r*1/3,r/15,x0,y0,r);
-	    gradient.addColorStop(0,'#ffffff');
-	    gradient.addColorStop(0.42,col);
-	    ctx.fillStyle = gradient;
+	    radialGradient(x0,y0,r,col,0.42)
     }
 
     var backFlag = function(col1,col2,w,h){
         ctx.save();
-        var g = ctx.createLinearGradient(w/2,0,0,h);
-        g.addColorStop(0,col1);
-        g.addColorStop(1,col2);
-        ctx.fillStyle = g;
-        ctx.fillRect(0,0,w,h);
+        linearGradient(col1,col2,w,w/2,h)
         ctx.restore();
     }
 
@@ -33,11 +38,7 @@ var DrawForVis = function(ctx){
 
         back : function(col1,col2,w,h){
             ctx.save();
-            var g = ctx.createLinearGradient(0,0,0,h);
-            g.addColorStop(0,col1);
-            g.addColorStop(1,col2);
-            ctx.fillStyle = g;
-            ctx.fillRect(0,0,w,h);
+            linearGradient(col1,col2,w,0,h)
             ctx.restore();
         },
 
