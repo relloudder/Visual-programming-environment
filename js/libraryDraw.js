@@ -34,6 +34,13 @@ var DrawForVis = function(ctx){
         return alpha*Math.PI/180;
     }
 
+    var MathCalculations = function(x0,y0,alpha1,alpha2,r){
+        this.x = x0 + Math.cos(alpha1)*r;
+    	this.y = y0 + Math.sin(alpha1)*r;
+    	this.dx = x0 + Math.cos(alpha2)*r/2;
+    	this.dy = y0 + Math.sin(alpha2)*r/2;
+    }
+
     return{
 
         back : function(col1,col2,w,h){
@@ -72,20 +79,21 @@ var DrawForVis = function(ctx){
         alphaBall : function(x0,y0,r,col,alpha){
             ctx.save();
             colorBall(x0,y0,r,col);
-            with (Math) {
             ctx.beginPath();
             ctx.save();
             ctx.beginPath(); //задняя стенка
-            var x1 = x0 + cos(radians(alpha))*r;
-            var y1 = y0 + sin(radians(alpha))*r;
-            var dx = x0 + cos(4/3*radians(alpha))*r/2;
-            var dy = y0 + sin(4/3*radians(alpha))*r/2;
+            var calcs = new MathCalculations(x0,y0,radians(alpha),4/3*radians(alpha),r);
+            var x1 = calcs.x;
+            var y1 = calcs.y;
+            var dx = calcs.dx;
+            var dy = calcs.dy;
             ctx.moveTo(x1,y1);
             ctx.quadraticCurveTo(dx,dy,x0-0.1*r,y0-0.1*r);
-            var x = x0 + cos(-radians(alpha+180))*r;
-            var y = y0 + sin(-radians(alpha+180))*r;
-            var dx = x0 + cos(-radians(2/3*alpha+180))*r/2;
-            var dy = y0 + sin(-radians(2/3*alpha+180))*r/2;
+            calcs = new MathCalculations(x0,y0,-radians(alpha+180),-radians(2/3*alpha+180),r);
+            x = calcs.x;
+            y = calcs.y;
+            dx = calcs.dx;
+            dy = calcs.dy;
             ctx.quadraticCurveTo(dx,dy,x,y);
             ctx.stroke();
             ctx.fillStyle = "#ffffff";
@@ -95,22 +103,23 @@ var DrawForVis = function(ctx){
             ctx.restore();
             ctx.beginPath(); //передняя стенка
             ctx.arc(x0,y0,r,radians(alpha),-radians(alpha+180),false);
-            x = x0 + cos(-radians(alpha+180))*r;
-            y = y0 + sin(-radians(alpha+180))*r;
-            dx = x0 + cos(-radians(4/3*alpha+180))*r/2;
-            dy = y0 + sin(-radians(4/3*alpha+180))*r/2;
+            calcs = new MathCalculations(x0,y0,-radians(alpha+180),-radians(4/3*alpha+180),r);
+            x = calcs.x;
+            y = calcs.y;
+            dx = calcs.dx;
+            dy = calcs.dy;
             ctx.moveTo(x,y);
             ctx.quadraticCurveTo(dx,dy,0.1*r+x0,0.1*r+y0);
-            x = x0 + cos(radians(alpha))*r;
-            y = y0 + sin(radians(alpha))*r;
-            dx = x0 + cos(2/3*radians(alpha))*r/2;
-            dy = y0 + sin(2/3*radians(alpha))*r/2;
+            calcs = new MathCalculations(x0,y0,radians(alpha),2/3*radians(alpha),r);
+            x = calcs.x;
+            y = calcs.y;
+            dx = calcs.dx;
+            dy = calcs.dy;
             ctx.quadraticCurveTo(dx,dy,x,y);
             ctx.stroke();
             ctx.fill();
             ctx.closePath();
             ctx.closePath();
-            }
             ctx.restore();
         },
 
