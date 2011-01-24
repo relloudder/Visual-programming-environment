@@ -172,6 +172,22 @@ var DrawForVis = function(ctx){
             ctx.fillText(name,-w+2,-rFont/4);
             ctx.closePath();
             ctx.restore();
+        },
+
+        connect : function(x0,y0,r,n,col,alpha){
+            ctx.save();
+            ctx.translate(x0,y0);
+            ctx.rotate(alpha);
+            ctx.beginPath();
+            ctx.moveTo(0,0);
+            for (var k = 1; k < n; k++){
+                ctx.quadraticCurveTo(r,k*r+2/3*r,r,k*r-r/2);
+                ctx.quadraticCurveTo(r,k*r-2/3*r,0,k*r);
+            }
+            ctx.strokeStyle = col;
+            ctx.stroke();
+            ctx.closePath();
+            ctx.restore();
         }
 
     };

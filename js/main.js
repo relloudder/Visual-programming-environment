@@ -30,6 +30,15 @@ function runInterface(){
         ballInt.draw(ctx);
         var ballName = new SymVarName('999',300,300,'green',18,'max');
         ballName.draw(ctx);
+        var ballInt = new SymVar('10',350,350,'green',20);
+        ballInt.draw(ctx);
+        var ballInt = new SymVar('20',400,350,'green',20);
+        ballInt.draw(ctx);
+        DrawForVis(ctx).connect(350,350+4,4,10,'blue',-Math.PI/2);
+        var ballInt = new SymVar('10',350,350,'green',20);
+        ballInt.draw(ctx);
+        var ballInt = new SymVar('20',400,350,'green',20);
+        ballInt.draw(ctx);
     });
 
     $('#stop, #new, #reset').click(function(){
