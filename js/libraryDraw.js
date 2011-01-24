@@ -36,9 +36,9 @@ var DrawForVis = function(ctx){
 
     var MathCalculations = function(x0,y0,alpha1,alpha2,r){
         this.x = x0 + Math.cos(alpha1)*r;
-    	this.y = y0 + Math.sin(alpha1)*r;
-    	this.dx = x0 + Math.cos(alpha2)*r/2;
-    	this.dy = y0 + Math.sin(alpha2)*r/2;
+        this.y = y0 + Math.sin(alpha1)*r;
+        this.dx = x0 + Math.cos(alpha2)*r/2;
+        this.dy = y0 + Math.sin(alpha2)*r/2;
     }
 
     return{
@@ -148,28 +148,28 @@ var DrawForVis = function(ctx){
         },
 
         flag : function(x0,y0,rSpring,n,col,name,rFont,alpha){
-	        ctx.save();
-	        ctx.beginPath();
+            ctx.save();
+            ctx.beginPath();
             ctx.translate(x0,y0);
             ctx.rotate(alpha);
-	        ctx.moveTo(0,0);
+            ctx.moveTo(0,0);
             for (var k=1; k<n; k++){
-		        ctx.quadraticCurveTo(rSpring,k*rSpring+2/3*rSpring,rSpring,k*rSpring-rSpring/2);
-		        ctx.quadraticCurveTo(rSpring,k*rSpring-2/3*rSpring,0,k*rSpring);
-	        }
-	        ctx.strokeStyle = col;
-	        ctx.stroke();
+                ctx.quadraticCurveTo(rSpring,k*rSpring+2/3*rSpring,rSpring,k*rSpring-rSpring/2);
+                ctx.quadraticCurveTo(rSpring,k*rSpring-2/3*rSpring,0,k*rSpring);
+            }
+            ctx.strokeStyle = col;
+            ctx.stroke();
             if (name.length > 5){
                 name = name.substring(0,5);
                 name = name+'~';
             }
             var w = name.length*0.6*rFont + 2;
             var h = rFont + 2;
-	        ctx.translate(0,n*rSpring-rSpring/2);
-	        backFlag('#aaa','#fff',w,h);
-	        ctx.rotate(Math.PI);
-	        ctx.font = rFont+'px Courier New';
-	        ctx.fillText(name,-w+2,-rFont/4);
+            ctx.translate(0,n*rSpring-rSpring/2);
+            backFlag('#aaa','#fff',w,h);
+            ctx.rotate(Math.PI);
+            ctx.font = rFont+'px Courier New';
+            ctx.fillText(name,-w+2,-rFont/4);
             ctx.closePath();
             ctx.restore();
         }
