@@ -34,11 +34,13 @@ function runInterface(){
         ballInt.draw(ctx);
         var ballInt = new SymVar('20',400,350,'green',20);
         ballInt.draw(ctx);
-        DrawForVis(ctx).connect(350,350+4,4,10,'blue',-Math.PI/2);
+        DrawForVis(ctx).connect(350,350+4,4,10,'yellow',-Math.PI/2);
         var ballInt = new SymVar('10',350,350,'green',20);
         ballInt.draw(ctx);
+        DrawForVis(ctx).hat(350,350-45,20,'yellow',1);
         var ballInt = new SymVar('20',400,350,'green',20);
         ballInt.draw(ctx);
+        DrawForVis(ctx).hat(400,350-45,20,'yellow',2);
     });
 
     $('#stop, #new, #reset').click(function(){

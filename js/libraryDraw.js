@@ -188,6 +188,25 @@ var DrawForVis = function(ctx){
             ctx.stroke();
             ctx.closePath();
             ctx.restore();
+        },
+
+        hat : function(x0,y0,r,col,val){
+            ctx.save();
+            colorText(x0-r/2,y0-r/4,r*2,col);
+            ctx.beginPath();
+            ctx.translate(x0,y0+1.3*r+r);
+            ctx.moveTo(0,-2*r);
+            var x = (r+1)*Math.cos(Math.PI/4*5);
+            var y = (r+1)*Math.sin(Math.PI/4*5);
+            ctx.lineTo(x,y);
+            ctx.quadraticCurveTo(0,0-1/3*r,-x,y);
+            ctx.lineTo(0,-2*r);
+            ctx.fill();
+            colorText(0,r/4,r,'#000');
+            ctx.font = r/4*3 + 'px Arial';
+            ctx.fillText(val,-r/8,-r*0.7);
+            ctx.closePath();
+            ctx.restore();
         }
 
     };
