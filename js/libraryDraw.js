@@ -30,6 +30,20 @@ var DrawForVis = function(ctx){
         ctx.restore();
     }
 
+    var spring = function(x0,y0,r,n,col,alpha){
+        ctx.save();
+        ctx.translate(x0,y0);
+        ctx.rotate(alpha);
+        ctx.beginPath();
+        ctx.moveTo(0,0);
+        for (var k = 1; k < n; k++){
+            ctx.quadraticCurveTo(r,k*r+2/3*r,r,k*r-r/2);
+            ctx.quadraticCurveTo(r,k*r-2/3*r,0,k*r);
+        }
+        ctx.strokeStyle = col;
+        ctx.stroke();
+    }
+
     var radians = function(alpha){
         return alpha*Math.PI/180;
     }
@@ -148,17 +162,7 @@ var DrawForVis = function(ctx){
         },
 
         flag : function(x0,y0,rSpring,n,col,name,rFont,alpha){
-            ctx.save();
-            ctx.beginPath();
-            ctx.translate(x0,y0);
-            ctx.rotate(alpha);
-            ctx.moveTo(0,0);
-            for (var k=1; k<n; k++){
-                ctx.quadraticCurveTo(rSpring,k*rSpring+2/3*rSpring,rSpring,k*rSpring-rSpring/2);
-                ctx.quadraticCurveTo(rSpring,k*rSpring-2/3*rSpring,0,k*rSpring);
-            }
-            ctx.strokeStyle = col;
-            ctx.stroke();
+            spring(x0,y0,rSpring,n,col,alpha);
             if (name.length > 5){
                 name = name.substring(0,5);
                 name = name+'~';
@@ -174,24 +178,25 @@ var DrawForVis = function(ctx){
             ctx.restore();
         },
 
-        connect : function(x0,y0,r,n,col,alpha){
-            ctx.save();
-            ctx.translate(x0,y0);
-            ctx.rotate(alpha);
-            ctx.beginPath();
-            ctx.moveTo(0,0);
-            for (var k = 1; k < n; k++){
-                ctx.quadraticCurveTo(r,k*r+2/3*r,r,k*r-r/2);
-                ctx.quadraticCurveTo(r,k*r-2/3*r,0,k*r);
-            }
-            ctx.strokeStyle = col;
-            ctx.stroke();
+        union : function(x0,y0,r,n,col,alpha){
+            spring(x0,y0,r,n,col,alpha);
             ctx.closePath();
             ctx.restore();
         },
 
+        connect : function(xBeg,yBeg,xEnd,yEnd,r,col){
+            var rr = Math.sqrt((xBeg-xEnd)*(xBeg-xEnd)+(yBeg-yEnd)*(yBeg-yEnd));
+            alpha = Math.atan((xBeg-xEnd)/(yBeg-yEnd));
+            if ((yBeg-yEnd)>0){
+                alpha = Math.PI+alpha;
+            }
+            n = Math.ceil(rr/(1*r));
+            this.union(xBeg,yBeg,r,n,col,-alpha);
+        },
+
         hat : function(x0,y0,r,col,val){
             ctx.save();
+            //исправить на градиент
             colorText(x0-r/2,y0-r/4,r*2,col);
             ctx.beginPath();
             ctx.translate(x0,y0+1.3*r+r);
