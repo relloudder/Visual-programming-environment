@@ -8,14 +8,16 @@ $(function(){
 //for example
 function runInterface(){
     $('#playMenu, #play').click(function(){
-        var ballInt = new SymVar('10',200,250,'blue',20);
+        var ballInt = new SymVar('10',50,50,'blue',20);
         ballInt.draw(ctx);
-        var ballName = new SymVarName('999',300,300,'green',18,'max');
+        var ballName = new SymVarName('999',100,100,'green',18,'max');
         ballName.draw(ctx);
-        var ExArr = new SymVarArrayIndex(100,500,150,'pink',20,'1');
-        var newArray = new SymArray(100,450,5,1,ExArr,'first');
+        var ExArr = new SymVarArrayIndex(100,200,150,'pink',20,'1');
+        var newArray = new SymArray(100,250,5,1,ExArr,'first');
 		newArray.inputRandom(100);
         newArray.draw(ctx);
+        var iRecord = new SymVarItemRecord('999',300,300,'green',18,'min');
+        iRecord.draw(ctx);
     });
 
     $('#stop, #new, #reset').click(function(){

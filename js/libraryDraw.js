@@ -212,6 +212,29 @@ var DrawForVis = function(ctx){
             ctx.fillText(val,-r/8,-r*0.7);
             ctx.closePath();
             ctx.restore();
+        },
+
+        hatRecord : function(x0,y0,r,col,val,alpha){
+            ctx.save();
+            ctx.translate(x0-r*Math.sin(alpha)/2,y0+r*Math.cos(alpha)/2);
+            ctx.rotate(alpha);
+            ctx.beginPath();
+            ctx.moveTo(-r*1.5,0);
+            ctx.quadraticCurveTo(0,-r/2,r*1.5,0);
+            ctx.quadraticCurveTo(0,r*2,-r*1.5,0);
+            colorBall(-r/2,0,r*1.3,'rgb(230,230,230)');
+            ctx.fill();
+            ctx.strokeStyle = 'rgb(200,200,200)';
+            ctx.stroke();
+            ctx.closePath();
+            ctx.rotate(Math.PI);
+            ctx.fillStyle = 'black';
+            if(val.length > 5){
+                val = val.substr(0,4) + '~';
+            }
+            ctx.font = r*3/4 + 'px Arial';
+            ctx.fillText(val,-r,0);
+	        ctx.restore();
         }
 
     };

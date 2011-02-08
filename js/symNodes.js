@@ -116,6 +116,24 @@ SymVarArrayIndex = new Class({
     }
 })
 
+SymVarItemRecord = new Class({
+    Extends: SymVarName,
+    initialize: function (v,pX,pY,cVar,cR,nameV){
+        this.parent(v,pX,pY,cVar,cR,nameV);
+        this.turn = Math.PI;
+    },
+    cloneVar : function(){
+        return  new SymVarItemRecord(this.val,this.posX,this.posY,this.colVar,this.rVar,this.name);
+    },
+    draw : function(ctx){
+        with(this){
+            DrawForVis(ctx).ball(posX,posY,rVar,colVar);
+            DrawForVis(ctx).text(val,posX,posY,rVar,0);
+            DrawForVis(ctx).hatRecord(posX,posY,rVar,colVar,name,turn);
+        }
+    }
+})
+
 SymArray = new Class({
     Extends: SymVarName,
     initialize: function (pX,pY,sArray,fIndex,cloneItem,nameV){
