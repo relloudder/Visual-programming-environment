@@ -235,8 +235,45 @@ var DrawForVis = function(ctx){
             ctx.font = r*3/4 + 'px Arial';
             ctx.fillText(val,-r,0);
 	        ctx.restore();
-        }
+        },
 
+        record : function(x0,y0,r,col,val){
+            ctx.save();
+            var h = 10;
+            ctx.translate(x0,y0);
+            ctx.beginPath();
+            ctx.moveTo(-1.5*r-h,-r);
+            ctx.lineTo(1.5*r,-r);
+            ctx.lineTo(2.5*r,-2*r);
+            ctx.lineTo(-0.5*r-h,-2*r);
+            ctx.lineTo(-1.5*r-h,-r);
+            ctx.strokeStyle = col;
+            ctx.stroke();
+            ctx.fillStyle = 'rgb(230,230,230)';
+            ctx.fill();
+            ctx.closePath();
+            ctx.beginPath();
+            ctx.moveTo(-0.5*r-h,-2*r);
+            ctx.lineTo(-0.5*r-h, 0);
+            ctx.strokeStyle = col;
+            ctx.stroke();
+            ctx.closePath();
+            ctx.beginPath();
+            ctx.fillStyle = col;
+            ctx.fillRect(-1.5*r-h,-r,3*r+h,2*r);
+            ctx.fillStyle = col;
+            //colorFigure(col,'rgb(200,200,200)',r,r);
+            ctx.moveTo(1.5*r,r);
+            ctx.lineTo(2.5*r,0);
+            ctx.lineTo(2.5*r,-2*r);
+            ctx.lineTo(1.5*r,-r);
+            ctx.fill();
+            ctx.closePath();
+            ctx.fillStyle = 'black';
+            ctx.font = 'bold ' + r*2 + 'px Arial';
+            ctx.fillText(val,-r-h,r/3*2);
+            ctx.restore();
+        }
     };
 
 }

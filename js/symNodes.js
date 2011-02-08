@@ -139,10 +139,10 @@ SymArray = new Class({
     initialize: function (pX,pY,sArray,fIndex,cloneItem,nameV){
         this.parent(0,pX,pY,cloneItem.colVar,cloneItem.rVar,nameV);
         this.firstIndex = fIndex;
-        this.sizeArray = sArray;
+        this.sizeElement = sArray;
         this.turn = Math.PI/6; //для красоты
         this.itemsElement = new Array(); //для хранения каждого элемнта массива
-        for (var i = 0; i <= this.sizeArray; i++){
+        for (var i = 0; i <= this.sizeElement; i++){
 	        var x = this.posX + this.rVar*2.2*i; //положение каждого шарика по x
 		    var y = this.posY - i*this.rVar*Math.sin(this.turn);
             var item  =  cloneItem.cloneVar();
@@ -153,22 +153,80 @@ SymArray = new Class({
 	    }
     },
     firstIndex : 0,
-    sizeArray : 0,
+    sizeElement : 0,
     itemsElement : null,
     draw : function(ctx){
         with(this) {
-	        for(var i = sizeArray-1; i >= 0; i--){
+	        for(var i = sizeElement-1; i >= 0; i--){
 			    DrawForVis(ctx).connect(itemsElement[i+1].posX,itemsElement[i+1].posY,
 			        itemsElement[i].posX,itemsElement[i].posY,rVar/5,'yellow');
 			}
-		    for(var i = sizeArray; i >= 0; i--){
+		    for(var i = sizeElement; i >= 0; i--){
 		       itemsElement[i].draw(ctx);
 		    }
             DrawForVis(ctx).flag(posX-rVar,posY,rVar/5,6,colVar,name,rVar,155*Math.PI/180);
 	    }
     },
     inputRandom : function(maxValue){
-        for(var i = 0; i <= this.sizeArray; i++){
+        for(var i = 0; i <= this.sizeElement; i++){
+            this.itemsElement[i].inputRandom(maxValue);
+        }
+    }
+})
+
+SymRecord = new Class({
+    Extends: SymVarName,
+    initialize: function (pX,pY,cVar,nameV){
+        this.parent(0,pX,pY,cVar,20,nameV);
+        this.itemsElement = new Array();
+        this.sizeElement = 0;
+    },
+    sizeElement : 0,
+    itemsElement : null,
+    clone : function(){
+        var rec =  new SymVarRecord(this.val,this.posX,this.posY,this.colVar,this.name);
+        for (var i = 0; i < this.sizeElement; i++){
+            var sVar = this.itemsElement[i].clone();
+            rec.push(sVar);
+        }
+        return rec;
+    },
+    getItemProperty : function(number){
+        var itemProperty = new Array();
+        with(this){
+            itemProperty[0] = -Math.PI/(this.sizeElement+1)*(number+1);//угол
+            itemProperty[1] = posX + 40*(1 + itemsElement.length/6)*Math.cos(itemProperty[0]);//позиция по x
+            itemProperty[2] = posY + 40*(1 + itemsElement.length/6)*Math.sin(itemProperty[0]);//позиция по y
+            itemProperty[0] = itemProperty[0] - Math.PI/2;
+        }
+        return itemProperty;
+    },
+    push : function(vItem){
+        with(this){
+            for(var i = 0; i < sizeElement; i++){
+                if (itemsElement[i].getName().toLowerCase() == vItem.getName().toLowerCase()) return -1;
+            }
+            itemsElement.push(vItem);
+            sizeElement+=1;
+            for(var i = 0; i < sizeElement; i++){
+                var property = getItemProperty(i);
+                itemsElement[i].turn = property[0];
+                itemsElement[i].setPosY(property[2]);
+                itemsElement[i].setPosX(property[1]);
+            }
+        }
+    },
+    draw : function(ctx){
+        with(this){
+            DrawForVis(ctx).record(posX,posY,rVar/2.5,colVar,name);
+            for(var i = 0; i < sizeElement; i++){
+                DrawForVis(ctx).connect(itemsElement[i].posX,itemsElement[i].posY,posX,posY-rVar/2,4,colVar);
+                itemsElement[i].draw(ctx);
+            }
+        }
+    },
+    inputRandom : function(maxValue){
+        for(var i = 0; i <= this.sizeElement; i++){
             this.itemsElement[i].inputRandom(maxValue);
         }
     }
