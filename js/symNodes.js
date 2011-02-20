@@ -92,16 +92,22 @@ SymVarName = new Class({
         }
         this.parent(v,pX,pY,cVar,cR);
         this.name = nameV;
+        this.type = type;
     },
     name : '',
+    type : 'int',
     getName : function(){
         return this.name;
     },
     setName : function(n){
         this.name = n;
     },
+    inputRandom : function (maxValue){
+        if (this.type == 'char') this.val = "'" + String.fromCharCode(48 + Math.floor(Math.random()*80)) + "'";
+	    else this.val = Math.floor(Math.random()*maxValue);
+	},
     clone : function(){
-        return new SymVarName(this.val,this.posX,this.posY,this.colVar,this.rVar,this.name);
+        return new SymVarName(this.val,this.posX,this.posY,this.type,this.name);
     },
     draw : function(ctx){
         with(this){
@@ -118,7 +124,7 @@ SymVarArrayIndex = new Class({
         this.parent(v,pX,pY,type,nameV);
     },
     cloneVar : function(){
-        return  new SymVarArrayIndex(this.val,this.posX,this.posY,this.colVar,this.rVar,this.name);
+        return  new SymVarArrayIndex(this.val,this.posX,this.posY,this.type,this.name);
     },
     draw : function(ctx){
         with(this){
@@ -150,7 +156,7 @@ SymVarItemRecord = new Class({
 SymArray = new Class({
     Extends: SymVarName,
     initialize: function (pX,pY,sArray,fIndex,cloneItem,nameV){
-        this.parent(0,pX,pY,cloneItem.rVar,nameV);
+        this.parent(0,pX,pY,cloneItem.type,nameV);
         this.firstIndex = fIndex;
         this.sizeElement = sArray;
         this.turn = Math.PI/6; //для красоты
@@ -197,7 +203,7 @@ SymRecord = new Class({
     sizeElement : 0,
     itemsElement : null,
     clone : function(){
-        var rec =  new SymVarRecord(this.val,this.posX,this.posY,this.colVar,this.name);
+        var rec =  new SymVarRecord(this.val,this.posX,this.posY,this.type,this.name);
         for (var i = 0; i < this.sizeElement; i++){
             var sVar = this.itemsElement[i].clone();
             rec.push(sVar);
@@ -239,7 +245,7 @@ SymRecord = new Class({
         }
     },
     inputRandom : function(maxValue){
-        for(var i = 0; i <= this.sizeElement; i++){
+        for(var i = 0; i < this.sizeElement; i++){
             this.itemsElement[i].inputRandom(maxValue);
         }
     }

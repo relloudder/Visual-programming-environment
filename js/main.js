@@ -21,6 +21,7 @@ function runInterface(){
         newRecord.push(record1);
         newRecord.push(record2);
         newRecord.push(record3);
+        newRecord.inputRandom(10);
         newRecord.draw(ctx);
     });
 
