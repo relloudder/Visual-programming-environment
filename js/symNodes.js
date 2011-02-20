@@ -69,7 +69,7 @@ SymVar = new Class({
     draw : function(ctx){
         with(this){
             DrawForVis(ctx).ball(posX,posY,rVar,colVar);
-            if (val != '') DrawForVis(ctx).text(val,posX,posY,rVar,0);
+            if (val != '') DrawForVis(ctx).text(val,posX,posY,rVar,0,type);
         }
     }
 });
@@ -112,7 +112,7 @@ SymVarName = new Class({
     draw : function(ctx){
         with(this){
             DrawForVis(ctx).ball(posX,posY,rVar,colVar);
-            DrawForVis(ctx).text(val,posX,posY,rVar,0);
+            DrawForVis(ctx).text(val,posX,posY,rVar,0,type);
             DrawForVis(ctx).flag(posX-rVar,posY-4,4,6,colVar,name,rVar,155*Math.PI/180);
         }
     }
@@ -129,7 +129,7 @@ SymVarArrayIndex = new Class({
     draw : function(ctx){
         with(this){
             DrawForVis(ctx).ball(posX,posY,rVar,colVar);
-            DrawForVis(ctx).text(val,posX,posY,rVar,0);
+            DrawForVis(ctx).text(val,posX,posY,rVar,0,type);
             DrawForVis(ctx).hat(posX,posY-2.25*rVar,rVar,'yellow',name);
         }
     }
@@ -147,7 +147,7 @@ SymVarItemRecord = new Class({
     draw : function(ctx){
         with(this){
             DrawForVis(ctx).ball(posX,posY,rVar,colVar);
-            DrawForVis(ctx).text(val,posX,posY,rVar,0);
+            DrawForVis(ctx).text(val,posX,posY,rVar,0,type);
             DrawForVis(ctx).hatRecord(posX,posY,rVar,colVar,name,turn);
         }
     }

@@ -144,7 +144,7 @@ var DrawForVis = function(ctx){
             ctx.restore();
         },
 
-        text : function(val,x0,y0,r,alpha){
+        text : function(val,x0,y0,r,alpha,type){
             ctx.save();
             ctx.translate(x0,y0);
             ctx.rotate(alpha);
@@ -155,6 +155,7 @@ var DrawForVis = function(ctx){
 	            val = Math.ceil(val*10)/10;
 		        stringVal = val.toString(10);
 	        }
+	        if (type == 'real' && stringVal.indexOf('.') < 0) stringVal += '.0';
 	        var lengthVal = stringVal.length;
 	        if (lengthVal > 5){
 	            stringVal = stringVal.substring(0,5);
