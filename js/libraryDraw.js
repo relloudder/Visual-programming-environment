@@ -26,8 +26,15 @@ var DrawForVis = function(ctx){
 
     var backFlag = function(col1,col2,w,h){
         ctx.save();
-        linearGradient(col1,col2,w,w/2,h)
+        linearGradient(col1,col2,w,w/2,h);
         ctx.restore();
+    }
+
+    var colorFigure = function (col1,col2,w,h) {
+        var gradient = ctx.createLinearGradient(-w,-h,w,h);
+        gradient.addColorStop(0.3,col1);
+        gradient.addColorStop(1,col2);
+        ctx.fillStyle = gradient;
     }
 
     var spring = function(x0,y0,r,n,col,alpha){
@@ -239,7 +246,8 @@ var DrawForVis = function(ctx){
 
         record : function(x0,y0,r,col,val){
             ctx.save();
-            var h = 10;
+            var h = val.length*r/6;
+            if (h < 10) h = 10;
             ctx.translate(x0,y0);
             ctx.beginPath();
             ctx.moveTo(-1.5*r-h,-r);
@@ -262,7 +270,7 @@ var DrawForVis = function(ctx){
             ctx.fillStyle = col;
             ctx.fillRect(-1.5*r-h,-r,3*r+h,2*r);
             ctx.fillStyle = col;
-            //colorFigure(col,'rgb(200,200,200)',r,r);
+            colorFigure(col,'rgb(200,200,200)',r,r);
             ctx.moveTo(1.5*r,r);
             ctx.lineTo(2.5*r,0);
             ctx.lineTo(2.5*r,-2*r);
@@ -270,7 +278,7 @@ var DrawForVis = function(ctx){
             ctx.fill();
             ctx.closePath();
             ctx.fillStyle = 'black';
-            ctx.font = 'bold ' + r*2 + 'px Arial';
+            ctx.font = 'bold ' + r*1.5 + 'px Arial';
             ctx.fillText(val,-r-h,r/3*2);
             ctx.restore();
         }

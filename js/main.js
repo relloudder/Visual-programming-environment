@@ -8,18 +8,16 @@ $(function(){
 //for example
 function runInterface(){
     $('#playMenu, #play').click(function(){
-        var ballInt = new SymVar('10',50,50,'blue',20);
-        ballInt.draw(ctx);
-        var ballName = new SymVarName('999',100,100,'green',18,'max');
+        var ballName = new SymVarName('999',100,100,'int','max');
         ballName.draw(ctx);
-        var ExArr = new SymVarArrayIndex(100,200,150,'pink',20,'1');
+        var ExArr = new SymVarArrayIndex(100,200,150,'char','1');
         var newArray = new SymArray(100,250,5,1,ExArr,'first');
 		newArray.inputRandom(100);
         newArray.draw(ctx);
-        var record1 = new SymVarItemRecord('9',0,0,'green',18,'r1');
-        var record2 = new SymVarItemRecord('99',0,0,'blue',18,'r2');
-        var record3 = new SymVarItemRecord('999',0,0,'red',18,'r3');
-        var newRecord = new SymRecord(400,400,'grey','smth');
+        var record1 = new SymVarItemRecord('9',0,0,'real','r1');
+        var record2 = new SymVarItemRecord('99',0,0,'int','r2');
+        var record3 = new SymVarItemRecord('999',0,0,'char','r3');
+        var newRecord = new SymRecord(400,400,'record','smth');
         newRecord.push(record1);
         newRecord.push(record2);
         newRecord.push(record3);

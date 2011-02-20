@@ -76,7 +76,20 @@ SymVar = new Class({
 
 SymVarName = new Class({
     Extends: SymVar,
-    initialize: function (v,pX,pY,cVar,cR,nameV){
+    initialize: function (v,pX,pY,type,nameV){
+        var cR = 15, cVar = 'pink';
+        if (type == 'int') {
+            cR = 20;
+            cVar = 'green';
+        }
+        else if (type == 'real') {
+            cR = 25;
+            cVar = 'red';
+        }
+        else if (type == 'record') {
+            cR = 20;
+            cVar = 'grey';
+        }
         this.parent(v,pX,pY,cVar,cR);
         this.name = nameV;
     },
@@ -101,8 +114,8 @@ SymVarName = new Class({
 
 SymVarArrayIndex = new Class({
     Extends: SymVarName,
-    initialize: function (v,pX,pY,cVar,cR,nameV){
-        this.parent(v,pX,pY,cVar,cR,nameV);
+    initialize: function (v,pX,pY,type,nameV){
+        this.parent(v,pX,pY,type,nameV);
     },
     cloneVar : function(){
         return  new SymVarArrayIndex(this.val,this.posX,this.posY,this.colVar,this.rVar,this.name);
@@ -118,8 +131,8 @@ SymVarArrayIndex = new Class({
 
 SymVarItemRecord = new Class({
     Extends: SymVarName,
-    initialize: function (v,pX,pY,cVar,cR,nameV){
-        this.parent(v,pX,pY,cVar,cR,nameV);
+    initialize: function (v,pX,pY,type,nameV){
+        this.parent(v,pX,pY,type,nameV);
         this.turn = Math.PI;
     },
     cloneVar : function(){
@@ -137,7 +150,7 @@ SymVarItemRecord = new Class({
 SymArray = new Class({
     Extends: SymVarName,
     initialize: function (pX,pY,sArray,fIndex,cloneItem,nameV){
-        this.parent(0,pX,pY,cloneItem.colVar,cloneItem.rVar,nameV);
+        this.parent(0,pX,pY,cloneItem.rVar,nameV);
         this.firstIndex = fIndex;
         this.sizeElement = sArray;
         this.turn = Math.PI/6; //для красоты
@@ -176,8 +189,8 @@ SymArray = new Class({
 
 SymRecord = new Class({
     Extends: SymVarName,
-    initialize: function (pX,pY,cVar,nameV){
-        this.parent(0,pX,pY,cVar,20,nameV);
+    initialize: function (pX,pY,type,nameV){
+        this.parent(0,pX,pY,type,nameV);
         this.itemsElement = new Array();
         this.sizeElement = 0;
     },
