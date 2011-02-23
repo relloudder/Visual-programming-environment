@@ -254,6 +254,7 @@ var DrawForVis = function(ctx){
 
         record : function(x0,y0,r,col,val){
             ctx.save();
+            if (typeof(val) == 'number') val = val.toString(10);
             var h = val.length*r/6;
             if (h < 10) h = 10;
             ctx.translate(x0,y0);

@@ -142,7 +142,7 @@ SymVarItemRecord = new Class({
         this.turn = Math.PI;
     },
     clone : function(){
-        return  new SymVarItemRecord(this.val,this.posX,this.posY,this.colVar,this.rVar,this.name);
+        return  new SymVarItemRecord(this.val,this.posX,this.posY,this.type,this.name);
     },
     draw : function(ctx){
         with(this){
@@ -160,10 +160,10 @@ SymArray = new Class({
         this.firstIndex = fIndex;
         this.sizeElement = sArray;
         this.type = 'array';
-        this.turn = Math.PI/20; //для красоты
+        this.turn = Math.PI/4; //для красоты
         this.itemsElement = new Array(); //для хранения каждого элемнта массива
         if (cloneItem instanceof SymArray)
-            this.turn = cloneItem.turn - Math.PI;
+            this.turn = cloneItem.turn + Math.PI / 2;
         for (var i = 0; i <= this.sizeElement; i++){
 	        var x = this.posX + this.rVar*2.2*i; //положение каждого шарика по x
 		    var y = this.posY - i*this.rVar*Math.sin(this.turn);
@@ -208,7 +208,8 @@ SymArray = new Class({
 		    for(var i = sizeElement; i >= 0; i--){
 		       itemsElement[i].draw(ctx);
 		    }
-            DrawForVis(ctx).flag(posX-rVar,posY,rVar/5,6,colVar,name,rVar,155*Math.PI/180);
+		    if (typeof(name) != 'number')
+                 DrawForVis(ctx).flag(posX-rVar,posY,rVar/5,6,colVar,name,rVar,155*Math.PI/180);
 	    }
     },
     inputRandom : function(maxValue){
@@ -259,7 +260,29 @@ SymRecord = new Class({
                 itemsElement[i].setPosX(property[1]);
             }
         }
-    },  
+    },
+    setPosX : function(vX) {
+        with(this) {
+            var x = posX;
+            posX = vX;
+            for(var i = 0; i < sizeElement; i++)
+                itemsElement[i].setPosX(itemsElement[i].posX - x + posX);
+        }
+    },
+    setPosY : function(vY){
+        with(this){
+            var y = posY;
+            posY = vY;
+            for(var i = 0; i < sizeElement; i++)
+                itemsElement[i].setPosY(itemsElement[i].posY - y + posY);
+        }
+    },
+    clone : function(){
+        var record =  new SymRecord(this.posX,this.posY,this.type,this.name);
+        for (var i = 0; i < this.sizeElement; i++)
+            record.push(this.itemsElement[i].clone());
+        return record;
+    },
     draw : function(ctx){
         with(this){
             DrawForVis(ctx).record(posX,posY,rVar/2.5,colVar,name);
