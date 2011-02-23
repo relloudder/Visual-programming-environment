@@ -123,7 +123,7 @@ SymVarArrayIndex = new Class({
     initialize: function (v,pX,pY,type,nameV){
         this.parent(v,pX,pY,type,nameV);
     },
-    cloneVar : function(){
+    clone : function(){
         return  new SymVarArrayIndex(this.val,this.posX,this.posY,this.type,this.name);
     },
     draw : function(ctx){
@@ -141,7 +141,7 @@ SymVarItemRecord = new Class({
         this.parent(v,pX,pY,type,nameV);
         this.turn = Math.PI;
     },
-    cloneVar : function(){
+    clone : function(){
         return  new SymVarItemRecord(this.val,this.posX,this.posY,this.colVar,this.rVar,this.name);
     },
     draw : function(ctx){
@@ -159,15 +159,18 @@ SymArray = new Class({
         this.parent(0,pX,pY,cloneItem.type,nameV);
         this.firstIndex = fIndex;
         this.sizeElement = sArray;
-        this.turn = Math.PI/6; //для красоты
+        this.type = 'array';
+        this.turn = Math.PI/20; //для красоты
         this.itemsElement = new Array(); //для хранения каждого элемнта массива
+        if (cloneItem instanceof SymArray)
+            this.turn = cloneItem.turn - Math.PI;
         for (var i = 0; i <= this.sizeElement; i++){
 	        var x = this.posX + this.rVar*2.2*i; //положение каждого шарика по x
 		    var y = this.posY - i*this.rVar*Math.sin(this.turn);
-            var item  =  cloneItem.cloneVar();
+            var item  =  cloneItem.clone();
             item.setPosX(x);
             item.setPosY(y);
-            item.setName(i+this.firstIndex);
+            item.setName(i + this.firstIndex);
 		    this.itemsElement.push(item);
 	    }
     },
@@ -187,6 +190,14 @@ SymArray = new Class({
             for (var i = 0; i <= sizeElement; i++)
                 itemsElement[i].setPosY(posY + i*itemsElement[i].rVar*Math.sin(this.turn));
         }
+    },
+    setName : function(name) {
+        this.name = name;
+        for (var i = 0; i <= this.sizeElement; i++)
+            this.itemsElement[i].name = this.name + ' ' + (i + this.firstIndex);
+    },
+    clone : function() {
+        return new SymArray(this.posX,this.posY,this.sizeElement,this.firstIndex,this.itemsElement[0],this.name);
     },
     draw : function(ctx){
         with(this) {

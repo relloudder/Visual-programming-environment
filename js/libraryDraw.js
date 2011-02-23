@@ -175,6 +175,7 @@ var DrawForVis = function(ctx){
                 name = name.substring(0,5);
                 name = name+'~';
             }
+            if (typeof(name) == 'number') name = name.toString(10);
             var w = name.length*0.6*rFont + 2;
             var h = rFont + 2;
             ctx.translate(0,n*rSpring-rSpring/2);
