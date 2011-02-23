@@ -174,6 +174,20 @@ SymArray = new Class({
     firstIndex : 0,
     sizeElement : 0,
     itemsElement : null,
+    setPosX : function(pX) {
+        with(this) {
+            posX = pX;
+            for (var i = 0; i <= sizeElement; i++)
+                itemsElement[i].setPosX(posX + itemsElement[i].rVar*i*2.2);
+        }
+    },
+    setPosY : function(pY) {
+        with(this) {
+            posY = pY;
+            for (var i = 0; i <= sizeElement; i++)
+                itemsElement[i].setPosY(posY + i*itemsElement[i].rVar*Math.sin(this.turn));
+        }
+    },
     draw : function(ctx){
         with(this) {
 	        for(var i = sizeElement-1; i >= 0; i--){
@@ -234,7 +248,7 @@ SymRecord = new Class({
                 itemsElement[i].setPosX(property[1]);
             }
         }
-    },
+    },  
     draw : function(ctx){
         with(this){
             DrawForVis(ctx).record(posX,posY,rVar/2.5,colVar,name);

@@ -18,6 +18,7 @@ function runInterface(){
         var record2 = new SymVarItemRecord('99',0,0,'int','r2');
         var record3 = new SymVarItemRecord('999',0,0,'char','r3');
         var newRecord = new SymRecord(400,400,'record','smth');
+        newRecord.push(newArray);
         newRecord.push(record1);
         newRecord.push(record2);
         newRecord.push(record3);
