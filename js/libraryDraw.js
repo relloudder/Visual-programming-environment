@@ -217,8 +217,14 @@ var DrawForVis = function(ctx){
             ctx.lineTo(0,-2*r);
             ctx.fill();
             colorText(0,r/4,r,'#000');
-            ctx.font = r/4*3 + 'px Arial';
-            ctx.fillText(val,-r/8,-r*0.7);
+            if (val.length == 1) {
+                ctx.font = r/4*3 + 'px Arial';
+                ctx.fillText(val,-r/8,-r*0.7);
+            }
+            else {
+                ctx.font = r/3*2 + 'px Arial';
+                ctx.fillText(val,-r/3,-r*0.7);
+            }
             ctx.closePath();
             ctx.restore();
         },
