@@ -2,12 +2,14 @@ Symbol = new Class({
     initialize: function(pX,pY){
         this.posX = pX;
         this.posY = pY;
+        this.owner = 'none';
     },
     visible : true,
     transp : 1,
     turn : 0,
     posX : 0,
     posY : 0,
+    owner : '',
     draw : function(ctx){},
     setVisible : function(vis){
         this.visible = vis;
@@ -107,48 +109,19 @@ SymVarName = new Class({
 	    else this.val = Math.floor(Math.random()*maxValue);
 	},
     clone : function(){
-        return new SymVarName(this.val,this.posX,this.posY,this.type,this.name);
+        var element = new SymVarName(this.val,this.posX,this.posY,this.type,this.name);
+        element.owner = this.owner;
+        return element;
     },
     draw : function(ctx){
         with(this){
             DrawForVis(ctx).ball(posX,posY,rVar,colVar);
             DrawForVis(ctx).text(val,posX,posY,rVar,0,type);
-            DrawForVis(ctx).flag(posX-rVar,posY-4,4,6,colVar,name,rVar,155*Math.PI/180);
-        }
-    }
-})
-
-SymVarArrayIndex = new Class({
-    Extends: SymVarName,
-    initialize: function (v,pX,pY,type,nameV){
-        this.parent(v,pX,pY,type,nameV);
-    },
-    clone : function(){
-        return  new SymVarArrayIndex(this.val,this.posX,this.posY,this.type,this.name);
-    },
-    draw : function(ctx){
-        with(this){
-            DrawForVis(ctx).ball(posX,posY,rVar,colVar);
-            DrawForVis(ctx).text(val,posX,posY,rVar,0,type);
-            DrawForVis(ctx).hat(posX,posY-2.25*rVar,rVar,'yellow',name);
-        }
-    }
-})
-
-SymVarItemRecord = new Class({
-    Extends: SymVarName,
-    initialize: function (v,pX,pY,type,nameV){
-        this.parent(v,pX,pY,type,nameV);
-        this.turn = Math.PI;
-    },
-    clone : function(){
-        return  new SymVarItemRecord(this.val,this.posX,this.posY,this.type,this.name);
-    },
-    draw : function(ctx){
-        with(this){
-            DrawForVis(ctx).ball(posX,posY,rVar,colVar);
-            DrawForVis(ctx).text(val,posX,posY,rVar,0,type);
-            DrawForVis(ctx).hatRecord(posX,posY,rVar,colVar,name,turn);
+            if (owner == 'array')
+                DrawForVis(ctx).hat(posX,posY-2.25*rVar,rVar,'yellow',name);
+            else if (owner == 'record')
+                DrawForVis(ctx).hatRecord(posX,posY,rVar,colVar,name,turn);
+            else DrawForVis(ctx).flag(posX-rVar,posY-4,4,6,colVar,name,rVar,155*Math.PI/180);
         }
     }
 })
@@ -162,6 +135,7 @@ SymArray = new Class({
         this.type = 'array';
         this.turn = Math.PI/4; //для красоты
         this.itemsElement = new Array(); //для хранения каждого элемнта массива
+        cloneItem.owner = 'array';
         if (cloneItem instanceof SymArray)
             this.turn = cloneItem.turn + Math.PI / 2;
         for (var i = 0; i <= this.sizeElement; i++){
@@ -197,7 +171,9 @@ SymArray = new Class({
             this.itemsElement[i].name = this.name + ' ' + (i + this.firstIndex);
     },
     clone : function() {
-        return new SymArray(this.posX,this.posY,this.sizeElement,this.firstIndex,this.itemsElement[0],this.name);
+        var element = new SymArray(this.posX,this.posY,this.sizeElement,this.firstIndex,this.itemsElement[0],this.name);
+        element.owner = this.owner;
+        return element;
     },
     draw : function(ctx){
         with(this) {
@@ -251,6 +227,7 @@ SymRecord = new Class({
             for(var i = 0; i < sizeElement; i++){
                 if (itemsElement[i].getName().toLowerCase() == vItem.getName().toLowerCase()) return -1;
             }
+            vItem.owner = 'record';
             itemsElement.push(vItem);
             sizeElement+=1;
             for(var i = 0; i < sizeElement; i++){
@@ -279,6 +256,7 @@ SymRecord = new Class({
     },
     clone : function(){
         var record =  new SymRecord(this.posX,this.posY,this.type,this.name);
+        record.owner = this.owner;
         for (var i = 0; i < this.sizeElement; i++)
             record.push(this.itemsElement[i].clone());
         return record;
