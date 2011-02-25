@@ -192,7 +192,7 @@ SymArray = new Class({
 		    for(var i = sizeElement; i >= 0; i--){
 		       itemsElement[i].draw(ctx);
 		    }
-		    if (typeof(name) != 'number')
+		    if (typeof(this.name) != 'number')
                  DrawForVis(ctx).flag(posX-rVar,posY,rVar/5,6,colVar,name,rVar,155*Math.PI/180);
 	    }
     },
