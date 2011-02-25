@@ -92,6 +92,10 @@ SymVarName = new Class({
             cR = 20;
             cVar = 'grey';
         }
+        else if (type == 'boolean') {
+            cR = 15;
+            cVar = 'blue';
+        }
         this.parent(v,pX,pY,cVar,cR);
         this.name = nameV;
         this.type = type;
@@ -106,6 +110,10 @@ SymVarName = new Class({
     },
     inputRandom : function (maxValue){
         if (this.type == 'char') this.val = "'" + String.fromCharCode(48 + Math.floor(Math.random()*80)) + "'";
+	    else if (this.type == 'boolean') {
+	        if (Math.floor(Math.random()*maxValue) == 0) this.val = 'F';
+	        else this.val = 'T'
+	    }
 	    else this.val = Math.floor(Math.random()*maxValue);
 	},
     clone : function(){

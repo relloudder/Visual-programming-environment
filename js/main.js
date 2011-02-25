@@ -16,7 +16,6 @@ function runInterface(){
 		newArray.inputRandom(100);
 		var newArray1 = new SymArray(100,250,3,1,ExArr1,'max');
 		newArray1.inputRandom(100);
-        newArray.draw(ctx);
         var record1 = new SymVarName('9',0,0,'real','r1');
         var record2 = new SymVarName('99',0,0,'int','r2');
         var record3 = new SymVarName('999',0,0,'char','r3');
@@ -33,6 +32,10 @@ function runInterface(){
         var Ex3Array = new SymArray(100,350,3,1,newRecord,'sec');
         Ex3Array.inputRandom(100);
         Ex3Array.draw(ctx);
+        var ExArr4 = new SymVarName(100,200,150,'boolean','1');
+        var newArray4 = new SymArray(100,500,4,2,ExArr4,'fourth');
+        newArray4.inputRandom(2);
+        newArray4.draw(ctx);
     });
 
     $('#stop, #new, #reset').click(function(){
