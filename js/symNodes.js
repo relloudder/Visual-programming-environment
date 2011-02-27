@@ -1,3 +1,24 @@
+VariableTree = new Class({
+   initialize: function(){
+        this.treeVar = new Array();
+    },
+    treeVar : null,
+    draw : function(ctx) {
+        for (var i = 0; i < this.treeVar.length; i++)
+            this.treeVar[i].draw(ctx);
+    },
+    push : function (item) {
+        this.treeVar.push(item);
+    },
+    findByPos : function(pos) {
+        for (var k = this.treeVar.length - 1; k >= 0; k--) {
+            var findSymbol = this.treeVar[k].findVar(pos);
+            if (findSymbol != -1) return findSymbol;
+        }
+        return -1;
+    },
+});
+
 Symbol = new Class({
     initialize: function(pX,pY){
         this.posX = pX;
@@ -73,6 +94,13 @@ SymVar = new Class({
             DrawForVis(ctx).ball(posX,posY,rVar,colVar);
             if (val != '') DrawForVis(ctx).text(val,posX,posY,rVar,0,type);
         }
+    },
+    findVar : function(pos){
+        var x = pos[0];
+        var y = pos[1];
+        if (((x - this.getPosX())*(x - this.getPosX()) + (y - this.getPosY())*(y - this.getPosY())) <= 1.5*this.rVar*this.rVar)
+            return this;
+        return -1;
     }
 });
 
@@ -200,6 +228,15 @@ SymArray = new Class({
         for(var i = 0; i <= this.sizeElement; i++){
             this.itemsElement[i].inputRandom(maxValue);
         }
+    },
+    findVar : function (pos) {
+        var find = this.parent(pos);
+        if (find != -1) return this;
+        for (var k = 1; k <= this.sizeElement; k++) {
+            find = this.itemsElement[k].findVar(pos);
+            if (find != -1) return find;
+        }
+        return -1;
     }
 })
 
@@ -282,5 +319,14 @@ SymRecord = new Class({
         for(var i = 0; i < this.sizeElement; i++){
             this.itemsElement[i].inputRandom(maxValue);
         }
+    },
+    findVar : function (pos) {
+        var find = this.parent(pos);
+        if (find != -1) return this;
+        for (var k = 1; k < this.sizeElement; k++) {
+            find = this.itemsElement[k].findVar(pos);
+            if (find != -1) return find;
+        }
+        return -1;
     }
 })

@@ -1,4 +1,5 @@
 var ctx;
+var tree;
 
 $(function(){
     initApplication();
@@ -8,8 +9,9 @@ $(function(){
 //for example
 function runInterface(){
     $('#playMenu, #play').click(function(){
+        tree = new VariableTree();
         var ballName = new SymVarName('999',100,100,'int','max');
-        ballName.draw(ctx);
+        tree.push(ballName);
         var ExArr = new SymVarName(100,200,150,'char','1');
         var ExArr1 = new SymVarName(0,0,0,'int','1');
         var newArray = new SymArray(100,250,4,2,ExArr,'first');
@@ -25,17 +27,20 @@ function runInterface(){
         newRecord.push(record2);
         //newRecord.push(record3);
         newRecord.inputRandom(10);
-        newRecord.draw(ctx);
+        tree.push(newRecord);
         var Ex2Array = new SymArray(450,150,3,1,newArray1,'second');
         Ex2Array.inputRandom(100);
-        Ex2Array.draw(ctx);
+        tree.push(Ex2Array);
         var Ex3Array = new SymArray(100,350,3,1,newRecord,'sec');
         Ex3Array.inputRandom(100);
-        Ex3Array.draw(ctx);
+        tree.push(Ex3Array);
         var ExArr4 = new SymVarName(100,200,150,'boolean','1');
         var newArray4 = new SymArray(100,500,4,2,ExArr4,'fourth');
         newArray4.inputRandom(2);
-        newArray4.draw(ctx);
+        tree.push(newArray4);
+        tree.draw(ctx);
+        var find = tree.findByPos([105,105]);
+        alert(find.name);
     });
 
     $('#stop, #new, #reset').click(function(){
