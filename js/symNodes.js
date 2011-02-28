@@ -1,22 +1,31 @@
 VariableTree = new Class({
-   initialize: function(){
-        this.treeVar = new Array();
+    initialize: function(){
+        this.treeVar = [];
     },
-    treeVar : null,
-    draw : function(ctx) {
+    treeVar: null,
+    varMove: null,
+    flagMove: false,
+    draw: function(ctx) {
+        DrawForVis(ctx).back("#7cb7e3","#cccccc",canvas.width,canvas.height);
         for (var i = 0; i < this.treeVar.length; i++)
             this.treeVar[i].draw(ctx);
     },
-    push : function (item) {
+    push: function (item) {
         this.treeVar.push(item);
     },
-    findByPos : function(pos) {
+    findByPos: function(pos) {
         for (var k = this.treeVar.length - 1; k >= 0; k--) {
             var findSymbol = this.treeVar[k].findVar(pos);
-            if (findSymbol != -1) return findSymbol;
+            if (findSymbol != -1) {
+            	var index = this.treeVar.length - 1;
+                var a = this.treeVar[index];
+                this.treeVar[index] = this.treeVar[k];
+                this.treeVar[k] = a;
+                return findSymbol;
+            }
         }
         return -1;
-    },
+    }
 });
 
 Symbol = new Class({
@@ -57,13 +66,11 @@ Symbol = new Class({
 
 SymVar = new Class({
     Extends: Symbol,
-    initialize: function (v,pX,pY,cVar,cR){
-        with(this){
-            parent(pX,pY);
-            val = v;
-            colVar = cVar;
-            rVar = cR;
-        }
+    initialize: function (val, pX, pY, colVar, rVar){
+        this.parent(pX, pY);
+        this.val = val;
+        this.colVar = colVar;
+        this.rVar = rVar;
     },
     val : 0,
     colVar : 0,
@@ -83,48 +90,47 @@ SymVar = new Class({
     getColVar : function(){
         return this.colVar;
     },
-	inputRandom : function (maxValue){
-	    this.val = Math.floor(Math.random()*maxValue);
+	inputRandom : function(maxValue){
+	    this.val = Math.floor(Math.random() * maxValue);
 	},
     clone : function(){
-        return new SymVar(this.val,this.posX,this.posY,this.colVar,this.rVar);
+        return new SymVar(this.val, this.posX, this.posY, this.colVar, this.rVar);
     },
     draw : function(ctx){
-        with(this){
-            DrawForVis(ctx).ball(posX,posY,rVar,colVar);
-            if (val != '') DrawForVis(ctx).text(val,posX,posY,rVar,0,type);
-        }
+        DrawForVis(ctx).ball(this.posX, this.posY, this.rVar, this.colVar);
+        if (this.val == '') return;
+        DrawForVis(ctx).text(this.val, this.posX, this.posY, this.rVar, 0, this.type);
     },
     findVar : function(pos){
         var x = pos[0];
         var y = pos[1];
-        if (((x - this.getPosX())*(x - this.getPosX()) + (y - this.getPosY())*(y - this.getPosY())) <= 1.5*this.rVar*this.rVar)
+        if (Math.pow(x - this.getPosX(), 2) + Math.pow(y - this.getPosY(), 2) <= 1.5 * Math.pow(this.rVar, 2))
             return this;
         return -1;
+    },
+    changePos : function(pos) {
+        this.posX = pos[0];
+        this.posY = pos[1];
     }
 });
 
 SymVarName = new Class({
     Extends: SymVar,
-    initialize: function (v,pX,pY,type,nameV){
-        var cR = 15, cVar = 'pink';
-        if (type == 'int') {
-            cR = 20;
-            cVar = 'green';
-        }
-        else if (type == 'real') {
-            cR = 25;
-            cVar = 'red';
-        }
-        else if (type == 'record') {
-            cR = 20;
-            cVar = 'grey';
-        }
-        else if (type == 'boolean') {
-            cR = 15;
-            cVar = 'blue';
-        }
-        this.parent(v,pX,pY,cVar,cR);
+    initialize: function (v, pX, pY, type, nameV) {
+    	var colorAndRadius = function(color, radius) {
+    		this.color = color;
+    		this.radius = radius;
+    	}
+    	var typeAndValue = {
+    	    'int': new colorAndRadius('green', 20),
+    	    'real': new colorAndRadius('red', 25),
+    	    'record': new colorAndRadius('grey', 20),
+    	    'boolean': new colorAndRadius('blue', 15),
+    	    'char': new colorAndRadius('pink', 15),
+    	    'array': new colorAndRadius('black', 20)
+    	}
+    	var t = typeAndValue[type];
+        this.parent(v, pX, pY, t.color, t.radius);
         this.name = nameV;
         this.type = type;
     },
@@ -133,19 +139,19 @@ SymVarName = new Class({
     getName : function(){
         return this.name;
     },
-    setName : function(n){
-        this.name = n;
+    setName : function(name){
+        this.name = name;
     },
     inputRandom : function (maxValue){
-        if (this.type == 'char') this.val = "'" + String.fromCharCode(48 + Math.floor(Math.random()*80)) + "'";
-	    else if (this.type == 'boolean') {
-	        if (Math.floor(Math.random()*maxValue) == 0) this.val = 'F';
-	        else this.val = 'T'
-	    }
-	    else this.val = Math.floor(Math.random()*maxValue);
+        if (this.type == 'char')
+        	this.val = "'" + String.fromCharCode(48 + Math.floor(Math.random() * 80)) + "'";
+	    else if (this.type == 'boolean')
+	    	this.val = Math.round(Math.random()) == 0 ? 'F' : 'T';
+	    else
+	    	this.val = Math.floor(Math.random() * maxValue);
 	},
     clone : function(){
-        var element = new SymVarName(this.val,this.posX,this.posY,this.type,this.name);
+        var element = new SymVarName(this.val, this.posX, this.posY, this.type, this.name);
         element.owner = this.owner;
         return element;
     },
@@ -232,11 +238,21 @@ SymArray = new Class({
     findVar : function (pos) {
         var find = this.parent(pos);
         if (find != -1) return this;
-        for (var k = 1; k <= this.sizeElement; k++) {
+        for (var k = 0; k <= this.sizeElement; k++) {
             find = this.itemsElement[k].findVar(pos);
             if (find != -1) return find;
         }
         return -1;
+    },
+    changePos : function(pos) {
+        var dx = this.posX- pos[0];
+        var dy = this.posY - pos[1];
+        for (var i = 0; i <= this.sizeElement; i++) {
+            this.itemsElement[i].setPosX(this.itemsElement[i].posX - dx);
+            this.itemsElement[i].setPosY(this.itemsElement[i].posY - dy);
+        }
+        this.posX = pos[0];
+        this.posY = pos[1];
     }
 })
 
@@ -323,10 +339,20 @@ SymRecord = new Class({
     findVar : function (pos) {
         var find = this.parent(pos);
         if (find != -1) return this;
-        for (var k = 1; k < this.sizeElement; k++) {
+        for (var k = 0; k < this.sizeElement; k++) {
             find = this.itemsElement[k].findVar(pos);
             if (find != -1) return find;
         }
         return -1;
+    },
+    changePos : function(pos){
+        var dx = this.posX - pos[0];
+        var dy = this.posY - pos[1];
+        this.posX = pos[0];
+        this.posY = pos[1];
+        for(var i = 0; i < this.sizeElement; i++){
+            this.itemsElement[i].setPosY(this.itemsElement[i].posY - dy);
+            this.itemsElement[i].setPosX(this.itemsElement[i].posX - dx);
+        }
     }
 })

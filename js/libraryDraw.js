@@ -195,7 +195,8 @@ var DrawForVis = function(ctx){
 
         connect : function(xBeg,yBeg,xEnd,yEnd,r,col){
             var rr = Math.sqrt((xBeg-xEnd)*(xBeg-xEnd)+(yBeg-yEnd)*(yBeg-yEnd));
-            alpha = Math.atan((xBeg-xEnd)/(yBeg-yEnd));
+            if ((yBeg-yEnd) == 0) alpha = -Math.PI/2;
+            else alpha = Math.atan((xBeg-xEnd)/(yBeg-yEnd));
             if ((yBeg-yEnd)>0){
                 alpha = Math.PI+alpha;
             }

@@ -18,6 +18,7 @@ function runInterface(){
 		newArray.inputRandom(100);
 		var newArray1 = new SymArray(100,250,3,1,ExArr1,'max');
 		newArray1.inputRandom(100);
+		tree.push(newArray1);
         var record1 = new SymVarName('9',0,0,'real','r1');
         var record2 = new SymVarName('99',0,0,'int','r2');
         var record3 = new SymVarName('999',0,0,'char','r3');
@@ -30,7 +31,7 @@ function runInterface(){
         tree.push(newRecord);
         var Ex2Array = new SymArray(450,150,3,1,newArray1,'second');
         Ex2Array.inputRandom(100);
-        tree.push(Ex2Array);
+        //tree.push(Ex2Array);
         var Ex3Array = new SymArray(100,350,3,1,newRecord,'sec');
         Ex3Array.inputRandom(100);
         tree.push(Ex3Array);
@@ -40,17 +41,38 @@ function runInterface(){
         tree.push(newArray4);
         tree.draw(ctx);
         var find = tree.findByPos([105,105]);
-        alert(find.name);
     });
 
     $('#stop, #new, #reset').click(function(){
         initApplication();
     });
+
+    $("#canvas").mousedown(function(event){
+        var x = event.pageX - $("#wCanvas").offset().left;
+        var y = event.pageY - $("#wCanvas").offset().top;
+        tree.varMove = tree.findByPos([x,y]);
+        if (tree.varMove != -1) {
+            tree.flagMove = true;
+        }
+    });
+
+    $("#canvas").mousemove(function(event) {
+        var x = event.pageX - $("#wCanvas").offset().left;
+        var y = event.pageY - $("#wCanvas").offset().top;
+        if (tree.flagMove) {
+	        tree.varMove.changePos(new Array(x,y));
+	        tree.draw(ctx);
+	    }
+    });
+
+    $("#canvas").mouseup(function(event) {
+        tree.flagMove = false;
+    });
 }
 
 function initApplication(){
     var canvas;
-    canvas = document.getElementById("firstStep");
+    canvas = document.getElementById("canvas");
     if(canvas.getContext){
         ctx = canvas.getContext("2d");
         canvas.width = document.body.offsetWidth*2/3;
