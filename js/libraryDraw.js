@@ -1,13 +1,13 @@
-var DrawForVis = function(ctx){
+var DrawForVis = function(ctx) {
 
-    var radialGradient = function(x0,y0,r,col,pos){
+    var radialGradient = function(x0,y0,r,col,pos) {
         var gradient = ctx.createRadialGradient(x0+r/4,y0-r*1/3,r/15,x0,y0,r);
         gradient.addColorStop(0,'#ffffff');
         gradient.addColorStop(pos,col);
         ctx.fillStyle = gradient;
     }
 
-    var linearGradient = function(col1,col2,w,w1,h){
+    var linearGradient = function(col1,col2,w,w1,h) {
         var gradient = ctx.createLinearGradient(w1,0,0,h);
         gradient.addColorStop(0,col1);
         gradient.addColorStop(1,col2);
@@ -15,16 +15,16 @@ var DrawForVis = function(ctx){
         ctx.fillRect(0,0,w,h);
     }
 
-    var colorBall = function (x0,y0,r,col){
+    var colorBall = function (x0,y0,r,col) {
         radialGradient(x0,y0,r,col,0.85)
         ctx.strokeStyle = col;
     }
 
-    var colorText = function (x0,y0,r,col){
+    var colorText = function (x0,y0,r,col) {
 	    radialGradient(x0,y0,r,col,0.42)
     }
 
-    var backFlag = function(col1,col2,w,h){
+    var backFlag = function(col1,col2,w,h) {
         ctx.save();
         linearGradient(col1,col2,w,w/2,h);
         ctx.restore();
@@ -37,13 +37,13 @@ var DrawForVis = function(ctx){
         ctx.fillStyle = gradient;
     }
 
-    var spring = function(x0,y0,r,n,col,alpha){
+    var spring = function(x0,y0,r,n,col,alpha) {
         ctx.save();
         ctx.translate(x0,y0);
         ctx.rotate(alpha);
         ctx.beginPath();
         ctx.moveTo(0,0);
-        for (var k = 1; k < n; k++){
+        for (var k = 1; k < n; k++) {
             ctx.quadraticCurveTo(r,k*r+2/3*r,r,k*r-r/2);
             ctx.quadraticCurveTo(r,k*r-2/3*r,0,k*r);
         }
@@ -51,26 +51,26 @@ var DrawForVis = function(ctx){
         ctx.stroke();
     }
 
-    var radians = function(alpha){
+    var radians = function(alpha) {
         return alpha*Math.PI/180;
     }
 
-    var MathCalculations = function(x0,y0,alpha1,alpha2,r){
+    var MathCalculations = function(x0,y0,alpha1,alpha2,r) {
         this.x = x0 + Math.cos(alpha1)*r;
         this.y = y0 + Math.sin(alpha1)*r;
         this.dx = x0 + Math.cos(alpha2)*r/2;
         this.dy = y0 + Math.sin(alpha2)*r/2;
     }
 
-    return{
+    return {
 
-        back : function(col1,col2,w,h){
+        back: function(col1,col2,w,h) {
             ctx.save();
             linearGradient(col1,col2,w,0,h)
             ctx.restore();
         },
 
-        ball : function(x0,y0,r,col){
+        ball: function(x0,y0,r,col) {
             ctx.save();
             ctx.beginPath();
             colorBall(x0,y0,r,col); //создаем градиент для закраски шарика
@@ -80,7 +80,7 @@ var DrawForVis = function(ctx){
             ctx.restore();
         },
 
-        halfBall : function(x0,y0,r,col){
+        halfBall: function(x0,y0,r,col) {
             ctx.save();
             colorBall(x0,y0,r,col);
             ctx.beginPath(); //передняя стенка
@@ -97,7 +97,7 @@ var DrawForVis = function(ctx){
             ctx.restore();
         },
 
-        alphaBall : function(x0,y0,r,col,alpha){
+        alphaBall: function(x0,y0,r,col,alpha) {
             ctx.save();
             colorBall(x0,y0,r,col);
             ctx.beginPath();
@@ -144,20 +144,20 @@ var DrawForVis = function(ctx){
             ctx.restore();
         },
 
-        text : function(val,x0,y0,r,alpha,type){
+        text: function(val,x0,y0,r,alpha,type) {
             ctx.save();
             ctx.translate(x0,y0);
             ctx.rotate(alpha);
             colorText(0,0,r,'#000');
 	        //размещение числового значения в шарике
 	        var stringVal = val.toString(10);
-	        if (stringVal.indexOf('.') >= 0){
+	        if (stringVal.indexOf('.') >= 0) {
 	            val = Math.ceil(val*10)/10;
 		        stringVal = val.toString(10);
 	        }
 	        if (type == 'real' && stringVal.indexOf('.') < 0) stringVal += '.0';
 	        var lengthVal = stringVal.length;
-	        if (lengthVal > 5){
+	        if (lengthVal > 5) {
 	            stringVal = stringVal.substring(0,5);
 	            lengthVal = 5;
 	        }
@@ -169,9 +169,9 @@ var DrawForVis = function(ctx){
             ctx.restore();
         },
 
-        flag : function(x0,y0,rSpring,n,col,name,rFont,alpha){
+        flag: function(x0,y0,rSpring,n,col,name,rFont,alpha) {
             spring(x0,y0,rSpring,n,col,alpha);
-            if (name.length > 5){
+            if (name.length > 5) {
                 name = name.substring(0,5);
                 name = name+'~';
             }
@@ -187,24 +187,24 @@ var DrawForVis = function(ctx){
             ctx.restore();
         },
 
-        union : function(x0,y0,r,n,col,alpha){
+        union: function(x0,y0,r,n,col,alpha) {
             spring(x0,y0,r,n,col,alpha);
             ctx.closePath();
             ctx.restore();
         },
 
-        connect : function(xBeg,yBeg,xEnd,yEnd,r,col){
+        connect: function(xBeg,yBeg,xEnd,yEnd,r,col) {
             var rr = Math.sqrt((xBeg-xEnd)*(xBeg-xEnd)+(yBeg-yEnd)*(yBeg-yEnd));
             if ((yBeg-yEnd) == 0) alpha = -Math.PI/2;
             else alpha = Math.atan((xBeg-xEnd)/(yBeg-yEnd));
-            if ((yBeg-yEnd)>0){
+            if ((yBeg-yEnd)>0) {
                 alpha = Math.PI+alpha;
             }
             n = Math.ceil(rr/(1*r));
             this.union(xBeg,yBeg,r,n,col,-alpha);
         },
 
-        hat : function(x0,y0,r,col,val){
+        hat: function(x0,y0,r,col,val) {
             ctx.save();
             //исправить на градиент
             colorText(x0-r/2,y0-r/4,r*2,col);
@@ -221,8 +221,7 @@ var DrawForVis = function(ctx){
             if (val.length == 1) {
                 ctx.font = r/4*3 + 'px Arial';
                 ctx.fillText(val,-r/8,-r*0.7);
-            }
-            else {
+            } else {
                 ctx.font = r/3*2 + 'px Arial';
                 ctx.fillText(val,-r/3,-r*0.7);
             }
@@ -230,7 +229,7 @@ var DrawForVis = function(ctx){
             ctx.restore();
         },
 
-        hatRecord : function(x0,y0,r,col,val,alpha){
+        hatRecord: function(x0,y0,r,col,val,alpha) {
             ctx.save();
             ctx.translate(x0-r*Math.sin(alpha)/2,y0+r*Math.cos(alpha)/2);
             ctx.rotate(alpha);
@@ -245,15 +244,13 @@ var DrawForVis = function(ctx){
             ctx.closePath();
             ctx.rotate(Math.PI);
             ctx.fillStyle = 'black';
-            if(val.length > 5){
-                val = val.substr(0,4) + '~';
-            }
+            if(val.length > 5) val = val.substr(0,4) + '~';
             ctx.font = r*3/4 + 'px Arial';
             ctx.fillText(val,-r,0);
 	        ctx.restore();
         },
 
-        record : function(x0,y0,r,col,val){
+        record: function(x0,y0,r,col,val) {
             ctx.save();
             if (typeof(val) == 'number') val = val.toString(10);
             var h = val.length*r/6;
@@ -293,5 +290,4 @@ var DrawForVis = function(ctx){
             ctx.restore();
         }
     };
-
 }

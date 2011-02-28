@@ -1,14 +1,14 @@
 var ctx;
 var tree;
 
-$(function(){
+$(function() {
     initApplication();
     runInterface();
 });
 
 //for example
-function runInterface(){
-    $('#playMenu, #play').click(function(){
+function runInterface() {
+    $('#playMenu, #play').click(function() {
         tree = new VariableTree();
         var ballName = new SymVarName('999',100,100,'int','max');
         tree.push(ballName);
@@ -43,11 +43,11 @@ function runInterface(){
         var find = tree.findByPos([105,105]);
     });
 
-    $('#stop, #new, #reset').click(function(){
+    $('#stop, #new, #reset').click(function() {
         initApplication();
     });
 
-    $("#canvas").mousedown(function(event){
+    $("#canvas").mousedown(function(event) {
         var x = event.pageX - $("#wCanvas").offset().left;
         var y = event.pageY - $("#wCanvas").offset().top;
         tree.varMove = tree.findByPos([x,y]);
@@ -70,10 +70,10 @@ function runInterface(){
     });
 }
 
-function initApplication(){
+function initApplication() {
     var canvas;
     canvas = document.getElementById("canvas");
-    if(canvas.getContext){
+    if(canvas.getContext) {
         ctx = canvas.getContext("2d");
         canvas.width = document.body.offsetWidth*2/3;
         canvas.height = document.body.offsetHeight/10*9;
