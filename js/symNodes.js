@@ -245,7 +245,7 @@ SymArray = new Class({
         return -1;
     },
     changePos: function(pos) {
-        var dx = this.posX- pos[0];
+        var dx = this.posX - pos[0];
         var dy = this.posY - pos[1];
         for (var i = 0; i <= this.sizeElement; i++) {
             this.itemsElement[i].setPosX(this.itemsElement[i].posX - dx);
@@ -265,14 +265,6 @@ SymRecord = new Class({
     },
     sizeElement: 0,
     itemsElement: null,
-    clone : function() {
-        var rec =  new SymVarRecord(this.val,this.posX,this.posY,this.type,this.name);
-        for (var i = 0; i < this.sizeElement; i++) {
-            var sVar = this.itemsElement[i].clone();
-            rec.push(sVar);
-        }
-        return rec;
-    },
     getItemProperty: function(number) {
         var itemProperty = new Array();
         with(this) {
@@ -285,9 +277,8 @@ SymRecord = new Class({
     },
     push: function(vItem) {
         with(this) {
-            for(var i = 0; i < sizeElement; i++) {
+            for(var i = 0; i < sizeElement; i++)
                 if (itemsElement[i].getName().toLowerCase() == vItem.getName().toLowerCase()) return -1;
-            }
             vItem.owner = 'record';
             itemsElement.push(vItem);
             sizeElement+=1;
