@@ -73,16 +73,16 @@ SymVar = new Class({
             DrawForVis(ctx).text(this.val,getAdjustedX(this.posX),getAdjustedY(this.posY),getAdjustedR(this.rVar),0,this.type);
 	    }
     },
-    findVar: function(pos) {
-        var x = pos[0];
-        var y = pos[1];
+    findVar: function(pos,tools) {
+        var x = pos[0]/tools.scale - tools.left;
+        var y = pos[1]/tools.scale - tools.top;
         if (Math.pow(x - this.getPosX(), 2) + Math.pow(y - this.getPosY(), 2) <= 1.5 * Math.pow(this.rVar, 2))
             return this;
         return -1;
     },
-    changePos: function(pos) {
-        this.posX = pos[0];
-        this.posY = pos[1];
+    changePos: function(pos,tools) {
+        this.posX = pos[0]/tools.scale - tools.left;
+	    this.posY = pos[1]/tools.scale - tools.top;
     }
 });
 
@@ -210,24 +210,24 @@ SymArray = new Class({
             this.itemsElement[i].inputRandom(maxValue);
         }
     },
-    findVar: function(pos) {
-        var find = this.parent(pos);
+    findVar: function(pos,tools) {
+        var find = this.parent(pos,tools);
         if (find != -1) return this;
         for (var k = 0; k <= this.sizeElement; k++) {
-            find = this.itemsElement[k].findVar(pos);
+            find = this.itemsElement[k].findVar(pos,tools);
             if (find != -1) return find;
         }
         return -1;
     },
-    changePos: function(pos) {
-        var dx = this.posX - pos[0];
-        var dy = this.posY - pos[1];
+    changePos: function(pos,tools) {
+        var dx =-this.itemsElement[0].getPosX()+pos[0]/tools.scale-tools.left;;
+        var dy =-this.itemsElement[0].getPosY()+pos[1]/tools.scale-tools.top;
         for (var i = 0; i <= this.sizeElement; i++) {
-            this.itemsElement[i].setPosX(this.itemsElement[i].posX - dx);
-            this.itemsElement[i].setPosY(this.itemsElement[i].posY - dy);
+            this.itemsElement[i].setPosX(this.itemsElement[i].posX + dx);
+            this.itemsElement[i].setPosY(this.itemsElement[i].posY + dy);
         }
-        this.posX = pos[0];
-        this.posY = pos[1];
+        this.posX = this.itemsElement[0].posX;
+        this.posY = this.itemsElement[0].posY;
     }
 })
 
@@ -302,23 +302,23 @@ SymRecord = new Class({
         for(var i = 0; i < this.sizeElement; i++)
             this.itemsElement[i].inputRandom(maxValue);
     },
-    findVar: function (pos) {
-        var find = this.parent(pos);
+    findVar: function(pos,tools) {
+        var find = this.parent(pos,tools);
         if (find != -1) return this;
         for (var k = 0; k < this.sizeElement; k++) {
-            find = this.itemsElement[k].findVar(pos);
+            find = this.itemsElement[k].findVar(pos,tools);
             if (find != -1) return find;
         }
         return -1;
     },
-    changePos: function(pos) {
-        var dx = this.posX - pos[0];
-        var dy = this.posY - pos[1];
-        this.posX = pos[0];
-        this.posY = pos[1];
+    changePos: function(pos,tools) {
+        var x = this.posX;
+		var y = this.posY;
+        this.posX = pos[0]/tools.scale-tools.left;
+        this.posY = pos[1]/tools.scale-tools.top;
         for(var i = 0; i < this.sizeElement; i++) {
-            this.itemsElement[i].setPosY(this.itemsElement[i].posY - dy);
-            this.itemsElement[i].setPosX(this.itemsElement[i].posX - dx);
+            this.itemsElement[i].setPosY(this.itemsElement[i].posY - y + this.posY);
+            this.itemsElement[i].setPosX(this.itemsElement[i].posX - x + this.posX);
         }
     }
 })

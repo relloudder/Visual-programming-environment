@@ -7,9 +7,6 @@ $(function() {
 
 function runInterface() {
     $('#playMenu, #play').click(function() {
-        app.tools.scale = 0.75;
-        app.tools.left = 100;
-        app.tools.top = 100;
         var ballName = new SymVarName('999',100,100,'int','max');
         app.tree.push(ballName);
         var ExArr = new SymVarName(100,200,150,'char','1');
@@ -45,10 +42,20 @@ function runInterface() {
         initApplication();
     });
 
+    $('#zoomIn').click(function() {
+        app.tools.scale += 0.01;
+        app.tree.draw(app.ctx);
+    });
+
+    $('#zoomOut').click(function() {
+        app.tools.scale -= 0.01;
+        app.tree.draw(app.ctx);
+    });
+
     $("#canvas").mousedown(function(event) {
         var x = event.pageX - $("#wCanvas").offset().left;
         var y = event.pageY - $("#wCanvas").offset().top;
-        app.tree.varMove = app.tree.findByPos([x,y]);
+        app.tree.varMove = app.tree.findByPos([x,y],app.tools);
         if (app.tree.varMove != -1) {
             app.tree.flagMove = true;
         }
@@ -58,7 +65,7 @@ function runInterface() {
         var x = event.pageX - $("#wCanvas").offset().left;
         var y = event.pageY - $("#wCanvas").offset().top;
         if (app.tree.flagMove) {
-	        app.tree.varMove.changePos(new Array(x,y));
+	        app.tree.varMove.changePos(new Array(x,y),app.tools);
 	        app.tree.draw(app.ctx);
 	    }
     });

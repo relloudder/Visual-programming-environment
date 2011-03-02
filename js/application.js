@@ -13,9 +13,9 @@ VariableTree = new Class({
     push: function(item) {
         this.treeVar.push(item);
     },
-    findByPos: function(pos) {
+    findByPos: function(pos,tools) {
         for (var k = this.treeVar.length - 1; k >= 0; k--) {
-            var findSymbol = this.treeVar[k].findVar(pos);
+            var findSymbol = this.treeVar[k].findVar(pos,tools);
             if (findSymbol != -1) {
             	var index = this.treeVar.length - 1;
                 var a = this.treeVar[index];
