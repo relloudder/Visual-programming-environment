@@ -1,4 +1,4 @@
-var app;
+var app, xOld = 0, yOld = 0;
 
 $(function() {
     initApplication();
@@ -56,22 +56,36 @@ function runInterface() {
         var x = event.pageX - $("#wCanvas").offset().left;
         var y = event.pageY - $("#wCanvas").offset().top;
         app.tree.varMove = app.tree.findByPos([x,y],app.tools);
-        if (app.tree.varMove != -1) {
-            app.tree.flagMove = true;
-        }
+        if (app.tree.varMove != -1)
+            app.flagMove = true;
+        if(app.move) app.flagCanvasMove = true;
+        xOld = x;
+        yOld = y;
     });
 
     $("#canvas").mousemove(function(event) {
         var x = event.pageX - $("#wCanvas").offset().left;
         var y = event.pageY - $("#wCanvas").offset().top;
-        if (app.tree.flagMove) {
+        if (app.flagCanvasMove){
+            app.tools.setTop(app.tools.getTop() - (yOld - y)/app.tools.getScale());
+            app.tools.setLeft(app.tools.getLeft() - (xOld - x)/app.tools.getScale());
+            app.tree.draw(app.ctx);
+        } else
+        if (app.flagMove) {
 	        app.tree.varMove.changePos(new Array(x,y),app.tools);
 	        app.tree.draw(app.ctx);
 	    }
+	    xOld = x;
+	    yOld = y;
     });
 
     $("#canvas").mouseup(function(event) {
-        app.tree.flagMove = false;
+        app.flagMove = false;
+        app.flagCanvasMove = false;
+    });
+
+    $("#hand").click(function() {
+        app.move = !app.move;
     });
 }
 

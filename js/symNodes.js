@@ -129,12 +129,12 @@ SymVarName = new Class({
     },
     draw: function(ctx) {
         with(app.tools) {
-            DrawForVis(ctx).ball(getAdjustedX(this.posX),getAdjustedX(this.posY),getAdjustedR(this.rVar),this.colVar);
-            DrawForVis(ctx).text(this.val,getAdjustedX(this.posX),getAdjustedX(this.posY),getAdjustedR(this.rVar),0,this.type);
+            DrawForVis(ctx).ball(getAdjustedX(this.posX),getAdjustedY(this.posY),getAdjustedR(this.rVar),this.colVar);
+            DrawForVis(ctx).text(this.val,getAdjustedX(this.posX),getAdjustedY(this.posY),getAdjustedR(this.rVar),0,this.type);
             if (this.owner == 'array')
                 DrawForVis(ctx).hat(getAdjustedX(this.posX),getAdjustedY(this.posY-2.25*this.rVar),getAdjustedR(this.rVar),'yellow',this.name);
             else if (this.owner == 'record')
-                DrawForVis(ctx).hatRecord(getAdjustedX(this.posX),getAdjustedX(this.posY),getAdjustedR(this.rVar),
+                DrawForVis(ctx).hatRecord(getAdjustedX(this.posX),getAdjustedY(this.posY),getAdjustedR(this.rVar),
                     this.colVar,this.name,this.turn);
             else DrawForVis(ctx).flag(getAdjustedX(this.posX-this.rVar),getAdjustedY(this.posY-4),4,6,this.colVar,
                 this.name,getAdjustedR(this.rVar),155*Math.PI/180);
@@ -195,7 +195,7 @@ SymArray = new Class({
         with(this)with(app.tools) {
 	        for(var i = sizeElement-1; i >= 0; i--) {
 			    DrawForVis(ctx).connect(getAdjustedX(itemsElement[i+1].posX),getAdjustedY(itemsElement[i+1].posY),
-			        getAdjustedX(itemsElement[i].posX),getAdjustedX(itemsElement[i].posY),getAdjustedR(rVar/5),'yellow');
+			        getAdjustedX(itemsElement[i].posX),getAdjustedY(itemsElement[i].posY),getAdjustedR(rVar/5),'yellow');
 			}
 		    for(var i = sizeElement; i >= 0; i--) {
 		       itemsElement[i].draw(ctx);

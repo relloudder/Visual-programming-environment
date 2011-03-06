@@ -4,7 +4,6 @@ VariableTree = new Class({
     },
     treeVar: null,
     varMove: null,
-    flagMove: false,
     draw: function(ctx) {
         DrawForVis(ctx).back("#7cb7e3","#cccccc",canvas.width,canvas.height);
         for (var i = 0; i < this.treeVar.length; i++)
@@ -74,6 +73,9 @@ Application = new Class({
         this.height = height;
         this.ctx = ctx;
     },
+    flagMove: false,
+    flagCanvasMove: false,
+    move: false,
     tree: null,
     tools: null,
     width: 0,
