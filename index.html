@@ -9,6 +9,8 @@
     <script type="text/javascript" src="js/symNodes.js"></script>
 	<script type="text/javascript" src="js/main.js"></script>
 	<script type="text/javascript" src="js/application.js"></script>
+	<script type="text/javascript" src="js/lexicalAnalyzer.js"></script>
+	<script type="text/javascript" src="js/scanner.js"></script>
 </head>
 
 <body>
@@ -123,7 +125,10 @@
 
     <div style="float:none; clear:both;"></div>
     <div id="wCanvas"><canvas id="canvas"></canvas></div>
-    <div id="code"><textarea cols=30 rows=40></textarea></div>
+    <div id="code">
+        <textarea cols=30 rows=40 id="programPanel"></textarea>
+        <input type="text" id="errorPanel" value="">
+    </div>
 
 </body>
 </html>

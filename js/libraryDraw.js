@@ -171,7 +171,7 @@ var DrawForVis = function(ctx) {
 
         flag: function(x0,y0,rSpring,n,col,name,rFont,alpha) {
             spring(x0,y0,rSpring,n,col,alpha);
-            if (name.length > 5) {
+            if (name.length > 6) {
                 name = name.substring(0,5);
                 name = name+'~';
             }
