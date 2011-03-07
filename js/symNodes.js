@@ -88,7 +88,7 @@ SymVar = new Class({
 
 SymVarName = new Class({
     Extends: SymVar,
-    initialize: function (v, pX, pY, type, nameV) {
+    initialize: function (v,pX,pY,type,nameV) {
     	var colorAndRadius = function(color, radius) {
     		this.color = color;
     		this.radius = radius;
@@ -102,7 +102,7 @@ SymVarName = new Class({
     	    'array': new colorAndRadius('black', 20)
     	}
     	var t = typeAndValue[type];
-        this.parent(v, pX, pY, t.color, t.radius);
+        this.parent(v,pX,pY,t.color,t.radius);
         this.name = nameV;
         this.type = type;
     },

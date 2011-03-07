@@ -89,7 +89,7 @@ LexicalAnalyzer = new Class({
         this.currentLexeme = Scanner.next(this.currentLexeme.nextLexemePos);
         if(this.currentLexeme.name.toLowerCase() != 'of') 
             this.exception.error('except of ',this.currentLexeme); 
-        return new SymArr(0,0,(bounder[1]-bounder[0]),this.getType(),'',bounder[0]*1);	
+        return new SymArray(0,0,(bounder[1]-bounder[0]),bounder[0]*1,this.getType(),'');
     },
     getBounders: function() {
         var pos = this.currentLexeme.nextLexemePos;
@@ -110,7 +110,7 @@ LexicalAnalyzer = new Class({
         return [low,hi];
     },
     getDeclarationRecord: function() {
-        var rec = new SymVarRecord(0,0,0,'record','');
+        var rec = new SymRecord(0,0,'record','');
         this.currentLexeme = Scanner.next(this.currentLexeme.nextLexemePos);
         while (this.currentLexeme.name.toLowerCase() != 'end')
             this.getDeclaration(rec);

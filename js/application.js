@@ -24,6 +24,20 @@ VariableTree = new Class({
             }
         }
         return -1;
+    },
+    treeLocation: function(width,height) {
+        var length = this.treeVar.length;
+        if(length/2 != Math.ceil(length/2)) length++;
+        var sizeX = width/4, sizeY = height/length*2;
+        var k = 0;
+        for(var i = 0; i < 2; i++)
+            for(var j = 0; j < length/2; j++) {
+                this.treeVar[k].setPosX(i*sizeX + sizeX - Math.random()*sizeX/2);
+                this.treeVar[k].setPosY(j*sizeY + sizeY - Math.random()*sizeY/2);
+                this.treeVar[k].inputRandom(10);
+                k++;
+                if(k == this.treeVar.length) return;
+            }
     }
 });
 
