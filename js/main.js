@@ -20,12 +20,12 @@ function runInterface() {
         initApplication();
     });
 
-    $('#zoomIn').click(function() {
+    $('#zoomIn, #zoomInMenu').click(function() {
         app.tools.scale += 0.01;
         app.tree.draw(app.ctx);
     });
 
-    $('#zoomOut').click(function() {
+    $('#zoomOut, #zoomOutMenu').click(function() {
         app.tools.scale -= 0.01;
         app.tree.draw(app.ctx);
     });
@@ -62,7 +62,7 @@ function runInterface() {
         app.flagCanvasMove = false;
     });
 
-    $("#hand").click(function() {
+    $("#hand, #handMenu").click(function() {
         app.move = !app.move;
     });
 }
