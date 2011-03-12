@@ -64,6 +64,8 @@ function runInterface() {
 
     $("#hand, #handMenu").click(function() {
         app.move = !app.move;
+        if (app.move) $("#canvas").css("cursor","move");
+        else $("#canvas").css("cursor","default");
     });
 }
 
