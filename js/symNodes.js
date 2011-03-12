@@ -152,8 +152,9 @@ SymArray = new Class({
         this.turn = Math.PI/4; //для красоты
         this.itemsElement = new Array(); //для хранения каждого элемнта массива
         cloneItem.owner = 'array';
-        if (cloneItem instanceof SymArray)
-            this.turn = cloneItem.turn + Math.PI / 2;
+        if (cloneItem instanceof SymArray) {
+            this.turn = cloneItem.turn + Math.PI/1.2;
+        }
         for (var i = 0; i <= this.sizeElement; i++) {
 	        var x = this.posX + this.rVar*2.2*i; //положение каждого шарика по x
 		    var y = this.posY - i*this.rVar*Math.sin(this.turn);
@@ -178,7 +179,7 @@ SymArray = new Class({
         with(this) {
             posY = pY;
             for (var i = 0; i <= sizeElement; i++)
-                itemsElement[i].setPosY(posY + i*itemsElement[i].rVar*Math.sin(this.turn));
+                itemsElement[i].setPosY(posY + i*itemsElement[i].rVar*Math.sin(this.turn)*1.2);
         }
     },
     setName: function(name) {
@@ -188,6 +189,7 @@ SymArray = new Class({
     },
     clone: function() {
         var element = new SymArray(this.posX,this.posY,this.sizeElement,this.firstIndex,this.itemsElement[0],this.name);
+        element.turn = this.turn;
         element.owner = this.owner;
         return element;
     },
