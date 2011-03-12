@@ -36,7 +36,7 @@ Symbol = new Class({
 
 SymVar = new Class({
     Extends: Symbol,
-    initialize: function (val, pX, pY, colVar, rVar) {
+    initialize: function(val,pX,pY,colVar,rVar) {
         this.parent(pX, pY);
         this.val = val;
         this.colVar = colVar;

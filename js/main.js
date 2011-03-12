@@ -67,6 +67,18 @@ function runInterface() {
         if (app.move) $("#canvas").css("cursor","move");
         else $("#canvas").css("cursor","default");
     });
+
+    $("#move").click(function() {
+        var moveBall = new SymVarName(0,50,300,"int","move");
+        app.tree.push(moveBall);
+        var moveVisBall = new SymVarMove(0,50,300,"grey",20,300,300,1/90);
+        var	k = app.insertRowVis();
+        app.insertElementVis(k,moveVisBall);
+        var moveVisBall1 = new SymVarMove(0,50,300,"grey",20,50,300,1/90);
+        var	k = app.insertRowVis();
+        app.insertElementVis(k,moveVisBall1);
+        app.paint();
+    });
 }
 
 function initApplication() {
