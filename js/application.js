@@ -28,7 +28,7 @@ VariableTree = new Class({
     treeLocation: function(width,height) {
         var length = this.treeVar.length;
         if(length/2 != Math.ceil(length/2)) length++;
-        var sizeX = width/4, sizeY = height/length*2;
+        var sizeX = width/3, sizeY = height/length*2;
         var k = 0;
         for(var i = 0; i < 2; i++)
             for(var j = 0; j < length/2; j++) {

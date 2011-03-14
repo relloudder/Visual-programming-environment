@@ -44,7 +44,7 @@ function runInterface() {
     $("#canvas").mousemove(function(event) {
         var x = event.pageX - $("#wCanvas").offset().left;
         var y = event.pageY - $("#wCanvas").offset().top;
-        if (app.flagCanvasMove){
+        if (app.flagCanvasMove) {
             app.tools.setTop(app.tools.getTop() - (yOld - y)/app.tools.getScale());
             app.tools.setLeft(app.tools.getLeft() - (xOld - x)/app.tools.getScale());
             app.tree.draw(app.ctx);
@@ -71,10 +71,10 @@ function runInterface() {
     $("#move").click(function() {
         var moveBall = new SymVarName(0,50,300,"int","move");
         app.tree.push(moveBall);
-        var moveVisBall = new SymVarMove(0,50,300,"grey",20,300,300,1/90);
+        var moveVisBall = new SymVarMove(0,50,300,"grey",20,350,300,1/90);
         var	k = app.insertRowVis();
         app.insertElementVis(k,moveVisBall);
-        var moveVisBall1 = new SymVarMove(0,50,300,"grey",20,50,300,1/90);
+        var moveVisBall1 = new SymVarMove(0,50,300,"grey",20,50,300,1/80);
         var	k = app.insertRowVis();
         app.insertElementVis(k,moveVisBall1);
         app.paint();

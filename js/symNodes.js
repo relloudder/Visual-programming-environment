@@ -262,8 +262,8 @@ SymRecord = new Class({
             for(var i = 0; i < sizeElement; i++) {
                 var property = getItemProperty(i);
                 itemsElement[i].turn = property[0];
-                itemsElement[i].setPosY(property[2]);
                 itemsElement[i].setPosX(property[1]);
+                itemsElement[i].setPosY(property[2]);
             }
         }
     },

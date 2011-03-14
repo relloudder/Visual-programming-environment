@@ -5,7 +5,7 @@ Exception = new Class({
     },
     textProgram: null,
     errorProgram: null,
-    error: function(error, currentLexeme) {
+    error: function(error,currentLexeme) {
         this.textProgram.get(0).setSelectionRange(currentLexeme.currentLexemePos,currentLexeme.nextLexemePos);
         this.errorProgram.val(error);
         jQuery.error();
@@ -37,23 +37,22 @@ LexicalAnalyzer = new Class({
             var pos = this.currentLexeme.nextLexemePos;
             this.currentLexeme = Scanner.next(this.currentLexeme.nextLexemePos);
             if(this.currentLexeme.name == ':') break;
-            if(this.currentLexeme.name != ',') 
+            if(this.currentLexeme.name != ',')
                 this.exception.error('except , or :',this.currentLex);
             pos = this.currentLexeme.nextLexemePos;
             this.currentLexeme = Scanner.next(this.currentLexeme.nextLexemePos);
-            if(this.currentLexeme.type != 'Identifier')  
+            if(this.currentLexeme.type != 'Identifier')
                 this.exception.error('except identefier ',this.currentLexeme);
-        } 
-        if(this.currentLexeme.name != ':') 
+        }
+        if(this.currentLexeme.name != ':')
             this.exception.error('except :',this.currentLexeme);
         pos = this.currentLexeme.nextLexemePos;
         var typeLexeme = this.getType();
         for (var i = 0; i < tableVar.length; i++) {
             var curVar = typeLexeme.clone();
             curVar.name = tableVar[i];
-            if(treeVar.push(curVar) == -1) 
-                this.exception.error('duplicate name variable '+ curVar.name, this.currentLexeme);		
-
+            if(treeVar.push(curVar) == -1)
+                this.exception.error('duplicate name variable ' + curVar.name, this.currentLexeme);
         }
         pos = this.currentLexeme.nextLexemePos;
         this.currentLexeme = Scanner.next(this.currentLexeme.nextLexemePos);
@@ -106,9 +105,9 @@ LexicalAnalyzer = new Class({
         this.currentLexeme = Scanner.next(this.currentLexeme.nextLexemePos);
         if(this.currentLexeme.type != 'NumberInt')
             this.exception.error('must be INTEGER constant  ',this.currentLexeme);
-        var hi = this.currentLexeme.name;
+        var high = this.currentLexeme.name;
         this.currentLexeme = Scanner.next(this.currentLexeme.nextLexemePos);
-        return [low,hi];
+        return [low,high];
     },
     getDeclarationRecord: function() {
         var rec = new SymRecord(0,0,'record','');

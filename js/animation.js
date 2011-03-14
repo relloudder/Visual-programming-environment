@@ -14,7 +14,7 @@ SymVarModifiable = new Class ({
 SymVarMove = new Class ({
     Extends: SymVarModifiable,
     initialize: function(val,pX,pY,cVar,rVar,endX,endY,g) {
-        this.parent(val,pX,pY,cVar,rVar,40);
+        this.parent(val,pX,pY,cVar,rVar,60);
         this.aY = g; //acceleration
         this.aX = 0;
         this.vX = 0; //speed
@@ -29,11 +29,11 @@ SymVarMove = new Class ({
     vX: 0,
     draw: function(ctx,tools) {
         with(this) with(tools) {
+            var timerSpeed = 6;
             if(numberMove > 0) {
                 DrawForVis(ctx).ball(getAdjustedX(posX),getAdjustedY(posY),getAdjustedR(rVar),colVar);
                 DrawForVis(ctx).text(val,getAdjustedX(posX),getAdjustedY(posY),getAdjustedR(rVar),angle,'int');
                 numberMove--;
-                var timerSpeed = 6;
                 vY = vY - aY*timerSpeed;
                 var hy = -(vY*timerSpeed + aY*Math.pow(timerSpeed,2)/2);
                 vX = vX + aX*timerSpeed;
