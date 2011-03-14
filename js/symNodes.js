@@ -293,9 +293,12 @@ SymRecord = new Class({
     draw: function(ctx) {
         with(this)with(app.tools){
             DrawForVis(ctx).record(getAdjustedX(posX),getAdjustedY(posY),getAdjustedR(rVar/2.5),colVar,name);
+            var dx = rVar*2/sizeElement;
+            var x = posX + rVar - dx/2;
             for(var i = 0; i < sizeElement; i++) {
                 DrawForVis(ctx).connect(getAdjustedX(itemsElement[i].posX),getAdjustedY(itemsElement[i].posY),
-                    getAdjustedX(posX),getAdjustedY(posY-rVar/2),4,colVar);
+                    getAdjustedX(x),getAdjustedY(posY-rVar/2),4,colVar);
+                x-=dx;
                 itemsElement[i].draw(ctx);
             }
         }
