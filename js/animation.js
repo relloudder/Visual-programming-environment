@@ -80,7 +80,7 @@ SymVarSeparation = new Class ({
         with(this) {
             if(numberOfMerSep > 0) {
                 var angleChord = Math.atan(hYOfMerSep/hXOfMerSep);
-                if(hXOfMerSep < 0) angle += Math.PI;
+                if(hXOfMerSep < 0) angleChord += Math.PI;
                 DrawForVis(ctx).divBall(tools.getAdjustedX(from.posX),tools.getAdjustedY(from.posY),
                     tools.getAdjustedR(rVar),colVar,angle,angleChord,0);
                 DrawForVis(ctx).divBall(tools.getAdjustedX(posX),tools.getAdjustedY(posY),
@@ -104,4 +104,59 @@ SymVarSeparation = new Class ({
             else return 0;
         }
     }
+});
+
+SymVarMerge = new Class ({
+    Extends: SymVarInteraction,
+    initialize: function(from,to,g) {
+        this.parent(from,to,g);
+        var t = this.numberOfMove*6;
+        this.vY = -(to.posY - from.posY - this.aY*Math.pow(t,2)/2)/t;
+        this.vX = (to.posX - from.posX)/t;
+        //var v1 = this.vY + this.aY*t;
+        var angleOfSeparation;
+        if (this.vX == 0) angleOfSeparation = Math.PI/2;
+        else angleOfSeparation = Math.atan(this.vY/this.vX);
+        if(this.vX > 0) angleOfSeparation += Math.PI;
+        //finding place for ball's union
+        this.vY = -(to.posY + 2*this.rVar*Math.sin(angleOfSeparation) - from.posY - this.aY*Math.pow(t,2)/2)/t;
+        this.vX = (to.posX + 2*this.rVar*Math.cos(angleOfSeparation) - from.posX)/t;
+    },
+    createSymVar: function (ctx,tools) {
+        this.from.setVisible(false);
+        return 0;
+    },
+    deleteSymVar: function (ctx,tools) {
+    with(this) {
+        if (numberOfMerSep == 12) {
+            to.setVisible(false);
+            angleOfRotation = Math.PI/(2*numberOfMerSep);
+            var angleOfSeparation = Math.atan((to.posY - posY)/(to.posX - posX));
+            if((to.posX - posX) > 0) angleOfSeparation += Math.PI;
+            hXOfMerSep = 2*rVar*Math.cos(angleOfSeparation)/numberOfMerSep;
+            hYOfMerSep = 2*rVar*Math.sin(angleOfSeparation)/numberOfMerSep;
+            angle = 0;
+            numberOfMerSep--;
+            colVar = to.colVar;
+        }
+        if(numberOfMerSep > 0) {
+            var angleChord = Math.atan(hYOfMerSep/hXOfMerSep);
+            if(hXOfMerSep < 0) angleChord += Math.PI;
+            DrawForVis(ctx).divBall(tools.getAdjustedX(to.posX),tools.getAdjustedY(to.posY),
+                tools.getAdjustedR(rVar),colVar,angle,angleChord,0);
+            DrawForVis(ctx).divBall(tools.getAdjustedX(posX),tools.getAdjustedY(posY),
+                tools.getAdjustedR(rVar),colVar,angle,angleChord,Math.PI);
+            posX -= hXOfMerSep;
+            posY -= hYOfMerSep;
+            numberOfMerSep--;
+            angle -= angleOfRotation;
+            if(numberOfMerSep == 0) {
+                to.setVisible(true);
+                to.setValue(from.getValue());
+                return 0;
+            }
+            return 1;
+        }
+    }}
+
 });
