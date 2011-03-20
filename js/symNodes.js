@@ -10,7 +10,7 @@ Symbol = new Class({
     posX: 0,
     posY: 0,
     owner: '',
-    draw: function(ctx) {},
+    draw: function(ctx,tools) {},
     setVisible: function(vis) {
         this.visible = vis;
     },
@@ -66,12 +66,10 @@ SymVar = new Class({
     clone: function() {
         return new SymVar(this.val, this.posX, this.posY, this.colVar, this.rVar);
     },
-    draw: function(ctx) {
-        with(app.tools) {
-            DrawForVis(ctx).ball(getAdjustedX(this.posX),getAdjustedY(this.posY),getAdjustedR(this.rVar), this.colVar);
-            if (this.val == '') return;
-            DrawForVis(ctx).text(this.val,getAdjustedX(this.posX),getAdjustedY(this.posY),getAdjustedR(this.rVar),0,this.type);
-	    }
+    draw: function(ctx,tools) {
+        DrawForVis(ctx).ball(tools.getAdjustedX(this.posX),tools.getAdjustedY(this.posY),tools.getAdjustedR(this.rVar), this.colVar);
+        if (this.val == '') return;
+        DrawForVis(ctx).text(this.val,tools.getAdjustedX(this.posX),tools.getAdjustedY(this.posY),tools.getAdjustedR(this.rVar),0,this.type);
     },
     findVar: function(pos,tools) {
         var x = pos[0]/tools.scale - tools.left;
@@ -127,18 +125,17 @@ SymVarName = new Class({
         element.owner = this.owner;
         return element;
     },
-    draw: function(ctx) {
-        with(app.tools) {
-            DrawForVis(ctx).ball(getAdjustedX(this.posX),getAdjustedY(this.posY),getAdjustedR(this.rVar),this.colVar);
-            DrawForVis(ctx).text(this.val,getAdjustedX(this.posX),getAdjustedY(this.posY),getAdjustedR(this.rVar),0,this.type);
-            if (this.owner == 'array')
-                DrawForVis(ctx).hat(getAdjustedX(this.posX),getAdjustedY(this.posY-2.25*this.rVar),getAdjustedR(this.rVar),'yellow',this.name);
-            else if (this.owner == 'record')
-                DrawForVis(ctx).hatRecord(getAdjustedX(this.posX),getAdjustedY(this.posY),getAdjustedR(this.rVar),
-                    this.colVar,this.name,this.turn);
-            else DrawForVis(ctx).flag(getAdjustedX(this.posX-this.rVar),getAdjustedY(this.posY-4),4,6,this.colVar,
-                this.name,getAdjustedR(this.rVar),155*Math.PI/180);
-        }
+    draw: function(ctx,tools) {
+        DrawForVis(ctx).ball(tools.getAdjustedX(this.posX),tools.getAdjustedY(this.posY),tools.getAdjustedR(this.rVar),this.colVar);
+        DrawForVis(ctx).text(this.val,tools.getAdjustedX(this.posX),tools.getAdjustedY(this.posY),tools.getAdjustedR(this.rVar),0,this.type);
+        if (this.owner == 'array')
+            DrawForVis(ctx).hat(tools.getAdjustedX(this.posX),tools.getAdjustedY(this.posY-2.25*this.rVar),
+                tools.getAdjustedR(this.rVar),'yellow',this.name);
+        else if (this.owner == 'record')
+            DrawForVis(ctx).hatRecord(tools.getAdjustedX(this.posX),tools.getAdjustedY(this.posY),tools.getAdjustedR(this.rVar),
+                this.colVar,this.name,this.turn);
+        else DrawForVis(ctx).flag(tools.getAdjustedX(this.posX-this.rVar),tools.getAdjustedY(this.posY-4),4,6,this.colVar,
+            this.name,tools.getAdjustedR(this.rVar),155*Math.PI/180);
     }
 })
 
@@ -193,18 +190,18 @@ SymArray = new Class({
         element.owner = this.owner;
         return element;
     },
-    draw: function(ctx) {
-        with(this)with(app.tools) {
+    draw: function(ctx,tools) {
+        with(this) {
 	        for(var i = sizeElement-1; i >= 0; i--) {
-			    DrawForVis(ctx).connect(getAdjustedX(itemsElement[i+1].posX),getAdjustedY(itemsElement[i+1].posY),
-			        getAdjustedX(itemsElement[i].posX),getAdjustedY(itemsElement[i].posY),getAdjustedR(rVar/5),'yellow');
+			    DrawForVis(ctx).connect(tools.getAdjustedX(itemsElement[i+1].posX),tools.getAdjustedY(itemsElement[i+1].posY),
+			        tools.getAdjustedX(itemsElement[i].posX),tools.getAdjustedY(itemsElement[i].posY),tools.getAdjustedR(rVar/5),'yellow');
 			}
 		    for(var i = sizeElement; i >= 0; i--) {
-		       itemsElement[i].draw(ctx);
+		       itemsElement[i].draw(ctx,tools);
 		    }
 		    if (typeof(this.name) != 'number')
-                 DrawForVis(ctx).flag(getAdjustedX(posX-rVar),getAdjustedY(posY),getAdjustedR(rVar/5),6,colVar,name,
-                     getAdjustedR(rVar),155*Math.PI/180);
+                 DrawForVis(ctx).flag(tools.getAdjustedX(posX-rVar),tools.getAdjustedY(posY),tools.getAdjustedR(rVar/5),6,colVar,name,
+                     tools.getAdjustedR(rVar),155*Math.PI/180);
 	    }
     },
     inputRandom: function(maxValue) {
@@ -290,16 +287,16 @@ SymRecord = new Class({
             record.push(this.itemsElement[i].clone());
         return record;
     },
-    draw: function(ctx) {
-        with(this)with(app.tools){
-            DrawForVis(ctx).record(getAdjustedX(posX),getAdjustedY(posY),getAdjustedR(rVar/2.5),colVar,name);
+    draw: function(ctx,tools) {
+        with(this) {
+            DrawForVis(ctx).record(tools.getAdjustedX(posX),tools.getAdjustedY(posY),tools.getAdjustedR(rVar/2.5),colVar,name);
             var dx = rVar*2/sizeElement;
             var x = posX + rVar - dx/2;
             for(var i = 0; i < sizeElement; i++) {
-                DrawForVis(ctx).connect(getAdjustedX(itemsElement[i].posX),getAdjustedY(itemsElement[i].posY),
-                    getAdjustedX(x),getAdjustedY(posY-rVar/2),4,colVar);
+                DrawForVis(ctx).connect(tools.getAdjustedX(itemsElement[i].posX),tools.getAdjustedY(itemsElement[i].posY),
+                    tools.getAdjustedX(x),tools.getAdjustedY(posY-rVar/2),4,colVar);
                 x-=dx;
-                itemsElement[i].draw(ctx);
+                itemsElement[i].draw(ctx,tools);
             }
         }
     },

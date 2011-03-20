@@ -25,11 +25,11 @@ SymVarMove = new Class ({
     vY: 0,
     vX: 0,
     draw: function(ctx,tools) {
-        with(this) with(tools) {
+        with(this) {
             var timerSpeed = 6;
             if(numberOfMove <= 0) return 0;
-            DrawForVis(ctx).ball(getAdjustedX(posX),getAdjustedY(posY),getAdjustedR(rVar),colVar);
-            DrawForVis(ctx).text(val,getAdjustedX(posX),getAdjustedY(posY),getAdjustedR(rVar),angle,'int');
+            DrawForVis(ctx).ball(tools.getAdjustedX(posX),tools.getAdjustedY(posY),tools.getAdjustedR(rVar),colVar);
+            DrawForVis(ctx).text(val,tools.getAdjustedX(posX),tools.getAdjustedY(posY),tools.getAdjustedR(rVar),angle,'int');
             numberOfMove--;
             vY = vY - aY*timerSpeed;
             var hy = -(vY*timerSpeed + aY*Math.pow(timerSpeed,2)/2);
