@@ -24,14 +24,14 @@ SymVarMove = new Class ({
     vX: 0,
     draw: function(ctx,tools) {
         with(this) {
-            var timerSpeed = 6;
+            var t = 6; //time of one move
             if(numberOfMove <= 0) return 0;
             DrawForVis(ctx).ball(tools.getAdjustedX(posX),tools.getAdjustedY(posY),tools.getAdjustedR(rVar),colVar);
             DrawForVis(ctx).text(val,tools.getAdjustedX(posX),tools.getAdjustedY(posY),tools.getAdjustedR(rVar),angle,'int');
             numberOfMove--;
-            vY = vY - aY*timerSpeed;
-            var hy = -(vY*timerSpeed + aY*Math.pow(timerSpeed,2)/2);
-            posX += vX*timerSpeed;
+            vY = vY - aY*t;
+            var hy = -(vY*t + aY*Math.pow(t,2)/2);
+            posX += vX*t;
             posY += hy;
             var angleOfRotation = Math.sqrt(Math.pow(hx,2) + Math.pow(hy,2))/rVar;
             if(hx > 0) angle += angleOfRotation;
@@ -40,3 +40,4 @@ SymVarMove = new Class ({
         }
     }
 });
+?
