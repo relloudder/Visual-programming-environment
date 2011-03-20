@@ -21,10 +21,17 @@ SymVarMove = new Class ({
     aY: 0,
     vY: 0,
     vX: 0,
+    createSymVar: function(ctx,tools) {
+        return 0;
+    },
+    deleteSymVar: function(ctx,tools) {
+        return 0;
+    },
     draw: function(ctx,tools) {
         with(this) {
             var t = 6; //time of one move
-            if(numberOfMove <= 0) return 0;
+            if(numberOfMove <= 0) return deleteSymVar(ctx,tools);
+            if(createSymVar(ctx,tools) == 1) return 1;
             DrawForVis(ctx).ball(tools.getAdjustedX(posX),tools.getAdjustedY(posY),tools.getAdjustedR(rVar),colVar);
             DrawForVis(ctx).text(val,tools.getAdjustedX(posX),tools.getAdjustedY(posY),tools.getAdjustedR(rVar),angle,'int');
             numberOfMove--;
