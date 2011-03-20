@@ -3,11 +3,9 @@ SymVarModifiable = new Class ({
     initialize: function(val,pX,pY,cVar,rVar,numberOfMove) {
         this.parent(val,pX,pY,cVar,rVar);
         this.numberOfMove = numberOfMove;
-        this.angleOfRotation = 0;
         this.angle = 0;
     },
     numberOfMove: null,
-    angleOfRotation: null,
     angle: 0
 });
 
@@ -35,7 +33,7 @@ SymVarMove = new Class ({
             var hy = -(vY*timerSpeed + aY*Math.pow(timerSpeed,2)/2);
             posX += vX*timerSpeed;
             posY += hy;
-            angleOfRotation = Math.sqrt(Math.pow(hx,2) + Math.pow(hy,2))/rVar;
+            var angleOfRotation = Math.sqrt(Math.pow(hx,2) + Math.pow(hy,2))/rVar;
             if(hx > 0) angle += angleOfRotation;
             else angle -= angleOfRotation;
             return 1;
