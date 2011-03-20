@@ -36,8 +36,9 @@ SymVarMove = new Class ({
             DrawForVis(ctx).text(val,tools.getAdjustedX(posX),tools.getAdjustedY(posY),tools.getAdjustedR(rVar),angle,'int');
             numberOfMove--;
             vY = vY - aY*t;
+            var hx = vX*t;
             var hy = -(vY*t + aY*Math.pow(t,2)/2);
-            posX += vX*t;
+            posX += hx;
             posY += hy;
             var angleOfRotation = Math.sqrt(Math.pow(hx,2) + Math.pow(hy,2))/rVar;
             if(hx > 0) angle += angleOfRotation;
@@ -46,4 +47,3 @@ SymVarMove = new Class ({
         }
     }
 });
-?
