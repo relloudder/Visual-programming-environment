@@ -47,3 +47,19 @@ SymVarMove = new Class ({
         }
     }
 });
+
+//movement from one object to another with g
+SymVarInteraction = new Class ({
+    Extends: SymVarMove,
+    initialize: function(from,to,g) {
+        this.parent(from.val,from.posX,from.posY,from.colVar,from.rVar,to.posX,to.posY,g);
+        this.from = from;
+        this.to = to;
+        this.numberOfMerSep = 12; // number of steps of merge and separation
+    },
+    fromSymbol: null,
+    to: null,
+    numberOfMerSep: null,
+    hXOfMerSep: null, //distance between steps on x
+    hYOfMerSep: null
+});
