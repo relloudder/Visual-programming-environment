@@ -288,6 +288,20 @@ var DrawForVis = function(ctx) {
             ctx.font = 'bold ' + r*1.5 + 'px Arial';
             ctx.fillText(val,-r-h/2,r/3*2);
             ctx.restore();
+        },
+
+        divBall: function(x0,y0,r,col,alpha,angle,rOrLAngle) {
+	        ctx.save();
+	        ctx.beginPath();
+	        ctx.translate(x0, y0);
+	        ctx.rotate(angle);
+	        colorBall(0,0,r,col);
+	        ctx.arc(0,0,r,rOrLAngle-alpha,rOrLAngle+alpha,false);
+            ctx.fill();
+	        ctx.stroke();
+            ctx.closePath();
+	        ctx.restore();
         }
+
     };
 }
