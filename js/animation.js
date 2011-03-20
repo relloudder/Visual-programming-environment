@@ -1,12 +1,12 @@
 SymVarModifiable = new Class ({
     Extends: SymVar,
-    initialize: function(val,pX,pY,cVar,rVar,moveNumber) {
+    initialize: function(val,pX,pY,cVar,rVar,numberOfMove) {
         this.parent(val,pX,pY,cVar,rVar);
-        this.numberMove = moveNumber;
+        this.numberOfMove = numberOfMove;
         this.angleOfRotation = 0;
         this.angle = 0;
     },
-    numberMove: null,
+    numberOfMove: null,
     angleOfRotation: null,
     angle: 0
 });
@@ -16,7 +16,7 @@ SymVarMove = new Class ({
     initialize: function(val,pX,pY,cVar,rVar,endX,endY,g) {
         this.parent(val,pX,pY,cVar,rVar,60);
         this.aY = g; //acceleration
-        var t = this.numberMove*6;
+        var t = this.numberOfMove*6;
         this.vX = (endX - pX)/t;
         this.vY = (pY - endY + this.aY*Math.pow(t,2)/2)/t;
     },
@@ -27,10 +27,10 @@ SymVarMove = new Class ({
     draw: function(ctx,tools) {
         with(this) with(tools) {
             var timerSpeed = 6;
-            if(numberMove <= 0) return 0;
+            if(numberOfMove <= 0) return 0;
             DrawForVis(ctx).ball(getAdjustedX(posX),getAdjustedY(posY),getAdjustedR(rVar),colVar);
             DrawForVis(ctx).text(val,getAdjustedX(posX),getAdjustedY(posY),getAdjustedR(rVar),angle,'int');
-            numberMove--;
+            numberOfMove--;
             vY = vY - aY*timerSpeed;
             var hy = -(vY*timerSpeed + aY*Math.pow(timerSpeed,2)/2);
             posX += vX*timerSpeed;
