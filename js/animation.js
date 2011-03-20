@@ -19,7 +19,6 @@ SymVarMove = new Class ({
         this.vY = (pY - endY + this.aY*Math.pow(t,2)/2)/t;
     },
     aY: 0,
-    aX: 0,
     vY: 0,
     vX: 0,
     draw: function(ctx,tools) {
