@@ -71,12 +71,11 @@ function runInterface() {
     $("#move").click(function() {
         var moveBall = new SymVarName(0,50,300,"int","move");
         app.tree.push(moveBall);
-        var moveVisBall = new SymVarMove(0,50,300,"grey",20,350,300,1/90);
+        var moveBallEnd = new SymVarName(0,350,300,"int","move");
+        app.tree.push(moveBallEnd);
+        var divBall = new SymVarSeparation(moveBall,moveBallEnd,1/90);
         var	k = app.insertRowVis();
-        app.insertElementVis(k,moveVisBall);
-        var moveVisBall1 = new SymVarMove(0,50,300,"grey",20,50,300,1/80);
-        var	k = app.insertRowVis();
-        app.insertElementVis(k,moveVisBall1);
+        app.insertElementVis(k,divBall);
         app.paint();
     });
 }
