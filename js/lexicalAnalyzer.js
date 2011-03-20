@@ -17,7 +17,7 @@ LexicalAnalyzer = new Class({
         Scanner.init(textProgram.val());
         this.exception = new Exception(textProgram,errorProgram) ; 
         this.currentLexeme = Scanner.next(0);
-    },    
+    },
     exception: null,
     currentLexeme: null,
     getProgram: function() {
