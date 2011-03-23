@@ -7,7 +7,7 @@ VariableTree = new Class({
     draw: function(ctx,tools) {
         DrawForVis(ctx).back("#7cb7e3","#cccccc",canvas.width,canvas.height);
         for (var i = 0; i < this.treeVar.length; i++)
-            this.treeVar[i].draw(ctx,tools);
+            if( this.treeVar[i].visible) this.treeVar[i].draw(ctx,tools);
     },
     push: function(item) {
         this.treeVar.push(item);
@@ -32,12 +32,17 @@ VariableTree = new Class({
         var k = 0;
         for(var i = 0; i < 2; i++)
             for(var j = 0; j < length/2; j++) {
-                this.treeVar[k].setPosX(i*sizeX + sizeX - Math.random()*sizeX/2);
-                this.treeVar[k].setPosY(j*sizeY + sizeY - Math.random()*sizeY/2);
+                this.treeVar[k].setPosX(i*sizeX + sizeX/2);
+                this.treeVar[k].setPosY(j*sizeY + sizeY/2);
                 this.treeVar[k].inputRandom(10);
                 k++;
                 if(k == this.treeVar.length) return;
             }
+    },
+	getVarByName: function(name){
+	    for (var k = this.treeVar.length - 1; k >= 0; k--)
+           if (this.treeVar[k].name == name) return this.treeVar[k];
+		return -1;
     }
 });
 
@@ -87,7 +92,8 @@ Application = new Class({
         this.height = height;
         this.ctx = ctx;
         this.treeVis = [];
-        this.speed = 60;
+        this.dTime = 25;
+		this.speed = 0.17;
     },
     flagMove: false,
     flagCanvasMove: false,
@@ -99,6 +105,7 @@ Application = new Class({
     ctx: null,
     idTimer: null,
     speed: null,
+	dTime: null,
     treeVis: null,
     insertRowVis: function() {
         this.treeVis.push([]);
@@ -110,7 +117,7 @@ Application = new Class({
     },
     paint: function() {
         self = this;
-       	this.idTimer = setInterval("self.drawTreeVis()",this.speed);
+       	this.idTimer = setInterval("self.drawTreeVis()",this.dTime);
     },
     drawTreeVis: function() {
         with(this) {
@@ -125,7 +132,7 @@ Application = new Class({
                 if(treeVis.length > 0) {
                     treeVis.splice(0,1); //delete 0 row
                     selfNew = this;
-                    idTimer = setInterval('selfNew.drawTreeVis()',this.speed);
+                    idTimer = setInterval('selfNew.drawTreeVis()',this.dTime);
                 }
             }
         }

@@ -14,27 +14,35 @@ SymVarMove = new Class ({
     initialize: function(val,pX,pY,cVar,rVar,endX,endY,g) {
         this.parent(val,pX,pY,cVar,rVar,60);
         this.aY = g; //acceleration
-        var t = this.numberOfMove*6;
-        this.vX = (endX - pX)/t;
+		//increase count of moving if displacement for X is too small
+		var dX = Math.abs(pX-endX);
+		if (dX < 50) dX = 100;
+		this.numberOfMove = Math.ceil(dX/(app.speed*app.dTime));
+		this.timeOneMove = dX/(this.numberOfMove);
+		var t = this.timeOneMove*this.numberOfMove;
+		this.vX = (endX - pX)/t;
         this.vY = (pY - endY + this.aY*Math.pow(t,2)/2)/t;
     },
     aY: 0,
     vY: 0,
     vX: 0,
+	timeOneMove: 0,
+	// function running before move
     createSymVar: function(ctx,tools) {
         return 0;
     },
+	// function running after move
     deleteSymVar: function(ctx,tools) {
         return 0;
     },
     draw: function(ctx,tools) {
         with(this) {
-            var t = 6; //time of one move
-            if(numberOfMove <= 0) return deleteSymVar(ctx,tools);
+            var t = timeOneMove; //time of one move
             if(createSymVar(ctx,tools) == 1) return 1;
+            if(numberOfMove <= 0) return deleteSymVar(ctx,tools);
             DrawForVis(ctx).ball(tools.getAdjustedX(posX),tools.getAdjustedY(posY),tools.getAdjustedR(rVar),colVar);
             DrawForVis(ctx).text(val,tools.getAdjustedX(posX),tools.getAdjustedY(posY),tools.getAdjustedR(rVar),angle,'int');
-            numberOfMove--;
+	        numberOfMove--;
             vY = vY - aY*t;
             var hx = vX*t;
             var hy = -(vY*t + aY*Math.pow(t,2)/2);
@@ -48,61 +56,61 @@ SymVarMove = new Class ({
     }
 });
 
-//movement from one object to another with g
+//movement from one object (from) to another (to) with g
 SymVarInteraction = new Class ({
     Extends: SymVarMove,
     initialize: function(from,to,g) {
         this.parent(from.val,from.posX,from.posY,from.colVar,from.rVar,to.posX,to.posY,g);
         this.from = from;
         this.to = to;
-        this.numberOfMerSep = 12; // number of steps of merge and separation
+		this.maxNumberOfMerSep = Math.ceil(this.numberOfMove/3);
+        this.numberOfMerSep = this.maxNumberOfMerSep; // number of steps of merge and separation
     },
-    fromSymbol: null,
+    from: null,
     to: null,
-    numberOfMerSep: null,
-    hXOfMerSep: null, //distance between steps on x
-    hYOfMerSep: null,
-    angleOfRotation: null
+	maxNumberOfMerSep : 0, // max number of steps of merge and separation
+    numberOfMerSep: 0,
+    directInteractive: 0 // derection for separation or marge
 });
 
 SymVarSeparation = new Class ({
     Extends: SymVarInteraction,
     initialize: function(from,to,g) {
         this.parent(from,to,g);
-        this.angleOfRotation = Math.PI/(2*this.numberOfMerSep);
-        this.angle = -Math.PI/2;
-        var angleOfSeparation = Math.atan(-this.vY/this.vX);
-		if(this.vX < 0) angleOfSeparation += Math.PI;
-        this.hXOfMerSep = 2*this.rVar/this.numberOfMerSep*(Math.cos(angleOfSeparation));
-        this.hYOfMerSep = 2*this.rVar/this.numberOfMerSep*(Math.sin(angleOfSeparation));
+        this.angle = - Math.PI/2;
+        this.to.setVisible(false);
+		this.directInteractive = - Math.PI/2;
+        if (this.vX != 0) this.directInteractive = Math.atan(-this.vY/this.vX);
+        if(this.vX < 0) this.directInteractive += Math.PI;
     },
     createSymVar: function (ctx,tools) {
         with(this) {
-            if(numberOfMerSep > 0) {
-                var angleChord = Math.atan(hYOfMerSep/hXOfMerSep);
-                if(hXOfMerSep < 0) angleChord += Math.PI;
-                DrawForVis(ctx).divBall(tools.getAdjustedX(from.posX),tools.getAdjustedY(from.posY),
-                    tools.getAdjustedR(rVar),colVar,angle,angleChord,0);
-                DrawForVis(ctx).divBall(tools.getAdjustedX(posX),tools.getAdjustedY(posY),
-                    tools.getAdjustedR(rVar),colVar,angle,angleChord,Math.PI);
-                posX += hXOfMerSep;
-                posY += hYOfMerSep;
-                numberOfMerSep--;
-                angle += angleOfRotation;
-                return 1;
-            }
-            else if(numberOfMerSep == 0) {
-                from.setVisible(true);
+		    if(numberOfMerSep == 0) {
                 numberOfMerSep--;
                 angle = 0;
-                colVar ='#999';
-                var t = numberOfMove*6;
+                colVar = to.colVar;
+                var t =  this.timeOneMove * this.numberOfMove;;
                 vX = (to.posX - posX)/t;
                 vY = -(to.posY - posY - aY*Math.pow(t,2)/2)/t;
                 return 0;
             }
-            else return 0;
+            if(numberOfMerSep > 0) {
+                DrawForVis(ctx).divBall(tools.getAdjustedX(from.posX),tools.getAdjustedY(from.posY),
+                    tools.getAdjustedR(rVar),colVar,angle,directInteractive,0);
+                DrawForVis(ctx).divBall(tools.getAdjustedX(posX),tools.getAdjustedY(posY),
+                    tools.getAdjustedR(rVar),colVar,angle,directInteractive,Math.PI);
+                posX += 2*rVar/maxNumberOfMerSep*(Math.cos(directInteractive));
+                posY += 2*rVar/maxNumberOfMerSep*(Math.sin(directInteractive));
+                numberOfMerSep--;
+                angle += Math.PI/(2*maxNumberOfMerSep);
+                return 1;
+            }
         }
+    },
+	deleteSymVar: function (ctx,tools) {
+        this.to.setVisible(true);
+		this.to.setValue(this.from.val);
+        return 0;
     }
 });
 
@@ -110,53 +118,40 @@ SymVarMerge = new Class ({
     Extends: SymVarInteraction,
     initialize: function(from,to,g) {
         this.parent(from,to,g);
-        var t = this.numberOfMove*6;
-        this.vY = -(to.posY - from.posY - this.aY*Math.pow(t,2)/2)/t;
-        this.vX = (to.posX - from.posX)/t;
-        //var v1 = this.vY + this.aY*t;
-        var angleOfSeparation;
-        if (this.vX == 0) angleOfSeparation = Math.PI/2;
-        else angleOfSeparation = Math.atan(this.vY/this.vX);
-        if(this.vX > 0) angleOfSeparation += Math.PI;
         //finding place for ball's union
-        this.vY = -(to.posY + 2*this.rVar*Math.sin(angleOfSeparation) - from.posY - this.aY*Math.pow(t,2)/2)/t;
-        this.vX = (to.posX + 2*this.rVar*Math.cos(angleOfSeparation) - from.posX)/t;
+        var y = this.to.posY;
+        var x = this.to.posX;
+	    var t;
+        while(Math.sqrt(Math.pow(x - this.to.posX,2) + Math.pow(y - this.to.posY,2)) < 2*this.rVar){
+	        this.numberOfMove--;
+            t = this.numberOfMove*this.timeOneMove;
+            y = this.from.posY - this.vY*t + this.aY*Math.pow(t,2)/2;
+            x = this.from.posX + this.vX*t;
+        }
+        this.directInteractive= -Math.PI/2;
+        if ((x - this.to.posX) != 0) this.directInteractive = Math.atan((y - this.to.posY)/(x - this.to.posX));
+        if((x - this.to.posX) < 0) this.directInteractive += Math.PI;
     },
     createSymVar: function (ctx,tools) {
         this.from.setVisible(false);
+		this.val = this.from.val;
         return 0;
     },
     deleteSymVar: function (ctx,tools) {
     with(this) {
-        if (numberOfMerSep == 12) {
-            to.setVisible(false);
-            angleOfRotation = Math.PI/(2*numberOfMerSep);
-            var angleOfSeparation = Math.atan((to.posY - posY)/(to.posX - posX));
-            if((to.posX - posX) > 0) angleOfSeparation += Math.PI;
-            hXOfMerSep = 2*rVar*Math.cos(angleOfSeparation)/numberOfMerSep;
-            hYOfMerSep = 2*rVar*Math.sin(angleOfSeparation)/numberOfMerSep;
-            angle = 0;
-            numberOfMerSep--;
-            colVar = to.colVar;
-        }
-        if(numberOfMerSep > 0) {
-            var angleChord = Math.atan(hYOfMerSep/hXOfMerSep);
-            if(hXOfMerSep < 0) angleChord += Math.PI;
-            DrawForVis(ctx).divBall(tools.getAdjustedX(to.posX),tools.getAdjustedY(to.posY),
-                tools.getAdjustedR(rVar),colVar,angle,angleChord,0);
-            DrawForVis(ctx).divBall(tools.getAdjustedX(posX),tools.getAdjustedY(posY),
-                tools.getAdjustedR(rVar),colVar,angle,angleChord,Math.PI);
-            posX -= hXOfMerSep;
-            posY -= hYOfMerSep;
-            numberOfMerSep--;
-            angle -= angleOfRotation;
-            if(numberOfMerSep == 0) {
-                to.setVisible(true);
+	    if(numberOfMerSep == maxNumberOfMerSep) angle = 0;
+		if(numberOfMerSep == 0) {
                 to.setValue(from.getValue());
                 return 0;
-            }
-            return 1;
         }
+        posX += (to.posX - posX)/numberOfMerSep;
+        posY += (to.posY - posY)/numberOfMerSep;
+        DrawForVis(ctx).divBall(tools.getAdjustedX(to.posX),tools.getAdjustedY(to.posY),
+            tools.getAdjustedR(rVar),to.colVar,angle,directInteractive,0);
+        DrawForVis(ctx).divBall(tools.getAdjustedX(posX),tools.getAdjustedY(posY),
+            tools.getAdjustedR(rVar),to.colVar,angle,directInteractive,Math.PI);
+        numberOfMerSep--;
+        angle -= Math.PI/(2*maxNumberOfMerSep);
+        return 1;
     }}
-
 });
