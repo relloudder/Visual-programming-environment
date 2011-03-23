@@ -69,14 +69,29 @@ function runInterface() {
     });
 
     $("#move").click(function() {
-        var moveBall = new SymVarName(0,50,300,"int","move");
-        app.tree.push(moveBall);
-        var moveBallEnd = new SymVarName(0,350,300,"int","move");
-        app.tree.push(moveBallEnd);
-        var divBall = new SymVarMerge(moveBall,moveBallEnd,1/90);
+        var moveBall = app.tree.getVarByName('max');;
+        var moveBallEnd =  app.tree.getVarByName('min');
+        var ball = new SymVar(0,300,300,"#999",20);
+        app.tree.push(ball);
+        var divBall = new SymVarSeparation(moveBall,ball,1/50);
         var	k = app.insertRowVis();
         app.insertElementVis(k,divBall);
+        var divBall2 = new SymVarMerge(ball,moveBallEnd,1/50);
+        var	k = app.insertRowVis();
+        app.insertElementVis(k,divBall2);
         app.paint();
+    });
+
+    $("#SpeedMin").click(function() {
+        app.speed -= 0.01;
+        $("#SpeedMax").html('Speed (' + Math.ceil(app.speed*100)/100+')');
+        $("#SpeedMin").html('Speed (' + Math.ceil(app.speed*100)/100+')');
+    });
+
+    $("#SpeedMax").click(function() {
+        app.speed += 0.01;
+        $("#SpeedMax").html('Speed (' + Math.ceil(app.speed*100)/100+')');
+        $("#SpeedMin").html('Speed (' + Math.ceil(app.speed*100)/100+')');
     });
 }
 
