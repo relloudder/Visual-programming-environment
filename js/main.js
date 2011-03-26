@@ -87,6 +87,8 @@ function runInterface() {
         app.insertElementVis(k,divBall);
         var divBall4 = new SymVarOpenClose(moveBallEnd,false);
         app.insertElementVis(k,divBall4);
+        var binOp = new SymBinOp('+',100,100,'binOp',0);
+        app.tree.push(binOp);
         app.paint();
     });
 

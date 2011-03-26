@@ -216,3 +216,17 @@ SymVarOpenClose = new Class ({
         }
     }
 });
+
+SymBinOp = new Class ({
+    Extends: SymVarName,
+    initialize: function(val,pX,pY,type,alpha) {
+        this.parent(val,pX,pY,'binOp','');
+        this.rVar = 25;
+    },
+    draw: function(ctx,tools) {
+        with(this) {
+            DrawForVis(ctx).halfBall(tools.getAdjustedX(posX),tools.getAdjustedY(posY),tools.getAdjustedR(rVar),colVar);
+            DrawForVis(ctx).text(val,tools.getAdjustedX(posX),tools.getAdjustedY(posY + rVar/2.5),tools.getAdjustedR(rVar),0,type);
+        }
+    }
+});

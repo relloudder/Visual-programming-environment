@@ -97,7 +97,8 @@ SymVarName = new Class({
     	    'record': new colorAndRadius('grey', 20),
     	    'boolean': new colorAndRadius('blue', 15),
     	    'char': new colorAndRadius('pink', 15),
-    	    'array': new colorAndRadius('black', 20)
+    	    'array': new colorAndRadius('black', 20),
+    	    'binOp': new colorAndRadius('grey', 20)
     	}
     	var t = typeAndValue[type];
         this.parent(v,pX,pY,t.color,t.radius);
