@@ -190,34 +190,17 @@ SymVarBiggerSmaller = new Class ({
     }
 });
 
-SymVarOpen = new Class ({
+SymVarOpenClose = new Class ({
     Extends: SymVarChange,
-    initialize: function(change) {
+    initialize: function(change,open) {
         this.parent(change);
-        this.angle = -90;
-        this.angleOfRotation = (-5 - this.angle)/this.numberOfMove;
-    },
-    draw: function(ctx,tools) {
-        with(this) {
-            changeableObject.setVisible(false);
-            DrawForVis(ctx).alphaBall(tools.getAdjustedX(posX),tools.getAdjustedY(posY),tools.getAdjustedR(rVar),colVar,angle);
-            if(numberOfMove == 0) {
-                changeableObject.setVisible(true);
-                return 0;
-            }
-            numberOfMove--;
-            angle += angleOfRotation;
-            return 1;
+        if (open) {
+            this.angle = -90;
+            this.angleOfRotation = (-5 - this.angle)/this.numberOfMove;
+        } else {
+            this.angle = -5;
+            this.angleOfRotation = (-85 - this.angle)/this.numberOfMove;
         }
-    }
-});
-
-SymVarClose = new Class ({
-    Extends: SymVarChange,
-    initialize: function(change) {
-        this.parent(change);
-        this.angle = -5;
-        this.angleOfRotation = (-85 - this.angle)/this.numberOfMove;
     },
     draw: function(ctx,tools) {
         with(this) {
