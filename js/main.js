@@ -74,15 +74,19 @@ function runInterface() {
         var ball = new SymVar(0,300,300,"#999",20);
         app.tree.push(ball);
         var divBall = new SymVarSeparation(moveBall,ball,1/50);
-        var	k = app.insertRowVis();
+        k = app.insertRowVis();
         app.insertElementVis(k,divBall);
         var divBall2 = new SymVarMerge(ball,moveBallEnd,1/50);
-        var	k = app.insertRowVis();
+        k = app.insertRowVis();
         app.insertElementVis(k,divBall2);
-        var	k = app.insertRowVis();
+        k = app.insertRowVis();
         app.insertElementVis(k,divBall);
         var divBall3 = new SymVarOpen(moveBallEnd);
         app.insertElementVis(k,divBall3);
+        k = app.insertRowVis();
+        app.insertElementVis(k,divBall);
+        var divBall4 = new SymVarClose(moveBallEnd);
+        app.insertElementVis(k,divBall4);
         app.paint();
     });
 

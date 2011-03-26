@@ -210,4 +210,26 @@ SymVarOpen = new Class ({
             return 1;
         }
     }
-})
+});
+
+SymVarClose = new Class ({
+    Extends: SymVarChange,
+    initialize: function(change) {
+        this.parent(change);
+        this.angle = -5;
+        this.angleOfRotation = (-85 - this.angle)/this.numberOfMove;
+    },
+    draw: function(ctx,tools) {
+        with(this) {
+            changeableObject.setVisible(false);
+            DrawForVis(ctx).alphaBall(tools.getAdjustedX(posX),tools.getAdjustedY(posY),tools.getAdjustedR(rVar),colVar,angle);
+            if(numberOfMove == 0) {
+                changeableObject.setVisible(true);
+                return 0;
+            }
+            numberOfMove--;
+            angle += angleOfRotation;
+            return 1;
+        }
+    }
+});
