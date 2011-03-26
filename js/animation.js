@@ -159,10 +159,34 @@ SymVarMerge = new Class ({
 SymVarChange = new Class ({
     Extends: SymVarModifiable,
     initialize: function(change) {
-        this.parent(change.val,change.posX,change.posY,change.colVar,15);
-        changeSymbol = change;
-	    rVar = change.rVar;
+        this.parent(change.val,change.posX,change.posY,change.colVar,change.rVar,15);
+        this.changeableObject = change;
+	    this.rVar = change.rVar;
     },
-	changeSymbol: null
-})
+	changeableObject: null
+});
 
+SymVarBiggerSmaller = new Class ({
+    Extends: SymVarChange,
+    initialize: function(change,changeEnd) { // changeEnd - finite size
+        this.parent(change);
+        this.deltaRadius = (changeEnd - change.rVar)/this.numberOfMove;
+    },
+    deltaRadius: null,
+    draw: function(ctx,tools) {
+        with(this) {
+            changeableObject.setVisible(false);
+            DrawForVis(ctx).ball(tools.getAdjustedX(posX),tools.getAdjustedY(posY),tools.getAdjustedR(rVar),colVar);
+            DrawForVis(ctx).text(val,tools.getAdjustedX(posX),tools.getAdjustedY(posY),tools.getAdjustedR(rVar),0,changeableObject.type);
+            if(numberOfMove > 0) {
+                numberOfMove--;
+                rVar += deltaRadius;
+                return 1;
+            } else {
+                changeableObject.rVar = rVar;
+                changeableObject.setVisible(true);
+                return 0;
+            }
+        }
+    }
+})

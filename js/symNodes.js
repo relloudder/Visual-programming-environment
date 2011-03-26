@@ -134,7 +134,7 @@ SymVarName = new Class({
         else if (this.owner == 'record')
             DrawForVis(ctx).hatRecord(tools.getAdjustedX(this.posX),tools.getAdjustedY(this.posY),tools.getAdjustedR(this.rVar),
                 this.colVar,this.name,this.turn);
-        else DrawForVis(ctx).flag(tools.getAdjustedX(this.posX-this.rVar),tools.getAdjustedY(this.posY-4),4,6,this.colVar,
+        else DrawForVis(ctx).flag(tools.getAdjustedX(this.posX-this.rVar),tools.getAdjustedY(this.posY-4),this.rVar/5,6,this.colVar,
             this.name,tools.getAdjustedR(this.rVar),155*Math.PI/180);
     }
 })

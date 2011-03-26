@@ -79,6 +79,10 @@ function runInterface() {
         var divBall2 = new SymVarMerge(ball,moveBallEnd,1/50);
         var	k = app.insertRowVis();
         app.insertElementVis(k,divBall2);
+        var	k = app.insertRowVis();
+        app.insertElementVis(k,divBall);
+        var divBall3 = new SymVarBiggerSmaller(moveBallEnd,50);
+        app.insertElementVis(k,divBall3);
         app.paint();
     });
 
