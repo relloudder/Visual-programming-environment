@@ -178,15 +178,36 @@ SymVarBiggerSmaller = new Class ({
             changeableObject.setVisible(false);
             DrawForVis(ctx).ball(tools.getAdjustedX(posX),tools.getAdjustedY(posY),tools.getAdjustedR(rVar),colVar);
             DrawForVis(ctx).text(val,tools.getAdjustedX(posX),tools.getAdjustedY(posY),tools.getAdjustedR(rVar),0,changeableObject.type);
-            if(numberOfMove > 0) {
-                numberOfMove--;
-                rVar += deltaRadius;
-                return 1;
-            } else {
+            if(numberOfMove == 0) {
                 changeableObject.rVar = rVar;
                 changeableObject.setVisible(true);
                 return 0;
             }
+            numberOfMove--;
+            rVar += deltaRadius;
+            return 1;
+        }
+    }
+});
+
+SymVarOpen = new Class ({
+    Extends: SymVarChange,
+    initialize: function(change) {
+        this.parent(change);
+        this.angle = -90;
+        this.angleOfRotation = (-5 - this.angle)/this.numberOfMove;
+    },
+    draw: function(ctx,tools) {
+        with(this) {
+            changeableObject.setVisible(false);
+            DrawForVis(ctx).alphaBall(tools.getAdjustedX(posX),tools.getAdjustedY(posY),tools.getAdjustedR(rVar),colVar,angle);
+            if(numberOfMove == 0) {
+                changeableObject.setVisible(true);
+                return 0;
+            }
+            numberOfMove--;
+            angle += angleOfRotation;
+            return 1;
         }
     }
 })

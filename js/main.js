@@ -81,7 +81,7 @@ function runInterface() {
         app.insertElementVis(k,divBall2);
         var	k = app.insertRowVis();
         app.insertElementVis(k,divBall);
-        var divBall3 = new SymVarBiggerSmaller(moveBallEnd,50);
+        var divBall3 = new SymVarOpen(moveBallEnd);
         app.insertElementVis(k,divBall3);
         app.paint();
     });
