@@ -51,7 +51,7 @@ SynArray = new Class({
         return this.symbolArray.getType();
     },
     getSymbol: function() { //returns sym from treeVar
-        var result = this.right.operation(false);
+        var result = this.right.operation(false); //create calculating index expression
         var item = this.left.getItemArrByNum(result);
         if((this.symbolArray instanceof SynArray)||(this.symbolArray instanceof SynRecord)) {
             this.symbolArray.setItemLeft(item);
@@ -98,3 +98,21 @@ SynRecord = new Class({
     }
 });
 
+SynConstInt = new Class({
+    Extends: SynExpr,
+    initialize: function(constValue) {
+        this.constValue = constValue;
+        this.type = 'int';
+    },
+    constValue: null,
+    getValue: function() {
+        return this.constValue;
+    }
+});
+
+SynConstReal = new Class({
+    Extends: SynConstInt,
+    initialize: function(constValue) {
+        this.type = 'real';
+    }
+});
