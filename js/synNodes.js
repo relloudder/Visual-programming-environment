@@ -116,3 +116,63 @@ SynConstReal = new Class({
         this.type = 'real';
     }
 });
+
+SynBinOp = new Class({
+    Extends: SynExpr,
+    initialize: function(op,left,right) {
+        this.symBinOp = op;
+        this.left = left;
+        this.right = right;
+        this.binOp = op.value;
+    },
+    constValue: null,
+    getValue: function() {
+        return this.constValue;
+    },
+    left: null,
+    right: null, //SynExpr
+    binOp: null, //TBinOpType
+    symBinOp: null, // Symbol
+    setPosX: function(pX) {
+        var x = this.symBinOp.posX;
+        this.symBinOp.posX = pX;
+        this.left.setPosX(this.left.getPosX() - x + this.symBinOp.posX);
+        this.right.setPosX(this.right.getPosX() - x + this.symBinOp.posX);
+    },
+    setPosY: function(pY) {
+        var y = this.symBinOp.posY;
+        this.symBinOp.posY = pY;
+        this.left.setPosY(this.left.getPosY() - y + this.symBinOp.posY);
+        this.right.setPosY(this.right.getPosY() - y +this.symBinOp.posY);
+    },
+    getPosX: function() {
+        return this.symBinOp.posX;
+    },
+    getPosY: function() {
+        return this.symBinOp.posY;
+    },
+    getSymBinOp: function() {
+        return this.symBinOp ;
+    },
+    getRight: function() {
+        return this.right;
+    },
+    getLeft: function() {
+        return this.left;
+    },
+    draw: function(ctx,tools) {
+        this.symBinOp.draw(ctx,tools);
+        DrawForVis(cts).connect(tools.getAdjustedX(this.getPosX()),tools.getAdjustedY(this.getPosY()),
+            tools.getAdjustedX(this.left.getPosX()),tools.getAdjustedY(this.left.getPosY()),
+            tools.getAdjustedR(20/5),this.symBinOp.colVar);
+        DrawForVis(ctx).connect(tools.getAdjustedX(this.getPosX()),tools.getAdjustedY(this.getPosY()),
+            tools.getAdjustedX(this.right.getPosX()),tools.getAdjustedY(this.right.getPosY()),
+            tools.getAdjustedR(20/5),this.symBinOp.colVar);
+        this.left.draw(ctx,tools);
+        this.right.draw(ctx,tools);
+    }
+});
+
+
+
+
