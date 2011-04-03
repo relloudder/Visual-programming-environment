@@ -1,4 +1,5 @@
 var app, xOld = 0, yOld = 0;
+var expression;
 
 $(function() {
     initApplication();
@@ -12,7 +13,10 @@ function runInterface() {
         var errorProgram = $('#errorPanel');
         var lex = new LexicalAnalyzer(textProgram,errorProgram);
         lex.getProgram();
+        var c = new SymConst(1,200,200);
+        app.tree.push(c);
         app.tree.treeLocation(app.width,app.height);
+        k = app.insertRowVis();
         app.tree.draw(app.ctx,app.tools);
     });
 
@@ -69,7 +73,7 @@ function runInterface() {
     });
 
     $("#move").click(function() {
-        var moveBall = app.tree.getVarByName('max');;
+        /*var moveBall = app.tree.getVarByName('max');;
         var moveBallEnd =  app.tree.getVarByName('min');
         var ball = new SymVar(0,300,300,"#999",20);
         app.tree.push(ball);
@@ -88,7 +92,8 @@ function runInterface() {
         var divBall4 = new SymVarOpenClose(moveBallEnd,false);
         app.insertElementVis(k,divBall4);
         var binOp = new SymBinOp('+',100,100,'binOp',0);
-        app.tree.push(binOp);
+        app.tree.push(binOp);*/
+        expression.interpretation([300,400]);
         app.paint();
     });
 

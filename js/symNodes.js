@@ -34,6 +34,19 @@ Symbol = new Class({
     }
 });
 
+SymbolName = new Class({
+    Extends: Symbol,
+    initialize: function(pX,pY,text) {
+        this.text = text;	
+        this.turn = -Math.PI;
+    },
+    text: null,
+    draw: function(ctx,tools) {
+        DrawForVis(ctx).flag(tools.getAdjustedX(this.posX+this.text.length*4),tools.getAdjustedY(this.posY+8),
+            tools.getAdjustedR(10),1,'black',this.text,tools.getAdjustedR(20),this.turn);
+    }
+});
+
 SymVar = new Class({
     Extends: Symbol,
     initialize: function(val,pX,pY,colVar,rVar) {
@@ -324,4 +337,23 @@ SymRecord = new Class({
             this.itemsElement[i].setPosX(this.itemsElement[i].posX - x + this.posX);
         }
     }
-})
+});
+
+SymConst = new Class({
+    Extends: SymVarName,
+    initialize: function (v,pX,pY) {
+        this.parent(v,pX,pY,'int','1const');
+    },
+    draw: function(ctx, tools) {
+    with(this) {
+        DrawForVis(ctx).ball(tools.getAdjustedX(posX),tools.getAdjustedY(posY),tools.getAdjustedR(rVar),colVar);
+        DrawForVis(ctx).ball(tools.getAdjustedX(posX+20),tools.getAdjustedY(posY+5),tools.getAdjustedR(rVar),colVar);
+        DrawForVis(ctx).text('13',tools.getAdjustedX(posX+20),tools.getAdjustedY(posY+5),tools.getAdjustedR(rVar),0,type);
+        DrawForVis(ctx).ball(tools.getAdjustedX(posX+10),tools.getAdjustedY(posY-2),tools.getAdjustedR(rVar),colVar);
+        DrawForVis(ctx).text('60',tools.getAdjustedX(posX+10),tools.getAdjustedY(posY-2),tools.getAdjustedR(rVar),0,type);
+        DrawForVis(ctx).ball(tools.getAdjustedX(posX-18),tools.getAdjustedY(posY+15),tools.getAdjustedR(rVar),colVar);
+        DrawForVis(ctx).text('44',tools.getAdjustedX(posX-18),tools.getAdjustedY(posY+15),tools.getAdjustedR(rVar),0,type);
+        DrawForVis(ctx).ball(tools.getAdjustedX(posX+2),tools.getAdjustedY(posY+12),tools.getAdjustedR(rVar),colVar);
+        DrawForVis(ctx).text('60',tools.getAdjustedX(posX+2),tools.getAdjustedY(posY+12),tools.getAdjustedR(rVar),0,type);
+    }}
+});

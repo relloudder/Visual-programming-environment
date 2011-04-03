@@ -22,7 +22,7 @@ LexicalAnalyzer = new Class({
     currentLexeme: null,
     getProgram: function() {
         if (this.currentLexeme.name.toLowerCase() == 'var') this.getVar();
-        if (this.currentLexeme.name.toLowerCase() == 'begin');
+        if (this.currentLexeme.name.toLowerCase() == 'begin') this.getBlock();
         else this.exception.error('except BEGIN',this.currentLexeme);   
     },
     getVar: function() {
@@ -38,7 +38,7 @@ LexicalAnalyzer = new Class({
             this.currentLexeme = Scanner.next(this.currentLexeme.nextLexemePos);
             if(this.currentLexeme.name == ':') break;
             if(this.currentLexeme.name != ',')
-                this.exception.error('except , or :',this.currentLex);
+                this.exception.error('except , or :',this.currentLexeme);
             pos = this.currentLexeme.nextLexemePos;
             this.currentLexeme = Scanner.next(this.currentLexeme.nextLexemePos);
             if(this.currentLexeme.type != 'Identifier')
@@ -115,5 +115,67 @@ LexicalAnalyzer = new Class({
         while (this.currentLexeme.name.toLowerCase() != 'end')
             this.getDeclaration(rec);
         return rec;
+    },
+    getBlock: function() {
+        app.tree.treeLocation();
+        this.currentLexeme = Scanner.next(this.currentLexeme.nextLexemePos);
+        expression = this.parseExpr(canvas.treeVar,';');
+        expression.putPosition([400,300]);
+    },
+    parseExpr: function(treeVar,endLexeme) {
+        return this.parseCompare(treeVar,endLexeme);
+    },
+    parseCompare: function(treeVar,endLexeme) {
+        var left = this.parseAdd(treeVar,endLexeme);
+        if(this.currentLexeme.type == 'Comparison') {
+            var binOp = new SymBinOp(this.currentLexeme.name,0,0,'#5500ff',Math.random()-0.5);
+            this.currentLexeme = Scanner.next(this.currentLexeme.nextLexemePos);
+            left = new SynBinOp(binOp,left,this.parseCompare(treeVar,endLexeme));
+            left.type = 'boolean';
+        }
+        return left;
+    },
+    parseAdd: function(treeVar,endLexeme){
+        var left = this.parseTerm(treeVar,endLexeme);
+        if((this.currentLexeme.name == '+') || (this.currentLexeme.name == '-') ||
+	        (this.currentLexeme.name.toLowerCase() == 'or')) {
+		    var binOp = new SymBinOp(this.currentLexeme.name,0,0,'#5500ff',Math.random()-0.5);
+		    this.currentLexeme = Scanner.next(this.currentLexeme.nextLexemePos);
+            left = new SynBinOp(binOp,left,this.parseAdd(treeVar,endLexeme));
+        }
+        return left;
+    },
+    parseTerm: function(treeVar,endLexeme) {
+        var left = this.parseFactor(treeVar,endLexeme);
+        if((this.currentLexeme.name == '*') || (this.currentLexeme.name == '/')||
+            (this.currentLexeme.name.toLowerCase() == 'and') || (this.currentLexeme.name.toLowerCase() == 'div')) {
+            var binOp = new SymBinOp(this.currentLexeme.name,0,0,'#5500ff',Math.random()-0.5);
+            this.currentLexeme = Scanner.next(this.currentLexeme.nextLexemePos);
+            left = new SynBinOp(binOp,left,this.parseTerm(treeVar,endLexeme));
+        }
+        return left;
+    },
+    parseFactor: function(treeVar,endLexeme){
+        var result;
+        if(this.currentLexeme.type == 'Identifier') {
+	        result = this.parseIdentifier(treeVar);
+        }
+        else if(this.currentLexeme.type == 'NumberReal') {
+            result = new SynConstReal(this.currentLexeme.name);
+        }
+        else if(this.currentLexeme.type == 'NumberInt') {
+            result = new SynConstInt(this.currentLexeme.name);
+        }
+        else if(this.currentLexeme.name == '(') {
+            this.currentLexeme = Scanner.next(this.currentLexeme.nextLexemePos);
+            result = this.parseCompare(treeVar,endLexeme);
+        }
+        else this.exception.error('error in token', this.currentLexeme);
+	    this.currentLexeme = Scanner.next(this.currentLexeme.nextLexemePos);
+        if((this.currentLexeme.type != 'MathOperation') && (this.currentLexeme.name !=')')
+	        && (this.currentLexeme.type != 'Comparison') &&(this.currentLexeme.name != 'or'))
+            if(this.currentLexeme.name == endLexeme);
+            else this.exception.error('except arithmetic or compare operation',this.currentLexeme);
+        return result;
     }
 });

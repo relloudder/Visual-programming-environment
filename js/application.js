@@ -6,6 +6,7 @@ VariableTree = new Class({
     varMove: null,
     draw: function(ctx,tools) {
         DrawForVis(ctx).back("#7cb7e3","#cccccc",canvas.width,canvas.height);
+        expression.draw(app.ctx,app.tools);
         for (var i = 0; i < this.treeVar.length; i++)
             if( this.treeVar[i].visible) this.treeVar[i].draw(ctx,tools);
     },

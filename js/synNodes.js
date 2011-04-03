@@ -1,12 +1,59 @@
 SynExpr = new Class({
-    initialize: function() {},
+    initialize: function() {
+       this.symbolName = new SymbolName(0,0,'');
+    },
     type: '',
+    symbolName: null,
     getValue: function() {
         return 0;
     },
     setValue: function(value) {},
     getType : function() {
         return this.type;
+    },
+    getPosX: function() {
+        return this.symbolName.posX;
+    },
+    getPosY: function() {
+        return this.symbolName.posY;
+    },
+    setPosX: function(pX) {
+        this.symbolName.posX = pX;
+    },
+    setPosY : function(pY) {
+        this.symbolName.posY = pY;
+    },
+    putPosition: function(pos) {
+        this.setPosX(pos[0]);
+        this.setPosY(pos[1]);
+        if(this instanceof SynBinOp) {
+            var pos = this.getSymBinOp().getPosSuch(true);
+            var pos1 = this.getSymBinOp().getPosSuch(false);
+            this.getLeft().putPosition(pos);
+            this.getRight().putPosition(pos1);
+        }
+    },
+    interpretation: function(pos) {
+        var varBeg, varEnd, varGo, k;
+        if(this instanceof SynBinOp) {
+            var expression = this;
+            this.getRight().interpretation(this.symBinOp.getPosSuch(false));
+            this.getLeft().interpretation(this.symBinOp.getPosSuch(true));
+        } else {
+            if((this instanceof SynConstInt) || (this instanceof SynConstReal)) {
+                varBeg = app.tree.getVarByName('1const');
+                varBeg.val = this.getValue();
+            } else varBeg = this.getSymbol();
+            var  k = app.treeVis.length - 1;
+            varEnd = new SymVar(varBeg.val,this.getPosX(),this.getPosY(),'#999',varBeg.rVar);
+            varEnd.setVisible(false);
+            app.tree.push(varEnd);
+            varGo = new SymVarSeparation(varBeg,varEnd,1/(90));
+            app.insertElementVis(k,varGo);
+        }
+    },
+    draw: function(ctx,tools) {
+        this.symbolName.draw(ctx,tools);
     }
 });
 
@@ -15,6 +62,7 @@ SynVar = new Class({
     initialize: function(symVar) {
         this.symVar = symVar;
         this.type = symVar.type;
+        this.symbolName = new SymbolName(0,0,symVar.name);
     },
     symVar: null,
     getValue: function() {
@@ -91,7 +139,7 @@ SynRecord = new Class({
     getName: function() {
         return this.left.name;
     },
-    setItemLeft = function(item) {
+    setItemLeft: function(item) {
         this.left = item;
         if (this instanceof SynRecord)
             this.right.left = item.getItemByName(this.right.getName());
@@ -103,6 +151,7 @@ SynConstInt = new Class({
     initialize: function(constValue) {
         this.constValue = constValue;
         this.type = 'int';
+        this.symbolName = new SymbolName(200,200,constValue);
     },
     constValue: null,
     getValue: function() {
@@ -143,7 +192,7 @@ SynBinOp = new Class({
         var y = this.symBinOp.posY;
         this.symBinOp.posY = pY;
         this.left.setPosY(this.left.getPosY() - y + this.symBinOp.posY);
-        this.right.setPosY(this.right.getPosY() - y +this.symBinOp.posY);
+        this.right.setPosY(this.right.getPosY() - y + this.symBinOp.posY);
     },
     getPosX: function() {
         return this.symBinOp.posX;
@@ -162,7 +211,7 @@ SynBinOp = new Class({
     },
     draw: function(ctx,tools) {
         this.symBinOp.draw(ctx,tools);
-        DrawForVis(cts).connect(tools.getAdjustedX(this.getPosX()),tools.getAdjustedY(this.getPosY()),
+        DrawForVis(ctx).connect(tools.getAdjustedX(this.getPosX()),tools.getAdjustedY(this.getPosY()),
             tools.getAdjustedX(this.left.getPosX()),tools.getAdjustedY(this.left.getPosY()),
             tools.getAdjustedR(20/5),this.symBinOp.colVar);
         DrawForVis(ctx).connect(tools.getAdjustedX(this.getPosX()),tools.getAdjustedY(this.getPosY()),
@@ -172,7 +221,3 @@ SynBinOp = new Class({
         this.right.draw(ctx,tools);
     }
 });
-
-
-
-

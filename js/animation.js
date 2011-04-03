@@ -108,6 +108,7 @@ SymVarSeparation = new Class ({
         }
     },
 	deleteSymVar: function (ctx,tools) {
+
         this.to.setVisible(true);
 		this.to.setValue(this.from.val);
         return 0;
@@ -222,11 +223,27 @@ SymBinOp = new Class ({
     initialize: function(val,pX,pY,type,alpha) {
         this.parent(val,pX,pY,'binOp','');
         this.rVar = 25;
+        this.alpha = alpha;
     },
+    alpha: null,
     draw: function(ctx,tools) {
         with(this) {
             DrawForVis(ctx).halfBall(tools.getAdjustedX(posX),tools.getAdjustedY(posY),tools.getAdjustedR(rVar),colVar);
             DrawForVis(ctx).text(val,tools.getAdjustedX(posX),tools.getAdjustedY(posY + rVar/2.5),tools.getAdjustedR(rVar),0,type);
         }
+    },
+    getPosSuch: function(left) {
+        var x, y, dx1, dx2, dy1, dy2
+        dx1 = this.rVar*2*Math.cos(Math.PI/5*(4+this.alpha)-Math.PI/2);
+        dx2 = this.rVar*2*Math.cos(Math.PI/5*(4-this.alpha)-Math.PI/2);
+        dy1 = this.rVar*2*Math.sin(Math.PI/5*(4+this.alpha)-Math.PI/2);
+        dy2 = this.rVar*2*Math.sin(Math.PI/5*(4-this.alpha)-Math.PI/2);
+        x = this.posX - dx2;
+        y = this.posY - dy2;
+        if(!left) {
+            x = this.posX + dx1;
+            y = this.posY - dy1;
+        }
+        return new Array(x,y);
     }
 });
