@@ -40,9 +40,9 @@ VariableTree = new Class({
                 if(k == this.treeVar.length) return;
             }
     },
-	getVarByName: function(name){
-	    for (var k = this.treeVar.length - 1; k >= 0; k--)
-           if (this.treeVar[k].name == name) return this.treeVar[k];
+	getVarByName: function(tree,name) {
+	    for (var k = tree.length - 1; k >= 0; k--)
+           if (tree[k].name == name) return tree[k];
 		return -1;
     }
 });

@@ -241,6 +241,9 @@ SymArray = new Class({
         }
         this.posX = this.itemsElement[0].posX;
         this.posY = this.itemsElement[0].posY;
+    },
+    getItemArrByNum : function(num){
+         return this.itemsElement[num - this.firstIndex]
     }
 })
 
@@ -282,8 +285,9 @@ SymRecord = new Class({
         with(this) {
             var x = posX;
             posX = vX;
-            for(var i = 0; i < sizeElement; i++)
+            for(var i = 0; i < sizeElement; i++){
                 itemsElement[i].setPosX(itemsElement[i].posX - x + posX);
+            }
         }
     },
     setPosY: function(vY) {
@@ -336,7 +340,12 @@ SymRecord = new Class({
             this.itemsElement[i].setPosY(this.itemsElement[i].posY - y + this.posY);
             this.itemsElement[i].setPosX(this.itemsElement[i].posX - x + this.posX);
         }
-    }
+    },
+    getItemByName: function(name) {
+        for(var i = 0; i < this.sizeElement; i++)
+            if (this.itemsElement[i].getName() == name) return this.itemsElement[i];
+        return -1;
+    },
 });
 
 SymConst = new Class({

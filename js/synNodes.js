@@ -41,7 +41,7 @@ SynExpr = new Class({
             this.getLeft().interpretation(this.symBinOp.getPosSuch(true));
         } else {
             if((this instanceof SynConstInt) || (this instanceof SynConstReal)) {
-                varBeg = app.tree.getVarByName('1const');
+                varBeg = app.tree.getVarByName(app.tree.treeVar,'1const');
                 varBeg.val = this.getValue();
             } else varBeg = this.getSymbol();
             var  k = app.treeVis.length - 1;
@@ -85,6 +85,7 @@ SynArray = new Class({
         this.left = left;
         this.right = right;
         this.symbolArray = symbol;
+        this.symbolName = new SymbolName(0,0,this.getAllName(this.left.name+'['));
     },
     left: null, //link for synArray
     right: null, //expression for index
@@ -99,24 +100,38 @@ SynArray = new Class({
         return this.symbolArray.getType();
     },
     getSymbol: function() { //returns sym from treeVar
-        var result = this.right.operation(false); //create calculating index expression
-        var item = this.left.getItemArrByNum(result);
+        //var result = this.right.operation(false); //create calculating index expression
+        //var item = this.left.getItemArrByNum(result);
+        var item = this.left.getItemArrByNum(1);
         if((this.symbolArray instanceof SynArray)||(this.symbolArray instanceof SynRecord)) {
             this.symbolArray.setItemLeft(item);
-            return this.symbolArr.getSymbol();
+            return this.symbolArray.getSymbol();
         }
         return item;
     },
     setItemLeft: function(item) {
         this.left = item;
+    },
+    getAllName: function(name) {
+        if(this.symbolArray instanceof SynArray) {
+            name = name + this.right.getValue() + ',';
+            return this.symbolArray.getAllName(name);
+        }
+        else if(this.symbolArray instanceof SynRecord) {
+            name = name + this.right.getValue() + ']';
+            return this.symbolArray.getAllName(name);
+        }
+        name = name + this.right.getValue() + ']';
+        return name;
     }
 });
 
 SynRecord = new Class({
     Extends: SynExpr,
     initialize: function(left,right) {
-        this.left = left; //link for synRecord
+        this.left = left; //link for symRecord
         this.right = right; //record's fields
+        this.symbolName = new SymbolName(0,0,this.getAllName(this.left.name));
     },
     left: null,
     right: null,
@@ -143,6 +158,18 @@ SynRecord = new Class({
         this.left = item;
         if (this instanceof SynRecord)
             this.right.left = item.getItemByName(this.right.getName());
+    },
+    getAllName: function(name) {
+        if(this.right instanceof SynRecord) {
+            name = name + '.' + this.right.left.name;
+            return this.right.getAllName(name);
+        }
+        else if(this.right instanceof SynArray) {
+            name = name + '.' + this.right.left.name + '[';
+            return this.right.getAllName(name);
+        }
+        name = name + '.' + this.right.getName();
+        return name;
     }
 });
 

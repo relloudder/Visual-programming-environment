@@ -117,9 +117,8 @@ LexicalAnalyzer = new Class({
         return rec;
     },
     getBlock: function() {
-        app.tree.treeLocation();
         this.currentLexeme = Scanner.next(this.currentLexeme.nextLexemePos);
-        expression = this.parseExpr(canvas.treeVar,';');
+        expression = this.parseExpr(app.tree.treeVar,';');
         expression.putPosition([400,300]);
     },
     parseExpr: function(treeVar,endLexeme) {
@@ -177,5 +176,61 @@ LexicalAnalyzer = new Class({
             if(this.currentLexeme.name == endLexeme);
             else this.exception.error('except arithmetic or compare operation',this.currentLexeme);
         return result;
+    },
+    parseIdentifier: function(treeVar) {
+        var item = app.tree.getVarByName(treeVar,this.currentLexeme.name);
+        if(item == -1)
+            this.exception.error('variable has no name',this.currentLexeme);
+        if(item instanceof SymArray)
+            return this.parseSymArr(item,treeVar);
+        else if(item instanceof SymRecord)
+            return this.parseSymRecord(item,treeVar);
+        else if(item instanceof SymVarName)
+            return new SynVar(item);
+        else
+            this.exception.error('error type lexeme',this.currentLexeme);
+    },
+    parseSymArr: function(item,treeVar) {
+        this.currentLexeme = Scanner.next(this.currentLexeme.nextLexemePos);
+        this.text = this.text + this.currentLexeme.name;
+        if (this.currentLexeme.name!='[')
+            this.exception.error('except [ ', this.currentLexeme);
+        this.currentLexeme = Scanner.next(this.currentLexeme.nextLexemePos);
+        return this.parseIndexArray(item, treeVar, ']');
+    },
+    parseIndexArray: function(itemSymb,treeVar,endLexeme) {
+        var newSynExpr;
+        var item = itemSymb;
+        item = item.itemsElement[0];
+	    if(item instanceof SymArray) endLexeme = ',';
+	    else endLexeme = ']';
+        var arrIndex = this.parseExpr(treeVar,endLexeme);
+	    if(this.currentLexeme.name == ',') {
+		    if (!(item instanceof SymArray))
+		        this.exception.error('error index ',this.currentLexeme);
+		    this.text = this.text + this.currentLexeme.name;
+            this.currentLexeme = Scanner.next(this.currentLexeme.nextLexemePos);
+            newSynExpr = this.parseIndexArray(item,treeVar,endLexeme);
+        }
+        else if(this.currentLexeme.name == ']') {
+            if(item instanceof SymArray)
+                this.exception.error('except index array',this.currentLexeme);
+            if(item instanceof SymRecord)
+                newSynExpr = this.parseSymRecord(item, item.itemsRecord);
+	        else newSynExpr = new SynVar(item);
+            this.text = this.text + this.currentLexeme.name;
+        }
+        else this.exception.error('except ] ',this.currentLexeme);
+        return new SynArray(itemSymb,arrIndex,newSynExpr);
+    },
+    parseSymRecord: function(item,treeVar) {
+        this.currentLexeme = Scanner.next(this.currentLexeme.nextLexemePos);
+        this.text = this.text + this.currentLexeme.name;
+        if(this.currentLexeme.name != '.')
+            this.exception.error('except . ',this.currentLexeme);
+        this.currentLexeme = Scanner.next(this.currentLexeme.nextLexemePos);
+        this.text = this.text + this.currentLexeme.name;
+        return new SynRecord(item, this.parseIdentifier(item.itemsElement));
     }
 });
+

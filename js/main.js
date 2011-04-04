@@ -13,10 +13,9 @@ function runInterface() {
         var errorProgram = $('#errorPanel');
         var lex = new LexicalAnalyzer(textProgram,errorProgram);
         lex.getProgram();
-        var c = new SymConst(1,200,200);
-        app.tree.push(c);
         app.tree.treeLocation(app.width,app.height);
-        k = app.insertRowVis();
+        var c = new SymConst(1,600,500);
+        app.tree.push(c);
         app.tree.draw(app.ctx,app.tools);
     });
 
@@ -93,6 +92,7 @@ function runInterface() {
         app.insertElementVis(k,divBall4);
         var binOp = new SymBinOp('+',100,100,'binOp',0);
         app.tree.push(binOp);*/
+        k = app.insertRowVis();
         expression.interpretation([300,400]);
         app.paint();
     });
