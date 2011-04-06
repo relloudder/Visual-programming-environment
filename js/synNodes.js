@@ -42,10 +42,10 @@ SynExpr = new Class({
         } else {
             if((this instanceof SynConstInt) || (this instanceof SynConstReal)) {
                 varBeg = app.tree.getVarByName(app.tree.treeVar,'1const');
-                varBeg.val = this.getValue();
+                varBeg.setValue(this.getValue());
             } else varBeg = this.getSymbol();
             var  k = app.treeVis.length - 1;
-            varEnd = new SymVar(varBeg.val,this.getPosX(),this.getPosY(),'#999',varBeg.rVar);
+            varEnd = new SymVar(varBeg.getValue(),this.getPosX(),this.getPosY(),'#999',varBeg.rVar);
             varEnd.setVisible(false);
             app.tree.push(varEnd);
             varGo = new SymVarSeparation(varBeg,varEnd,1/(90));
@@ -54,6 +54,15 @@ SynExpr = new Class({
     },
     draw: function(ctx,tools) {
         this.symbolName.draw(ctx,tools);
+    },
+    findSynExpr: function(pos,tools) {
+        var find = this.symbolName.findVar(pos,tools);
+        if (find != -1) return this;
+        return -1;
+    },
+    changePos: function(pos,tools) {
+        this.symbolName.posX = pos[0]/tools.scale-tools.left;
+        this.symbolName.posY = pos[1]/tools.scale-tools.top;
     }
 });
 
@@ -246,5 +255,18 @@ SynBinOp = new Class({
             tools.getAdjustedR(20/5),this.symBinOp.colVar);
         this.left.draw(ctx,tools);
         this.right.draw(ctx,tools);
+    },
+    findSynExpr: function(pos,tools) {
+        var find = this.symBinOp.findVar(pos,tools);
+        if (find != -1) return this;
+        find = this.left.findSynExpr(pos,tools);
+        if (find != -1) return find;
+        find = this.right.findSynExpr(pos,tools);
+        if (find != -1) return find;
+        return -1;
+    },
+    changePos: function(pos,tools) {
+        this.setPosX(pos[0]/tools.scale-tools.left);
+        this.setPosY(pos[1]/tools.scale-tools.top);
     }
 });

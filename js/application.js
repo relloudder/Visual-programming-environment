@@ -1,12 +1,15 @@
 VariableTree = new Class({
     initialize: function() {
         this.treeVar = [];
+		this.treeStatment = [];
     },
     treeVar: null,
+	treeStatment: null,
     varMove: null,
     draw: function(ctx,tools) {
         DrawForVis(ctx).back("#7cb7e3","#cccccc",canvas.width,canvas.height);
-        expression.draw(app.ctx,app.tools);
+		for (var i = 0; i < this.treeStatment.length; i++)
+            this.treeStatment[i].draw(ctx,tools);
         for (var i = 0; i < this.treeVar.length; i++)
             if( this.treeVar[i].visible) this.treeVar[i].draw(ctx,tools);
     },
@@ -24,6 +27,11 @@ VariableTree = new Class({
                 return findSymbol;
             }
         }
+		for (var k = this.treeStatment.length - 1; k >= 0 ; k--) {
+            var findSyn = this.treeStatment[k].findSynExpr(pos,tools);
+            if (findSyn != -1)
+            return findSyn;
+		}
         return -1;
     },
     treeLocation: function(width,height) {

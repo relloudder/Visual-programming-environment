@@ -39,10 +39,10 @@ SymVarMove = new Class ({
         with(this) {
             var t = timeOneMove; //time of one move
             if(createSymVar(ctx,tools) == 1) return 1;
-            if(numberOfMove <= 0) return deleteSymVar(ctx,tools);
             DrawForVis(ctx).ball(tools.getAdjustedX(posX),tools.getAdjustedY(posY),tools.getAdjustedR(rVar),colVar);
             DrawForVis(ctx).text(val,tools.getAdjustedX(posX),tools.getAdjustedY(posY),tools.getAdjustedR(rVar),angle,'int');
-	        numberOfMove--;
+	        if(numberOfMove <= 0) return deleteSymVar(ctx,tools);
+			numberOfMove--;
             vY = vY - aY*t;
             var hx = vX*t;
             var hy = -(vY*t + aY*Math.pow(t,2)/2);
@@ -108,9 +108,7 @@ SymVarSeparation = new Class ({
         }
     },
 	deleteSymVar: function (ctx,tools) {
-
         this.to.setVisible(true);
-		this.to.setValue(this.from.val);
         return 0;
     }
 });
@@ -245,5 +243,12 @@ SymBinOp = new Class ({
             y = this.posY - dy1;
         }
         return new Array(x,y);
+    },
+    findVar: function(pos,tools){
+        var x = pos[0]/tools.scale - tools.left;
+        var  y = pos[1]/tools.scale - tools.top;
+        if ((((x-this.getPosX())*(x-this.getPosX())+(y-this.getPosY())*(y-this.getPosY())) <= 2*this.rVar*this.rVar) && (y > this.getPosY()))
+            return this;
+        return -1;
     }
 });

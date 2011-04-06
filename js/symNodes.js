@@ -44,7 +44,15 @@ SymbolName = new Class({
     draw: function(ctx,tools) {
         DrawForVis(ctx).flag(tools.getAdjustedX(this.posX+this.text.length*4),tools.getAdjustedY(this.posY+8),
             tools.getAdjustedR(10),1,'black',this.text,tools.getAdjustedR(20),this.turn);
+    },
+    findVar: function(pos, tools) {
+        var x = pos[0]/tools.scale - tools.left;
+        var y = pos[1]/tools.scale - tools.top;
+        if ((this.posX > x) && ((this.posX-20) < x) && ((this.posY-30) < y) && ((this.posY) > y))
+            return this;
+        return -1;
     }
+
 });
 
 SymVar = new Class({

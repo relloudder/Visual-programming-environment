@@ -16,7 +16,9 @@ function runInterface() {
         app.tree.treeLocation(app.width,app.height);
         var c = new SymConst(1,600,500);
         app.tree.push(c);
-        app.tree.draw(app.ctx,app.tools);
+		app.tree.treeStatment.push(expression);
+		app.paint();
+        //app.tree.draw(app.ctx,app.tools);
     });
 
     $('#stop, #new, #reset').click(function() {
@@ -50,11 +52,13 @@ function runInterface() {
         if (app.flagCanvasMove) {
             app.tools.setTop(app.tools.getTop() - (yOld - y)/app.tools.getScale());
             app.tools.setLeft(app.tools.getLeft() - (xOld - x)/app.tools.getScale());
-            app.tree.draw(app.ctx,app.tools);
+            //app.tree.draw(app.ctx,app.tools);
+			app.paint();
         } else
         if (app.flagMove) {
 	        app.tree.varMove.changePos(new Array(x,y),app.tools);
-	        app.tree.draw(app.ctx,app.tools);
+	        //app.tree.draw(app.ctx,app.tools);
+			app.paint();
 	    }
 	    xOld = x;
 	    yOld = y;
