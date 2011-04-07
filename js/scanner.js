@@ -102,9 +102,9 @@ var Scanner = (function() {
             new LexemeType('Keyword', keywords),
             new LexemeType('Separator', separators),
             new LexemeType('Comparison', comparisons),
+            new LexemeType('MathOperation', mathOperations),
             new LexemeType('NumberReal', numbersReal),
             new LexemeType('NumberInt', numbersInt),
-            new LexemeType('MathOperation', mathOperations),
             new LexemeType('Identifier', identifiers)
         ];
 

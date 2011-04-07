@@ -119,7 +119,7 @@ LexicalAnalyzer = new Class({
     getBlock: function() {
         this.currentLexeme = Scanner.next(this.currentLexeme.nextLexemePos);
         expression = this.parseExpr(app.tree.treeVar,';');
-        expression.putPosition([400,300]);
+        expression.putPosition([500,400]);
     },
     parseExpr: function(treeVar,endLexeme) {
         return this.parseCompare(treeVar,endLexeme);

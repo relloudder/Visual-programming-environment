@@ -97,7 +97,7 @@ function runInterface() {
         var binOp = new SymBinOp('+',100,100,'binOp',0);
         app.tree.push(binOp);*/
         k = app.insertRowVis();
-        expression.interpretation([300,400]);
+        expression.interpretation([400,400]);
         expression.operation(true);
         app.paint();
     });
