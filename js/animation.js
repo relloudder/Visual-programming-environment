@@ -159,7 +159,7 @@ SymVarMerge = new Class ({
 SymVarChange = new Class ({
     Extends: SymVarModifiable,
     initialize: function(change) {
-        this.parent(change.val,change.posX,change.posY,change.colVar,change.rVar,15);
+        this.parent(change.val,change.posX,change.posY,change.colVar,change.rVar,30);
         this.changeableObject = change;
 	    this.rVar = change.rVar;
     },
@@ -180,7 +180,7 @@ SymVarBiggerSmaller = new Class ({
             DrawForVis(ctx).text(val,tools.getAdjustedX(posX),tools.getAdjustedY(posY),tools.getAdjustedR(rVar),0,changeableObject.type);
             if(numberOfMove == 0) {
                 changeableObject.rVar = rVar;
-                //changeObject.setVisible(true);
+                changeableObject.setVisible(true);
                 return 0;
             }
             numberOfMove--;
@@ -222,7 +222,6 @@ SymBinOp = new Class ({
     Extends: SymVarName,
     initialize: function(val,pX,pY,type,alpha) {
         this.parent(val,pX,pY,'binOp','');
-        this.rVar = 25;
         this.alpha = alpha;
     },
     alpha: null,

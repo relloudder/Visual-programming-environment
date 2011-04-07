@@ -107,6 +107,7 @@ SynExpr = new Class({
                 app.insertElementVis(k,varGo);
                 k = app.insertRowVis();
                 varGo = new SymVarBiggerSmaller(varNew,r);
+                varNew.rVar = r;
                 app.insertElementVis(k,varGo);
             }
             return result;
@@ -158,9 +159,8 @@ SynArray = new Class({
         return this.symbolArray.getType();
     },
     getSymbol: function() { //returns sym from treeVar
-        //var result = this.right.operation(false); //create calculating index expression
-        //var item = this.left.getItemArrByNum(result);
-        var item = this.left.getItemArrByNum(1);
+        var result = this.right.operation(false); //create calculating index expression
+        var item = this.left.getItemArrByNum(result);
         if((this.symbolArray instanceof SynArray)||(this.symbolArray instanceof SynRecord)) {
             this.symbolArray.setItemLeft(item);
             return this.symbolArray.getSymbol();
