@@ -98,6 +98,7 @@ function runInterface() {
         app.tree.push(binOp);*/
         k = app.insertRowVis();
         expression.interpretation([300,400]);
+        expression.operation(true);
         app.paint();
     });
 

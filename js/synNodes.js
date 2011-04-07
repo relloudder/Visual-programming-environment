@@ -63,7 +63,56 @@ SynExpr = new Class({
     changePos: function(pos,tools) {
         this.symbolName.posX = pos[0]/tools.scale-tools.left;
         this.symbolName.posY = pos[1]/tools.scale-tools.top;
-    }
+    },
+    operation: function(visible) {
+        var result,varNew,cVarL,cVarR,varGo,varGoL,varGoR,k,r;
+        with (this) {
+            if(this instanceof SynBinOp) {
+            if(getBinOpType() == '+')
+                result = 1*getRight().operation(visible) + 1*getLeft().operation(visible);
+            if(getBinOpType() == '-')
+                result = getLeft().operation(visible) - getRight().operation(visible);
+            if(getBinOpType() == '*')
+                result = getLeft().operation(visible) * getRight().operation(visible);
+            if (getBinOpType() == '/')
+                result = getLeft().operation(visible) / getRight().operation(visible);
+            if(getBinOpType() == '<')
+                result = getLeft().operation(visible) < getRight().operation(visible);
+            if(getBinOpType() == '>')
+                result = getLeft().operation(visible) > getRight().operation(visible);
+            if(getBinOpType() == 'or')
+                result = getLeft().operation(visible) || getRight().operation(visible);
+            if(getBinOpType() == 'and')
+                result = getLeft().operation(visible) && getRight().operation(visible);
+            if(getBinOpType() == '<=')
+                result = getLeft().operation(visible) <= getRight().operation(visible);
+            if(getBinOpType() == '>=')
+                result = getLeft().operation(visible) >= getRight().operation(visible);
+            if(getBinOpType() == '<>')
+                result = getLeft().operation(visible) != getRight().operation(visible);
+            if(visible) {
+                varGo = new SymVarOpenClose(symBinOp,false,false);
+                cVarL = app.tree.findByPos([this.left.getPosX(),this.left.getPosY()],app.tools);
+                cVarR = app.tree.findByPos([this.right.getPosX(),this.right.getPosY()],app.tools);
+                varGoL = new SymVarDown(cVarL,symBinOp,0.001);
+                varGoR = new SymVarDown(cVarR,symBinOp,0.001);
+                varNew = new SymVar(result,symBinOp.getPosX(),symBinOp.getPosY(),'#999',cVarR.rVar);
+                r = varNew.rVar;
+                varNew.rVar = symBinOp.rVar;
+                varNew.setVisible(false);
+                app.tree.push(varNew);
+                k = app.insertRowVis();
+                app.insertElementVis(k,varGoR);
+                app.insertElementVis(k,varGoL);
+                app.insertElementVis(k,varGo);
+                k = app.insertRowVis();
+                varGo = new SymVarBiggerSmaller(varNew,r);
+                app.insertElementVis(k,varGo);
+            }
+            return result;
+        }
+        return getValue();
+    }}
 });
 
 SynVar = new Class({
@@ -208,7 +257,7 @@ SynBinOp = new Class({
         this.symBinOp = op;
         this.left = left;
         this.right = right;
-        this.binOp = op.value;
+        this.binOp = op.val;
     },
     constValue: null,
     getValue: function() {
@@ -245,7 +294,11 @@ SynBinOp = new Class({
     getLeft: function() {
         return this.left;
     },
+    getBinOpType: function() {
+        return this.binOp;
+    },
     draw: function(ctx,tools) {
+        if (this.symBinOp.visible) {
         this.symBinOp.draw(ctx,tools);
         DrawForVis(ctx).connect(tools.getAdjustedX(this.getPosX()),tools.getAdjustedY(this.getPosY()),
             tools.getAdjustedX(this.left.getPosX()),tools.getAdjustedY(this.left.getPosY()),
@@ -254,7 +307,7 @@ SynBinOp = new Class({
             tools.getAdjustedX(this.right.getPosX()),tools.getAdjustedY(this.right.getPosY()),
             tools.getAdjustedR(20/5),this.symBinOp.colVar);
         this.left.draw(ctx,tools);
-        this.right.draw(ctx,tools);
+        this.right.draw(ctx,tools);}
     },
     findSynExpr: function(pos,tools) {
         var find = this.symBinOp.findVar(pos,tools);

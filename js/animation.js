@@ -110,7 +110,8 @@ SymVarSeparation = new Class ({
 	deleteSymVar: function (ctx,tools) {
         this.to.setVisible(true);
         return 0;
-    }
+    },
+
 });
 
 SymVarMerge = new Class ({
@@ -179,7 +180,7 @@ SymVarBiggerSmaller = new Class ({
             DrawForVis(ctx).text(val,tools.getAdjustedX(posX),tools.getAdjustedY(posY),tools.getAdjustedR(rVar),0,changeableObject.type);
             if(numberOfMove == 0) {
                 changeableObject.rVar = rVar;
-                changeableObject.setVisible(true);
+                //changeObject.setVisible(true);
                 return 0;
             }
             numberOfMove--;
@@ -191,7 +192,7 @@ SymVarBiggerSmaller = new Class ({
 
 SymVarOpenClose = new Class ({
     Extends: SymVarChange,
-    initialize: function(change,open) {
+    initialize: function(change,open,visible) {
         this.parent(change);
         if (open) {
             this.angle = -90;
@@ -199,6 +200,7 @@ SymVarOpenClose = new Class ({
         } else {
             this.angle = -5;
             this.angleOfRotation = (-85 - this.angle)/this.numberOfMove;
+            this.visible = visible;
         }
     },
     draw: function(ctx,tools) {
@@ -206,7 +208,7 @@ SymVarOpenClose = new Class ({
             changeableObject.setVisible(false);
             DrawForVis(ctx).alphaBall(tools.getAdjustedX(posX),tools.getAdjustedY(posY),tools.getAdjustedR(rVar),colVar,angle);
             if(numberOfMove == 0) {
-                changeableObject.setVisible(true);
+                changeableObject.setVisible(visible);
                 return 0;
             }
             numberOfMove--;
@@ -252,3 +254,15 @@ SymBinOp = new Class ({
         return -1;
     }
 });
+
+SymVarDown = new Class ({
+    Extends: SymVarInteraction,
+    initialize: function(from,to,g) {
+        this.parent(from,to,g);
+    },
+    createSymVar: function(ctx,tools) {
+        this.from.setVisible(false);
+        return 0;
+    }
+});
+
