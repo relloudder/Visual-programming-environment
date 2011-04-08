@@ -68,6 +68,7 @@ var Scanner = (function() {
     position = 0,
     code = null,
     program = null;
+	codePart = null;
 
 
     var updateCodeAndPosition = function(pos) {
@@ -102,7 +103,7 @@ var Scanner = (function() {
             new LexemeType('Keyword', keywords),
             new LexemeType('Separator', separators),
             new LexemeType('Comparison', comparisons),
-            new LexemeType('MathOperation', mathOperations),
+			new LexemeType('MathOperation', mathOperations),
             new LexemeType('NumberReal', numbersReal),
             new LexemeType('NumberInt', numbersInt),
             new LexemeType('Identifier', identifiers)
@@ -126,6 +127,7 @@ var Scanner = (function() {
         });
 
         updateCodeAndPosition(lexemeEndPos);
+		codePart += lexemeName;
         return new Lexeme(lexemeName, lexemeType, position, position - lexemeEndPos);
     };
 
@@ -139,7 +141,13 @@ var Scanner = (function() {
             position = 0;
             updateCodeAndPosition(pos);
             return match();
-        }
+        },
+
+		popCodePart: function() {
+		    var part = codePart;
+			codePart = '';
+			return part;
+		}
     };
 
 })();

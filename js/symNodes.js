@@ -250,8 +250,12 @@ SymArray = new Class({
         this.posX = this.itemsElement[0].posX;
         this.posY = this.itemsElement[0].posY;
     },
-    getItemArrByNum : function(num){
-         return this.itemsElement[num - this.firstIndex]
+    getItemArrByNum : function(num) {
+        if(((num - this.firstIndex) < 0) || ((num - this.firstIndex) > this.sizeElement)) {
+            alert('элемента с номером ' + num + ' в массиве нет');
+            return -1;
+        }
+        return this.itemsElement[num - this.firstIndex];
     }
 })
 

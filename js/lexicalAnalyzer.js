@@ -195,6 +195,7 @@ LexicalAnalyzer = new Class({
         this.text = this.text + this.currentLexeme.name;
         if (this.currentLexeme.name!='[')
             this.exception.error('except [ ', this.currentLexeme);
+        Scanner.popCodePart()
         this.currentLexeme = Scanner.next(this.currentLexeme.nextLexemePos);
         return this.parseIndexArray(item, treeVar, ']');
     },
@@ -205,6 +206,7 @@ LexicalAnalyzer = new Class({
 	    if(item instanceof SymArray) endLexeme = ',';
 	    else endLexeme = ']';
         var arrIndex = this.parseExpr(treeVar,endLexeme);
+        arrIndex.symbolName.text = Scanner.popCodePart();
 	    if(this.currentLexeme.name == ',') {
 		    if (!(item instanceof SymArray))
 		        this.exception.error('error index ',this.currentLexeme);

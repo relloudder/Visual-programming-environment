@@ -171,15 +171,18 @@ SynArray = new Class({
         this.left = item;
     },
     getAllName: function(name) {
+        var index = this.right.getValue();
+        if(index == null)
+            index = this.right.symbolName.text.substring(0,this.right.symbolName.text.length-1);
         if(this.symbolArray instanceof SynArray) {
-            name = name + this.right.getValue() + ',';
+            name = name + index + ',';
             return this.symbolArray.getAllName(name);
         }
         else if(this.symbolArray instanceof SynRecord) {
-            name = name + this.right.getValue() + ']';
+            name = name + index + ']';
             return this.symbolArray.getAllName(name);
         }
-        name = name + this.right.getValue() + ']';
+        name = name + index + ']';
         return name;
     }
 });
@@ -258,6 +261,7 @@ SynBinOp = new Class({
         this.left = left;
         this.right = right;
         this.binOp = op.val;
+        this.symbolName = new SymbolName(0,0,'');
     },
     constValue: null,
     getValue: function() {
