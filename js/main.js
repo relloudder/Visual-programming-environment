@@ -8,7 +8,9 @@ $(function() {
 
 function runInterface() {
     $('#playMenu, #play').click(function() {
+        var sp = app.speed;
         initApplication();
+        app.speed = sp;
         var textProgram = $('#programPanel');
         var errorProgram = $('#errorPanel');
         var lex = new LexicalAnalyzer(textProgram,errorProgram);
@@ -18,7 +20,6 @@ function runInterface() {
         app.tree.push(c);
 		app.tree.treeStatment.push(expression);
 		app.paint();
-        //app.tree.draw(app.ctx,app.tools);
     });
 
     $('#stop, #new, #reset').click(function() {
@@ -27,12 +28,12 @@ function runInterface() {
 
     $('#zoomIn, #zoomInMenu').click(function() {
         app.tools.scale += 0.01;
-        app.tree.draw(app.ctx,app.tools);
+        app.paint();
     });
 
     $('#zoomOut, #zoomOutMenu').click(function() {
         app.tools.scale -= 0.01;
-        app.tree.draw(app.ctx,app.tools);
+        app.paint();
     });
 
     $("#canvas").mousedown(function(event) {
@@ -52,12 +53,10 @@ function runInterface() {
         if (app.flagCanvasMove) {
             app.tools.setTop(app.tools.getTop() - (yOld - y)/app.tools.getScale());
             app.tools.setLeft(app.tools.getLeft() - (xOld - x)/app.tools.getScale());
-            //app.tree.draw(app.ctx,app.tools);
 			app.paint();
         } else
         if (app.flagMove) {
 	        app.tree.varMove.changePos(new Array(x,y),app.tools);
-	        //app.tree.draw(app.ctx,app.tools);
 			app.paint();
 	    }
 	    xOld = x;
