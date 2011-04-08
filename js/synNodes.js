@@ -92,8 +92,8 @@ SynExpr = new Class({
                 result = getLeft().operation(visible) != getRight().operation(visible);
             if(visible) {
                 varGo = new SymVarOpenClose(symBinOp,false,false);
-                cVarL = app.tree.findByPos([this.left.getPosX(),this.left.getPosY()],app.tools);
-                cVarR = app.tree.findByPos([this.right.getPosX(),this.right.getPosY()],app.tools);
+                cVarL = app.tree.findByPos([this.left.getPosX(),this.left.getPosY()],new Tools(0,0,1));
+                cVarR = app.tree.findByPos([this.right.getPosX(),this.right.getPosY()],new Tools(0,0,1));
                 varGoL = new SymVarDown(cVarL,symBinOp,0.001);
                 varGoR = new SymVarDown(cVarR,symBinOp,0.001);
                 varNew = new SymVar(result,symBinOp.getPosX(),symBinOp.getPosY(),'#999',Math.max(cVarR.rVar,cVarL.rVar));
