@@ -26,6 +26,17 @@ function runInterface() {
         initApplication();
     });
 
+    $('#stop').click(function() {
+        var end = new SymProgram(440,250,'#E8E8E8',false,470,200);
+        end.draw(app.ctx,app.tools);
+        var st2 = new SymAssignment(470,200,'#66CC99','j:=j*5',470,90);
+        st2.draw(app.ctx,app.tools);
+        var st1 = new SymAssignment(470,90,'#ff5544','i:=i+1',470,0);
+        st1.draw(app.ctx,app.tools);
+        var beg = new SymProgram(440,5,'#E8E8E8',true,0,0);
+        beg.draw(app.ctx,app.tools);
+    });
+
     $('#zoomIn, #zoomInMenu').click(function() {
         app.tools.scale += 0.01;
         app.paint();

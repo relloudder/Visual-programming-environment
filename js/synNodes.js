@@ -352,3 +352,38 @@ SynBinOp = new Class({
         this.setPosY(pos[1]/tools.scale-tools.top);
     }
 });
+
+Statment = new Class ({
+    Extends: SynExpr,
+    initialize: function(symStatment) {
+        this.symStatment = symStatment;
+    },
+    symStatment: null,
+    getValue: function() {
+        return this.constValue;
+    },
+    getPosY: function() {
+        this.symStatment.getPosY();
+    },
+    getPosY: function() {
+        this.symStatment.getPosX();
+    }
+});
+
+StmtAssignment = new Class ({
+    Extends: Statment,
+    initialize: function(aLeft,aRight,symStatment) {
+        this.parent(symStatment);
+        this.aLeft = aLeft;
+        this.aRight = aRight;
+    },
+    aLeft: null,
+    aRight: null,
+    getLeft: function() {
+        return this.aLeft;
+    },
+    getRight: function() {
+        return this.aRight;
+    }
+});
+
