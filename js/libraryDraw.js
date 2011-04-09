@@ -155,7 +155,9 @@ var DrawForVis = function(ctx) {
 	            val = Math.ceil(val*10)/10;
 		        stringVal = val.toString(10);
 	        }
-	        if (type == 'real' && stringVal.indexOf('.') < 0) stringVal += '.0';
+	        if (type == 'real' && stringVal.indexOf('.') < 0) {
+	            stringVal += '.0';
+	        }
 	        var lengthVal = stringVal.length;
 	        if (lengthVal > 5) {
 	            stringVal = stringVal.substring(0,5);
@@ -175,7 +177,9 @@ var DrawForVis = function(ctx) {
                 name = name.substring(0,5);
                 name = name+'~';
             }
-            if (typeof(name) == 'number') name = name.toString(10);
+            if (typeof(name) == 'number') {
+                name = name.toString(10);
+            }
             var w = name.length*0.6*rFont + 2;
             var h = rFont + 2;
             ctx.translate(0,n*rSpring-rSpring/2);
@@ -195,8 +199,11 @@ var DrawForVis = function(ctx) {
 
         connect: function(xBeg,yBeg,xEnd,yEnd,r,col) {
             var rr = Math.sqrt((xBeg-xEnd)*(xBeg-xEnd)+(yBeg-yEnd)*(yBeg-yEnd));
-            if ((yBeg-yEnd) == 0) alpha = -Math.PI/2;
-            else alpha = Math.atan((xBeg-xEnd)/(yBeg-yEnd));
+            if ((yBeg-yEnd) == 0) {
+                alpha = -Math.PI/2;
+            } else {
+                alpha = Math.atan((xBeg-xEnd)/(yBeg-yEnd));
+            }
             if ((yBeg-yEnd)>0) {
                 alpha = Math.PI+alpha;
             }
@@ -252,9 +259,13 @@ var DrawForVis = function(ctx) {
 
         record: function(x0,y0,r,col,val) {
             ctx.save();
-            if (typeof(val) == 'number') val = val.toString(10);
+            if (typeof(val) == 'number') {
+                val = val.toString(10);
+            }
             var h = val.length*r/6;
-            if (h < 10) h = 10;
+            if (h < 10) {
+                h = 10;
+            }
             ctx.translate(x0,y0);
             ctx.beginPath();
             ctx.moveTo(-1.5*r-h/2,-r);

@@ -26,7 +26,7 @@ SynExpr = new Class({
     putPosition: function(pos) {
         this.setPosX(pos[0]);
         this.setPosY(pos[1]);
-        if(this instanceof SynBinOp) {
+        if (this instanceof SynBinOp) {
             var pos = this.getSymBinOp().getPosSuch(true);
             var pos1 = this.getSymBinOp().getPosSuch(false);
             this.getLeft().putPosition(pos);
@@ -35,15 +35,17 @@ SynExpr = new Class({
     },
     interpretation: function(pos) {
         var varBeg, varEnd, varGo, k;
-        if(this instanceof SynBinOp) {
+        if (this instanceof SynBinOp) {
             var expression = this;
             this.getRight().interpretation(this.symBinOp.getPosSuch(false));
             this.getLeft().interpretation(this.symBinOp.getPosSuch(true));
         } else {
-            if((this instanceof SynConstInt) || (this instanceof SynConstReal)) {
+            if ((this instanceof SynConstInt) || (this instanceof SynConstReal)) {
                 varBeg = app.tree.getVarByName(app.tree.treeVar,'1const');
                 varBeg.setValue(this.getValue());
-            } else varBeg = this.getSymbol();
+            } else {
+                varBeg = this.getSymbol();
+            }
             var  k = app.treeVis.length - 1;
             varEnd = new SymVar(varBeg.getValue(),this.getPosX(),this.getPosY(),'#999',varBeg.rVar);
             varEnd.setVisible(false);
@@ -57,7 +59,9 @@ SynExpr = new Class({
     },
     findSynExpr: function(pos,tools) {
         var find = this.symbolName.findVar(pos,tools);
-        if (find != -1) return this;
+        if (find != -1) {
+            return this;
+        }
         return -1;
     },
     changePos: function(pos,tools) {
@@ -66,31 +70,42 @@ SynExpr = new Class({
     },
     operation: function(visible) {
         var result,varNew,cVarL,cVarR,varGo,varGoL,varGoR,k,r;
-        with (this) {
-            if(this instanceof SynBinOp) {
-            if(getBinOpType() == '+')
+        with(this) {
+            if (this instanceof SynBinOp) {
+            if (getBinOpType() == '+') {
                 result = 1*getRight().operation(visible) + 1*getLeft().operation(visible);
-            if(getBinOpType() == '-')
+            }
+            if (getBinOpType() == '-') {
                 result = getLeft().operation(visible) - getRight().operation(visible);
-            if(getBinOpType() == '*')
+            }
+            if (getBinOpType() == '*') {
                 result = getLeft().operation(visible) * getRight().operation(visible);
-            if (getBinOpType() == '/')
+            }
+            if (getBinOpType() == '/') {
                 result = getLeft().operation(visible) / getRight().operation(visible);
-            if(getBinOpType() == '<')
+            }
+            if (getBinOpType() == '<') {
                 result = getLeft().operation(visible) < getRight().operation(visible);
-            if(getBinOpType() == '>')
+            }
+            if (getBinOpType() == '>') {
                 result = getLeft().operation(visible) > getRight().operation(visible);
-            if(getBinOpType() == 'or')
+            }
+            if (getBinOpType() == 'or') {
                 result = getLeft().operation(visible) || getRight().operation(visible);
-            if(getBinOpType() == 'and')
+            }
+            if (getBinOpType() == 'and') {
                 result = getLeft().operation(visible) && getRight().operation(visible);
-            if(getBinOpType() == '<=')
+            }
+            if (getBinOpType() == '<=') {
                 result = getLeft().operation(visible) <= getRight().operation(visible);
-            if(getBinOpType() == '>=')
+            }
+            if (getBinOpType() == '>=') {
                 result = getLeft().operation(visible) >= getRight().operation(visible);
-            if(getBinOpType() == '<>')
+            }
+            if (getBinOpType() == '<>') {
                 result = getLeft().operation(visible) != getRight().operation(visible);
-            if(visible) {
+            }
+            if (visible) {
                 varGo = new SymVarOpenClose(symBinOp,false,false);
                 cVarL = app.tree.findByPos([this.left.getPosX(),this.left.getPosY()],new Tools(0,0,1));
                 cVarR = app.tree.findByPos([this.right.getPosX(),this.right.getPosY()],new Tools(0,0,1));
@@ -172,13 +187,13 @@ SynArray = new Class({
     },
     getAllName: function(name) {
         var index = this.right.getValue();
-        if(index == null)
+        if(index == null) {
             index = this.right.symbolName.text.substring(0,this.right.symbolName.text.length-1);
+        }
         if(this.symbolArray instanceof SynArray) {
             name = name + index + ',';
             return this.symbolArray.getAllName(name);
-        }
-        else if(this.symbolArray instanceof SynRecord) {
+        } else if(this.symbolArray instanceof SynRecord) {
             name = name + index + ']';
             return this.symbolArray.getAllName(name);
         }
@@ -204,12 +219,15 @@ SynRecord = new Class({
     },
     getSymbol: function() {
         var item = this;
-        while(item.right instanceof SynRecord)
+        while (item.right instanceof SynRecord) {
 	        item  =  item.right;
+	    }
 	    var symb;
-	    if(item.right instanceof SynArray)
+	    if (item.right instanceof SynArray) {
             symb = item.right.getSymbol();
-	    else symb = item.left.getItemByName(item.right.getName());
+        } else {
+            symb = item.left.getItemByName(item.right.getName());
+        }
 	    return symb;
     },
     getName: function() {
@@ -217,15 +235,15 @@ SynRecord = new Class({
     },
     setItemLeft: function(item) {
         this.left = item;
-        if (this instanceof SynRecord)
+        if (this instanceof SynRecord) {
             this.right.left = item.getItemByName(this.right.getName());
+        }
     },
     getAllName: function(name) {
-        if(this.right instanceof SynRecord) {
+        if (this.right instanceof SynRecord) {
             name = name + '.' + this.right.left.name;
             return this.right.getAllName(name);
-        }
-        else if(this.right instanceof SynArray) {
+        } else if (this.right instanceof SynArray) {
             name = name + '.' + this.right.left.name + '[';
             return this.right.getAllName(name);
         }
@@ -303,23 +321,30 @@ SynBinOp = new Class({
     },
     draw: function(ctx,tools) {
         if (this.symBinOp.visible) {
-        this.symBinOp.draw(ctx,tools);
-        DrawForVis(ctx).connect(tools.getAdjustedX(this.getPosX()),tools.getAdjustedY(this.getPosY()),
-            tools.getAdjustedX(this.left.getPosX()),tools.getAdjustedY(this.left.getPosY()),
-            tools.getAdjustedR(20/5),this.symBinOp.colVar);
-        DrawForVis(ctx).connect(tools.getAdjustedX(this.getPosX()),tools.getAdjustedY(this.getPosY()),
-            tools.getAdjustedX(this.right.getPosX()),tools.getAdjustedY(this.right.getPosY()),
-            tools.getAdjustedR(20/5),this.symBinOp.colVar);
-        this.left.draw(ctx,tools);
-        this.right.draw(ctx,tools);}
+            this.symBinOp.draw(ctx,tools);
+            DrawForVis(ctx).connect(tools.getAdjustedX(this.getPosX()),tools.getAdjustedY(this.getPosY()),
+                tools.getAdjustedX(this.left.getPosX()),tools.getAdjustedY(this.left.getPosY()),
+                tools.getAdjustedR(20/5),this.symBinOp.colVar);
+            DrawForVis(ctx).connect(tools.getAdjustedX(this.getPosX()),tools.getAdjustedY(this.getPosY()),
+                tools.getAdjustedX(this.right.getPosX()),tools.getAdjustedY(this.right.getPosY()),
+                tools.getAdjustedR(20/5),this.symBinOp.colVar);
+            this.left.draw(ctx,tools);
+            this.right.draw(ctx,tools);
+        }
     },
     findSynExpr: function(pos,tools) {
         var find = this.symBinOp.findVar(pos,tools);
-        if (find != -1) return this;
+        if (find != -1) {
+            return this;
+        }
         find = this.left.findSynExpr(pos,tools);
-        if (find != -1) return find;
+        if (find != -1) {
+            return find;
+        }
         find = this.right.findSynExpr(pos,tools);
-        if (find != -1) return find;
+        if (find != -1) {
+            return find;
+        }
         return -1;
     },
     changePos: function(pos,tools) {

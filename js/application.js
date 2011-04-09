@@ -8,10 +8,12 @@ VariableTree = new Class({
     varMove: null,
     draw: function(ctx,tools) {
         DrawForVis(ctx).back("#7cb7e3","#cccccc",canvas.width,canvas.height);
-		for (var i = 0; i < this.treeStatment.length; i++)
+		for (var i = 0; i < this.treeStatment.length; i++) {
             this.treeStatment[i].draw(ctx,tools);
-        for (var i = 0; i < this.treeVar.length; i++)
+        }
+        for (var i = 0; i < this.treeVar.length; i++) {
             if( this.treeVar[i].visible) this.treeVar[i].draw(ctx,tools);
+        }
     },
     push: function(item) {
         this.treeVar.push(item);
@@ -29,28 +31,37 @@ VariableTree = new Class({
         }
 		for (var k = this.treeStatment.length - 1; k >= 0 ; k--) {
             var findSyn = this.treeStatment[k].findSynExpr(pos,tools);
-            if (findSyn != -1)
-            return findSyn;
+            if (findSyn != -1) {
+                return findSyn;
+            }
 		}
         return -1;
     },
     treeLocation: function(width,height) {
         var length = this.treeVar.length;
-        if(length/2 != Math.ceil(length/2)) length++;
+        if (length/2 != Math.ceil(length/2)) {
+            length++;
+        }
         var sizeX = width/4, sizeY = height/length*2;
         var k = 0;
-        for(var i = 0; i < 2; i++)
+        for(var i = 0; i < 2; i++) {
             for(var j = 0; j < length/2; j++) {
                 this.treeVar[k].setPosX(i*sizeX + sizeX/2);
                 this.treeVar[k].setPosY(j*sizeY + sizeY/2);
                 this.treeVar[k].inputRandom(10);
                 k++;
-                if(k == this.treeVar.length) return;
+                if (k == this.treeVar.length) {
+                    return;
+                }
             }
+        }
     },
 	getVarByName: function(tree,name) {
-	    for (var k = tree.length - 1; k >= 0; k--)
-           if (tree[k].name == name) return tree[k];
+	    for (var k = tree.length - 1; k >= 0; k--) {
+	        if (tree[k].name == name) {
+	            return tree[k];
+	        }
+	    }
 		return -1;
     }
 });
@@ -133,12 +144,14 @@ Application = new Class({
             DrawForVis(ctx).back('#202020','#aaa',width,height);
             tree.draw(ctx,tools);
             var stopPaint = 0;
-            if(treeVis[0] != null)
-                for(var i = 0; i < treeVis[0].length; i++)
+            if (treeVis[0] != null) {
+                for (var i = 0; i < treeVis[0].length; i++) {
                     stopPaint += treeVis[0][i].draw(ctx,tools);
+                }
+            }
             if (stopPaint == 0) {
                 clearInterval(idTimer);
-                if(treeVis.length > 0) {
+                if (treeVis.length > 0) {
                     treeVis.splice(0,1); //delete 0 row
                     selfNew = this;
                     idTimer = setInterval('selfNew.drawTreeVis()',this.dTime);

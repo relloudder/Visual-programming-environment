@@ -48,8 +48,9 @@ SymbolName = new Class({
     findVar: function(pos, tools) {
         var x = pos[0]/tools.scale - tools.left;
         var y = pos[1]/tools.scale - tools.top;
-        if ((this.posX > x) && ((this.posX-20) < x) && ((this.posY-30) < y) && ((this.posY) > y))
+        if ((this.posX > x) && ((this.posX-20) < x) && ((this.posY-30) < y) && ((this.posY) > y)) {
             return this;
+        }
         return -1;
     }
 
@@ -89,14 +90,17 @@ SymVar = new Class({
     },
     draw: function(ctx,tools) {
         DrawForVis(ctx).ball(tools.getAdjustedX(this.posX),tools.getAdjustedY(this.posY),tools.getAdjustedR(this.rVar), this.colVar);
-        if (this.val == '') return;
+        if (this.val == '') {
+            return;
+        }
         DrawForVis(ctx).text(this.val,tools.getAdjustedX(this.posX),tools.getAdjustedY(this.posY),tools.getAdjustedR(this.rVar),0,this.type);
     },
     findVar: function(pos,tools) {
         var x = pos[0]/tools.scale - tools.left;
         var y = pos[1]/tools.scale - tools.top;
-        if (Math.pow(x - this.getPosX(), 2) + Math.pow(y - this.getPosY(), 2) <= 1.5 * Math.pow(this.rVar, 2))
+        if (Math.pow(x - this.getPosX(), 2) + Math.pow(y - this.getPosY(), 2) <= 1.5 * Math.pow(this.rVar, 2)) {
             return this;
+        }
         return -1;
     },
     changePos: function(pos,tools) {
@@ -135,12 +139,13 @@ SymVarName = new Class({
         this.name = name;
     },
     inputRandom: function (maxValue) {
-        if (this.type == 'char')
+        if (this.type == 'char') {
         	this.val = "'" + String.fromCharCode(48 + Math.floor(Math.random() * 80)) + "'";
-	    else if (this.type == 'boolean')
+        } else if (this.type == 'boolean') {
 	    	this.val = Math.round(Math.random()) == 0 ? 'F' : 'T';
-	    else
+	    } else {
 	    	this.val = Math.floor(Math.random() * maxValue);
+	    }
 	},
     clone: function() {
         var element = new SymVarName(this.val, this.posX, this.posY, this.type, this.name);
@@ -150,14 +155,16 @@ SymVarName = new Class({
     draw: function(ctx,tools) {
         DrawForVis(ctx).ball(tools.getAdjustedX(this.posX),tools.getAdjustedY(this.posY),tools.getAdjustedR(this.rVar),this.colVar);
         DrawForVis(ctx).text(this.val,tools.getAdjustedX(this.posX),tools.getAdjustedY(this.posY),tools.getAdjustedR(this.rVar),0,this.type);
-        if (this.owner == 'array')
+        if (this.owner == 'array') {
             DrawForVis(ctx).hat(tools.getAdjustedX(this.posX),tools.getAdjustedY(this.posY-2.25*this.rVar),
                 tools.getAdjustedR(this.rVar),'yellow',this.name);
-        else if (this.owner == 'record')
+        } else if (this.owner == 'record') {
             DrawForVis(ctx).hatRecord(tools.getAdjustedX(this.posX),tools.getAdjustedY(this.posY),tools.getAdjustedR(this.rVar),
                 this.colVar,this.name,this.turn);
-        else DrawForVis(ctx).flag(tools.getAdjustedX(this.posX-this.rVar),tools.getAdjustedY(this.posY-4),this.rVar/5,6,this.colVar,
-            this.name,tools.getAdjustedR(this.rVar),155*Math.PI/180);
+        } else {
+            DrawForVis(ctx).flag(tools.getAdjustedX(this.posX-this.rVar),tools.getAdjustedY(this.posY-4),this.rVar/5,6,this.colVar,
+                this.name,tools.getAdjustedR(this.rVar),155*Math.PI/180);
+        }
     }
 })
 
@@ -190,21 +197,24 @@ SymArray = new Class({
     setPosX: function(pX) {
         with(this) {
             posX = pX;
-            for (var i = 0; i <= sizeElement; i++)
+            for (var i = 0; i <= sizeElement; i++) {
                 itemsElement[i].setPosX(posX + itemsElement[i].rVar*i*2.2);
+            }
         }
     },
     setPosY: function(pY) {
         with(this) {
             posY = pY;
-            for (var i = 0; i <= sizeElement; i++)
+            for (var i = 0; i <= sizeElement; i++) {
                 itemsElement[i].setPosY(posY + i*itemsElement[i].rVar*Math.sin(this.turn)*1.2);
+            }
         }
     },
     setName: function(name) {
         this.name = name;
-        for (var i = 0; i <= this.sizeElement; i++)
+        for (var i = 0; i <= this.sizeElement; i++) {
             this.itemsElement[i].name = this.name + ' ' + (i + this.firstIndex);
+        }
     },
     clone: function() {
         var element = new SymArray(this.posX,this.posY,this.sizeElement,this.firstIndex,this.itemsElement[0],this.name);
@@ -214,16 +224,17 @@ SymArray = new Class({
     },
     draw: function(ctx,tools) {
         with(this) {
-	        for(var i = sizeElement-1; i >= 0; i--) {
+	        for (var i = sizeElement-1; i >= 0; i--) {
 			    DrawForVis(ctx).connect(tools.getAdjustedX(itemsElement[i+1].posX),tools.getAdjustedY(itemsElement[i+1].posY),
 			        tools.getAdjustedX(itemsElement[i].posX),tools.getAdjustedY(itemsElement[i].posY),tools.getAdjustedR(rVar/5),'yellow');
 			}
-		    for(var i = sizeElement; i >= 0; i--) {
+		    for (var i = sizeElement; i >= 0; i--) {
 		       itemsElement[i].draw(ctx,tools);
 		    }
-		    if (typeof(this.name) != 'number')
+		    if (typeof(this.name) != 'number') {
                  DrawForVis(ctx).flag(tools.getAdjustedX(posX-rVar),tools.getAdjustedY(posY),tools.getAdjustedR(rVar/5),6,colVar,name,
                      tools.getAdjustedR(rVar),155*Math.PI/180);
+            }
 	    }
     },
     inputRandom: function(maxValue) {
@@ -233,10 +244,14 @@ SymArray = new Class({
     },
     findVar: function(pos,tools) {
         var find = this.parent(pos,tools);
-        if (find != -1) return this;
+        if (find != -1) {
+            return this;
+        }
         for (var k = 0; k <= this.sizeElement; k++) {
             find = this.itemsElement[k].findVar(pos,tools);
-            if (find != -1) return find;
+            if (find != -1) {
+                return find;
+            }
         }
         return -1;
     },
@@ -251,7 +266,7 @@ SymArray = new Class({
         this.posY = this.itemsElement[0].posY;
     },
     getItemArrByNum : function(num) {
-        if(((num - this.firstIndex) < 0) || ((num - this.firstIndex) > this.sizeElement)) {
+        if (((num - this.firstIndex) < 0) || ((num - this.firstIndex) > this.sizeElement)) {
             alert('элемента с номером ' + num + ' в массиве нет');
             return -1;
         }
@@ -280,12 +295,15 @@ SymRecord = new Class({
     },
     push: function(vItem) {
         with(this) {
-            for(var i = 0; i < sizeElement; i++)
-                if (itemsElement[i].getName().toLowerCase() == vItem.getName().toLowerCase()) return -1;
+            for (var i = 0; i < sizeElement; i++) {
+                if (itemsElement[i].getName().toLowerCase() == vItem.getName().toLowerCase()) {
+                    return -1;
+                }
+            }
             vItem.owner = 'record';
             itemsElement.push(vItem);
             sizeElement+=1;
-            for(var i = 0; i < sizeElement; i++) {
+            for (var i = 0; i < sizeElement; i++) {
                 var property = getItemProperty(i);
                 itemsElement[i].turn = property[0];
                 itemsElement[i].setPosX(property[1]);
@@ -297,7 +315,7 @@ SymRecord = new Class({
         with(this) {
             var x = posX;
             posX = vX;
-            for(var i = 0; i < sizeElement; i++){
+            for (var i = 0; i < sizeElement; i++) {
                 itemsElement[i].setPosX(itemsElement[i].posX - x + posX);
             }
         }
@@ -322,7 +340,7 @@ SymRecord = new Class({
             DrawForVis(ctx).record(tools.getAdjustedX(posX),tools.getAdjustedY(posY),tools.getAdjustedR(rVar/2.5),colVar,name);
             var dx = rVar*2/sizeElement;
             var x = posX + rVar - dx/2;
-            for(var i = 0; i < sizeElement; i++) {
+            for (var i = 0; i < sizeElement; i++) {
                 DrawForVis(ctx).connect(tools.getAdjustedX(itemsElement[i].posX),tools.getAdjustedY(itemsElement[i].posY),
                     tools.getAdjustedX(x),tools.getAdjustedY(posY-rVar/2),4,colVar);
                 x-=dx;
@@ -336,10 +354,14 @@ SymRecord = new Class({
     },
     findVar: function(pos,tools) {
         var find = this.parent(pos,tools);
-        if (find != -1) return this;
+        if (find != -1) {
+            return this;
+        }
         for (var k = 0; k < this.sizeElement; k++) {
             find = this.itemsElement[k].findVar(pos,tools);
-            if (find != -1) return find;
+            if (find != -1) {
+                return find;
+            }
         }
         return -1;
     },
@@ -348,14 +370,17 @@ SymRecord = new Class({
 		var y = this.posY;
         this.posX = pos[0]/tools.scale-tools.left;
         this.posY = pos[1]/tools.scale-tools.top;
-        for(var i = 0; i < this.sizeElement; i++) {
+        for (var i = 0; i < this.sizeElement; i++) {
             this.itemsElement[i].setPosY(this.itemsElement[i].posY - y + this.posY);
             this.itemsElement[i].setPosX(this.itemsElement[i].posX - x + this.posX);
         }
     },
     getItemByName: function(name) {
-        for(var i = 0; i < this.sizeElement; i++)
-            if (this.itemsElement[i].getName() == name) return this.itemsElement[i];
+        for (var i = 0; i < this.sizeElement; i++) {
+            if (this.itemsElement[i].getName() == name) {
+                return this.itemsElement[i];
+            }
+        }
         return -1;
     },
 });
