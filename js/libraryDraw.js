@@ -62,6 +62,38 @@ var DrawForVis = function(ctx) {
         this.dy = y0 + Math.sin(alpha2)*r/2;
     }
 
+    var getGradient = function(col) {
+        var s,s1,s2,s3;
+        s = parseInt(col.substring(1,3),16) + 100;
+        if (s <= 255) {
+            s1=s.toString(16);
+        } else {
+            s1 = 'ff';
+        }
+        if (s1.length == 1) {
+            s1 = '0' + s1;
+        }
+        s = parseInt(col.substring(3,5),16) + 100;
+        if (s <= 255) {
+            s2 = s.toString(16);
+        } else {
+            s2 = 'ff';
+        }
+        if (s2.length == 1) {
+            s2 = '0' + s2;
+        }
+        s = parseInt(col.substring(5,7),16) + 100;
+        if (s <= 255) {
+            s3 = s.toString(16);
+        } else {
+            s3 = 'ff';
+        }
+        if (s3.length == 1) {
+            s3 = '0' + s3;
+        }
+        return('#'+s1+s2+s3);
+    }
+
     return {
 
         back: function(col1,col2,w,h) {
@@ -312,7 +344,59 @@ var DrawForVis = function(ctx) {
 	        ctx.stroke();
             ctx.closePath();
 	        ctx.restore();
-        }
+        },
 
+        rect: function(x0,y0,r,k,h,col,val,alpha){
+            ctx.save();
+            ctx.translate(x0,y0);
+            ctx.rotate(alpha);
+            ctx.beginPath();
+            ctx.moveTo(2*k*r,-r);
+            ctx.lineTo(2*k*r,-r+h);
+            ctx.lineTo(k/2*r,r+h);
+            ctx.lineTo(-2*k*r,r+h);
+            ctx.lineTo(-2*k*r,r);
+            ctx.fillStyle = '#FFCCCC';
+            ctx.fill();
+            ctx.closePath();
+            ctx.beginPath();
+            colorFigure(col,getGradient(col),k*r,r);
+            ctx.moveTo(-k/2*r,-r);
+            ctx.lineTo(2*k*r,-r);
+            ctx.lineTo(k/2*r,r);
+            ctx.lineTo(-2*k*r,r);
+            ctx.fill();
+            ctx.closePath();
+            this.roundedRect(-k*r+h,-k*r+h,2.5*k*r,r*2,4,'#E8E8E8','#C8C8C8',3);
+            ctx.fillStyle = '#000';
+            ctx.font = r*1.6+'px Arial';
+            ctx.fillText(val,-r*k+1.5*h,-r);
+            ctx.restore();
+        },
+
+        roundedRect: function(x,y,width,height,radius,col1,col2,h) {
+            ctx.beginPath();
+            ctx.moveTo(x+width,y+height);
+            ctx.lineTo(x+width+h,y-h+height);
+            ctx.lineTo(x+h+width,y-h+radius);
+            ctx.quadraticCurveTo(x+h+width,y-h,x+h+width-radius,y-h);
+            ctx.lineTo(x+h+radius,y-h);
+            ctx.lineTo(x,y);
+            ctx.fillStyle = col2;
+            ctx.fill();
+            ctx.closePath();
+            ctx.beginPath();
+            ctx.moveTo(x,y+radius);
+            ctx.lineTo(x,y+height-radius);
+            ctx.quadraticCurveTo(x,y+height,x+radius,y+height);
+            ctx.lineTo(x+width-radius,y+height);
+            ctx.quadraticCurveTo(x+width,y+height,x+width,y+height-radius);
+            ctx.lineTo(x+width,y+radius);
+            ctx.quadraticCurveTo(x+width,y,x+width-radius,y);
+            ctx.lineTo(x+radius,y);
+            ctx.quadraticCurveTo(x,y,x,y+radius);
+            ctx.fillStyle = col1;
+            ctx.fill();
+        }
     };
 }
