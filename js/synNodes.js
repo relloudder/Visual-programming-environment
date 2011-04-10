@@ -370,6 +370,15 @@ Statment = new Class ({
     },
     draw: function(ctx,tools) {
         this.symStatment.draw(ctx,tools);
+    },
+    getHeight: function() {
+        return this.symStatment.getHeight();
+    },
+    putPosition: function(pos,prev) {
+        this.symStatment.posX = pos[0];
+        this.symStatment.posY = pos[1];
+        this.symStatment.begX = prev[0];
+        this.symStatment.begY = prev[1];
     }
 });
 
@@ -401,6 +410,11 @@ StmtAssignment = new Class ({
     draw: function(ctx,tools) {
         this.symStatment.draw(ctx,tools);
         this.aRight.draw(ctx,tools);
+    },
+    putPosition: function(pos,prev) {
+       this.parent(pos,prev);
+       pos[1]-=15;
+       this.aRight.putPosition(pos,prev);
     }
 });
 

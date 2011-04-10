@@ -376,6 +376,7 @@ var DrawForVis = function(ctx) {
         },
 
         roundedRect: function(x,y,width,height,radius,col1,col2,h) {
+            ctx.save();
             ctx.beginPath();
             ctx.moveTo(x+width,y+height);
             ctx.lineTo(x+width+h,y-h+height);
@@ -398,6 +399,8 @@ var DrawForVis = function(ctx) {
             ctx.quadraticCurveTo(x,y,x,y+radius);
             ctx.fillStyle = col1;
             ctx.fill();
+            ctx.closePath();
+            ctx.restore();
         }
     };
 }

@@ -8,6 +8,7 @@ SymStatment = new Class ({
 	    this.begX = begX;
 	    this.begY = begY;
 	    this.angleOfRotation = 0;
+	    this.height = 150;
     },
     value: null,
 	color: null,
@@ -15,11 +16,18 @@ SymStatment = new Class ({
 	begX: null,
 	begY: null,
 	angleOfRotation: null,
+	height : null,
     getValue: function() {
         return this.val;
     },
     setValue: function(value) {
         this.value = value;
+    },
+    getHeight: function() {
+        return this.height;
+    },
+    setHeight: function(h) {
+        this.height = h;
     },
     getColor: function() {
         return this.color;
@@ -39,14 +47,14 @@ SymProgram = new Class ({
     beginOrEnd: null,
     draw: function(ctx,tools) {
         with(this) {
-            DrawForVis(ctx).roundedRect(tools.getAdjustedX(posX),tools.getAdjustedY(posY),
+            DrawForVis(ctx).roundedRect(tools.getAdjustedX(posX-r),tools.getAdjustedY(posY),
                 60,20,4,color,"#C8C8C8",3);
             if (beginOrEnd) {
-                DrawForVis(ctx).text("begin",tools.getAdjustedX(this.posX)+25,tools.getAdjustedY(this.posY)+5,25,0,"");
+                DrawForVis(ctx).text("begin",tools.getAdjustedX(this.posX),tools.getAdjustedY(this.posY+5),25,0,"");
             } else {
-                DrawForVis(ctx).connect(tools.getAdjustedX(begX),tools.getAdjustedY(begY)+18,
-                    tools.getAdjustedX(posX)+30,tools.getAdjustedY(posY),6,'#555555');
-                DrawForVis(ctx).text("end",tools.getAdjustedX(this.posX)+25,tools.getAdjustedY(this.posY)+5,18,0,"");
+                DrawForVis(ctx).connect(tools.getAdjustedX(begX),tools.getAdjustedY(begY+r*1.3),
+                    tools.getAdjustedX(posX),tools.getAdjustedY(posY),6,'#555555');
+                DrawForVis(ctx).text("end",tools.getAdjustedX(this.posX),tools.getAdjustedY(this.posY+5),18,0,"");
             }
 
         }

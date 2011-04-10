@@ -138,7 +138,7 @@ LexicalAnalyzer = new Class ({
     getBlock: function() {
         Scanner.popCodePart('');
         this.currentLexeme = Scanner.next(this.currentLexeme.nextLexemePos);
-        var symBeg = new SymProgram(440,5,'#E8E8E8',true,0,0);
+        var symBeg = new SymProgram(400,5,'#E8E8E8',true,0,0);
         var synBeg = new SynProgram(symBeg);
         app.tree.treeStatment.push(synBeg);
         //while (this.currentLexeme.name !='end'){
@@ -153,13 +153,12 @@ LexicalAnalyzer = new Class ({
             }
             this.currentLexeme = Scanner.next(this.currentLexeme.nextLexemePos);
             var expression = this.parseExpr(app.tree.treeVar,';');
-            expression.putPosition([470,180]);
-            var st2 = new SymAssignment(470,200,'#66CC99',Scanner.popCodePart(''),470,5);
+            var st2 = new SymAssignment(440,200,'#66CC99',Scanner.popCodePart(''),470,5);
             var statment = new StmtAssignment(varLeft,expression,st2);                                            
             app.tree.treeStatment.push(statment);
         }
         //}
-        var symEnd = new SymProgram(440,250,'#E8E8E8',false,470,200);
+        var symEnd = new SymProgram(440,200,'#E8E8E8',false,470,200);
         var synEnd = new SynProgram(symEnd);
         app.tree.treeStatment.push(synEnd);
     },

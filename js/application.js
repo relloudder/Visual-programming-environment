@@ -63,6 +63,14 @@ VariableTree = new Class({
 	        }
 	    }
 		return -1;
+    },
+    putPosition: function(pos,prev){
+        this.treeStatment[0].putPosition(pos,prev);
+        for (var k = 1; k < this.treeStatment.length; k++) {
+            prev = [pos[0],pos[1]];
+            pos[1] += this.treeStatment[k].getHeight();
+            this.treeStatment[k].putPosition(pos,prev);
+        }
     }
 });
 
