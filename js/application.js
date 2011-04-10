@@ -64,6 +64,14 @@ VariableTree = new Class({
 	    }
 		return -1;
     },
+    findSymbolByPos: function(pos) {
+        for (var k = this.treeVar.length - 1; k >= 1 ; k--) {
+            if ((pos[0] == this.treeVar[k].getPosX()) && (pos[1] == this.treeVar[k].getPosY())) {
+                return this.treeVar[k];
+            }
+        }
+        return -1;
+    },
     putPosition: function(pos,prev){
         this.treeStatment[0].putPosition(pos,prev);
         for (var k = 1; k < this.treeStatment.length; k++) {

@@ -144,18 +144,17 @@ LexicalAnalyzer = new Class ({
         //while (this.currentLexeme.name !='end'){
         if (this.currentLexeme.type == 'Identifier') {
             var varLeft = app.tree.getVarByName(app.tree.treeVar,this.currentLexeme.name);
-            if (varLeft == -1) {
-                this.exception.error('undeclaration name',this.currentLexeme);
-            }
             this.currentLexeme = Scanner.next(this.currentLexeme.nextLexemePos);
             if (this.currentLexeme.name != ':=') {
                 this.exception.error('except :=',this.currentLexeme);
             }
             this.currentLexeme = Scanner.next(this.currentLexeme.nextLexemePos);
-            var expression = this.parseExpr(app.tree.treeVar,';');
+            expression = this.parseExpr(app.tree.treeVar,';');
             var st2 = new SymAssignment(440,200,'#66CC99',Scanner.popCodePart(''),470,5);
             var statment = new StmtAssignment(varLeft,expression,st2);                                            
             app.tree.treeStatment.push(statment);
+        } else {
+            this.exception.error('missing identifier',this.currentLexeme);
         }
         //}
         var symEnd = new SymProgram(440,200,'#E8E8E8',false,470,200);
