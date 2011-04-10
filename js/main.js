@@ -18,7 +18,7 @@ function runInterface() {
         app.tree.treeLocation(app.width,app.height);
         var c = new SymConst(1,600,500);
         app.tree.push(c);
-		app.tree.treeStatment.push(expression);
+		//app.tree.treeStatment.push(expression);
 		app.paint();
     });
 

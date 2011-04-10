@@ -367,6 +367,9 @@ Statment = new Class ({
     },
     getPosY: function() {
         this.symStatment.getPosX();
+    },
+    draw: function(ctx,tools) {
+        this.symStatment.draw(ctx,tools);
     }
 });
 
@@ -384,6 +387,10 @@ StmtAssignment = new Class ({
     },
     getRight: function() {
         return this.aRight;
+    },
+    draw: function(ctx,tools) {
+        this.symStatment.draw(ctx,tools);
+        this.aRight.draw(ctx,tools);
     }
 });
 

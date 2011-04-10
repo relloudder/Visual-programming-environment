@@ -143,9 +143,9 @@ var Scanner = (function() {
             return match();
         },
 
-		popCodePart: function() {
+		popCodePart: function(text) {
 		    var part = codePart;
-			codePart = '';
+			codePart = text;
 			return part;
 		}
     };

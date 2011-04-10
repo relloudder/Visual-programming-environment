@@ -369,7 +369,8 @@ var DrawForVis = function(ctx) {
             ctx.closePath();
             this.roundedRect(-k*r+h,-k*r+h,2.5*k*r,r*2,4,'#E8E8E8','#C8C8C8',3);
             ctx.fillStyle = '#000';
-            ctx.font = r*1.6+'px Arial';
+            //найти длинну val.length и либо уменьшить либо обрезать
+            ctx.font = r*0.8+'px Arial';
             ctx.fillText(val,-r*k+1.5*h,-r);
             ctx.restore();
         },

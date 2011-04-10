@@ -4,7 +4,7 @@ SymStatment = new Class ({
         this.parent(pX,pY);
         this.value = value;
 	    this.color = color;
-	    this.r = 20;
+	    this.r = 25;
 	    this.begX = begX;
 	    this.begY = begY;
 	    this.angleOfRotation = 0;

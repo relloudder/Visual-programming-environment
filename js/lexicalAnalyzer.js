@@ -136,9 +136,30 @@ LexicalAnalyzer = new Class ({
         return rec;
     },
     getBlock: function() {
+        Scanner.popCodePart('');
         this.currentLexeme = Scanner.next(this.currentLexeme.nextLexemePos);
-        expression = this.parseExpr(app.tree.treeVar,';');
-        expression.putPosition([500,400]);
+        //var beg = new SynProgram();
+        //app.tree.treeStatment.push(beg);
+        //while (this.currentLexeme.name !='end'){
+        if (this.currentLexeme.type == 'Identifier') {
+            var varLeft = app.tree.getVarByName(app.tree.treeVar,this.currentLexeme.name);
+            if (varLeft == -1) {
+                this.exception.error('undeclaration name',this.currentLexeme);
+            }
+            this.currentLexeme = Scanner.next(this.currentLexeme.nextLexemePos);
+            if (this.currentLexeme.name != ':=') {
+                this.exception.error('except :=',this.currentLexeme);
+            }
+            this.currentLexeme = Scanner.next(this.currentLexeme.nextLexemePos);
+            var expression = this.parseExpr(app.tree.treeVar,';');
+            expression.putPosition([470,180]);
+            var st2 = new SymAssignment(470,200,'#66CC99',Scanner.popCodePart(''),470,90);
+            var statment = new StmtAssignment(varLeft,expression,st2);                                            
+            app.tree.treeStatment.push(statment);
+        }
+        //}
+        //var end1 = new SynProgram();
+        //app.tree.treeStatment.push(end1);
     },
     parseExpr: function(treeVar,endLexeme) {
         return this.parseCompare(treeVar,endLexeme);
@@ -214,11 +235,10 @@ LexicalAnalyzer = new Class ({
     },
     parseSymArr: function(item,treeVar) {
         this.currentLexeme = Scanner.next(this.currentLexeme.nextLexemePos);
-        this.text = this.text + this.currentLexeme.name;
         if (this.currentLexeme.name!='[') {
             this.exception.error('except [ ',this.currentLexeme);
         }
-        Scanner.popCodePart()
+        text = Scanner.popCodePart('')
         this.currentLexeme = Scanner.next(this.currentLexeme.nextLexemePos);
         return this.parseIndexArray(item,treeVar,']');
     },
@@ -232,12 +252,12 @@ LexicalAnalyzer = new Class ({
 	        endLexeme = ']';
 	    }
         var arrIndex = this.parseExpr(treeVar,endLexeme);
-        arrIndex.symbolName.text = Scanner.popCodePart();
+        arrIndex.symbolName.text = Scanner.popCodePart('');
+        Scanner.popCodePart(text + arrIndex.symbolName.text);
 	    if (this.currentLexeme.name == ',') {
 		    if (!(item instanceof SymArray)) {
 		        this.exception.error('error index ',this.currentLexeme);
 		    }
-		    this.text = this.text + this.currentLexeme.name;
             this.currentLexeme = Scanner.next(this.currentLexeme.nextLexemePos);
             newSynExpr = this.parseIndexArray(item,treeVar,endLexeme);
         } else if (this.currentLexeme.name == ']') {
@@ -248,7 +268,6 @@ LexicalAnalyzer = new Class ({
             } else {
                 newSynExpr = new SynVar(item);
             }
-            this.text = this.text + this.currentLexeme.name;
         } else {
             this.exception.error('except ] ',this.currentLexeme);
         }
@@ -256,12 +275,10 @@ LexicalAnalyzer = new Class ({
     },
     parseSymRecord: function(item,treeVar) {
         this.currentLexeme = Scanner.next(this.currentLexeme.nextLexemePos);
-        this.text = this.text + this.currentLexeme.name;
         if (this.currentLexeme.name != '.') {
             this.exception.error('except . ',this.currentLexeme);
         }
         this.currentLexeme = Scanner.next(this.currentLexeme.nextLexemePos);
-        this.text = this.text + this.currentLexeme.name;
         return new SynRecord(item,this.parseIdentifier(item.itemsElement));
     }
 });
