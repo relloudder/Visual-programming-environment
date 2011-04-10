@@ -373,6 +373,16 @@ Statment = new Class ({
     }
 });
 
+SynProgram = new Class ({
+    Extends: Statment,
+    initialize: function(symStatment) {
+        this.parent(symStatment);
+    },
+    draw: function(ctx,tools) {
+        this.symStatment.draw(ctx,tools);
+    }
+});
+
 StmtAssignment = new Class ({
     Extends: Statment,
     initialize: function(aLeft,aRight,symStatment) {

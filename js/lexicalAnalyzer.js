@@ -138,8 +138,9 @@ LexicalAnalyzer = new Class ({
     getBlock: function() {
         Scanner.popCodePart('');
         this.currentLexeme = Scanner.next(this.currentLexeme.nextLexemePos);
-        //var beg = new SynProgram();
-        //app.tree.treeStatment.push(beg);
+        var symBeg = new SymProgram(440,5,'#E8E8E8',true,0,0);
+        var synBeg = new SynProgram(symBeg);
+        app.tree.treeStatment.push(synBeg);
         //while (this.currentLexeme.name !='end'){
         if (this.currentLexeme.type == 'Identifier') {
             var varLeft = app.tree.getVarByName(app.tree.treeVar,this.currentLexeme.name);
@@ -153,13 +154,14 @@ LexicalAnalyzer = new Class ({
             this.currentLexeme = Scanner.next(this.currentLexeme.nextLexemePos);
             var expression = this.parseExpr(app.tree.treeVar,';');
             expression.putPosition([470,180]);
-            var st2 = new SymAssignment(470,200,'#66CC99',Scanner.popCodePart(''),470,90);
+            var st2 = new SymAssignment(470,200,'#66CC99',Scanner.popCodePart(''),470,5);
             var statment = new StmtAssignment(varLeft,expression,st2);                                            
             app.tree.treeStatment.push(statment);
         }
         //}
-        //var end1 = new SynProgram();
-        //app.tree.treeStatment.push(end1);
+        var symEnd = new SymProgram(440,250,'#E8E8E8',false,470,200);
+        var synEnd = new SynProgram(symEnd);
+        app.tree.treeStatment.push(synEnd);
     },
     parseExpr: function(treeVar,endLexeme) {
         return this.parseCompare(treeVar,endLexeme);
@@ -200,7 +202,7 @@ LexicalAnalyzer = new Class ({
 	        result = this.parseIdentifier(treeVar);
         } else if (this.currentLexeme.type == 'NumberReal') {
             result = new SynConstReal(this.currentLexeme.name);
-        }else if (this.currentLexeme.type == 'NumberInt') {
+        } else if (this.currentLexeme.type == 'NumberInt') {
             result = new SynConstInt(this.currentLexeme.name);
         } else if (this.currentLexeme.name == '(') {
             this.currentLexeme = Scanner.next(this.currentLexeme.nextLexemePos);
