@@ -68,7 +68,7 @@ SymAssignment = new Class ({
     },
     draw: function(ctx,tools) {
         with(this) {
-            DrawForVis(ctx).connect(tools.getAdjustedX(begX),tools.getAdjustedY(begY)+18,
+            DrawForVis(ctx).connect(tools.getAdjustedX(begX),tools.getAdjustedY(begY+r*1.3),
                 tools.getAdjustedX(posX),tools.getAdjustedY(posY),6,'#555555');
             DrawForVis(ctx).rect(tools.getAdjustedX(posX),tools.getAdjustedY(posY),tools.getAdjustedX(r)/2,3,6,color,value,0);
         }

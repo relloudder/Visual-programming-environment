@@ -141,22 +141,23 @@ LexicalAnalyzer = new Class ({
         var symBeg = new SymProgram(400,5,'#E8E8E8',true,0,0);
         var synBeg = new SynProgram(symBeg);
         app.tree.treeStatment.push(synBeg);
-        //while (this.currentLexeme.name !='end'){
-        if (this.currentLexeme.type == 'Identifier') {
-            var varLeft = app.tree.getVarByName(app.tree.treeVar,this.currentLexeme.name);
-            this.currentLexeme = Scanner.next(this.currentLexeme.nextLexemePos);
-            if (this.currentLexeme.name != ':=') {
-                this.exception.error('except :=',this.currentLexeme);
+        while (this.currentLexeme.name != 'end') {
+            if (this.currentLexeme.type == 'Identifier') {
+                var varLeft = app.tree.getVarByName(app.tree.treeVar,this.currentLexeme.name);
+                this.currentLexeme = Scanner.next(this.currentLexeme.nextLexemePos);
+                if (this.currentLexeme.name != ':=') {
+                    this.exception.error('except :=',this.currentLexeme);
+                }
+                this.currentLexeme = Scanner.next(this.currentLexeme.nextLexemePos);
+                expression = this.parseExpr(app.tree.treeVar,';');
+                var st2 = new SymAssignment(440,200,'#66CC99',Scanner.popCodePart(''),470,5);
+                var statment = new StmtAssignment(varLeft,expression,st2);
+                app.tree.treeStatment.push(statment);
+                this.currentLexeme = Scanner.next(this.currentLexeme.nextLexemePos);
+            } else {
+                this.exception.error('missing identifier',this.currentLexeme);
             }
-            this.currentLexeme = Scanner.next(this.currentLexeme.nextLexemePos);
-            expression = this.parseExpr(app.tree.treeVar,';');
-            var st2 = new SymAssignment(440,200,'#66CC99',Scanner.popCodePart(''),470,5);
-            var statment = new StmtAssignment(varLeft,expression,st2);                                            
-            app.tree.treeStatment.push(statment);
-        } else {
-            this.exception.error('missing identifier',this.currentLexeme);
         }
-        //}
         var symEnd = new SymProgram(440,200,'#E8E8E8',false,470,200);
         var synEnd = new SynProgram(symEnd);
         app.tree.treeStatment.push(synEnd);
@@ -213,7 +214,7 @@ LexicalAnalyzer = new Class ({
 	        && (this.currentLexeme.type != 'Comparison') && (this.currentLexeme.name != 'or')) {
             if (this.currentLexeme.name == endLexeme) {}
             else {
-                this.exception.error('except arithmetic or compare operation',this.currentLexeme);
+                this.exception.error('error in token', this.currentLexeme);
             }
         }
         return result;
