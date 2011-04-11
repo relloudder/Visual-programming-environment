@@ -79,6 +79,19 @@ VariableTree = new Class({
             pos[1] += this.treeStatment[k].getHeight();
             this.treeStatment[k].putPosition(pos,prev);
         }
+    },
+    setPrev: function() {
+        for (var k = 1; k < this.treeStatment.length - 1; k++) {
+            if ((this.treeStatment[k-1].symStatment.posY+70) > this.treeStatment[k].symStatment.posY) {
+                this.treeStatment[k].putPosition([this.treeStatment[k].symStatment.posX,this.treeStatment[k-1].symStatment.posY+70],
+                    [this.treeStatment[k-1].symStatment.posX,this.treeStatment[k-1].symStatment.posY]);
+            } else if (this.treeStatment[k].symStatment.posY > (this.treeStatment[k+1].symStatment.posY-70)) {
+                this.treeStatment[k].putPosition( [this.treeStatment[k].symStatment.posX,this.treeStatment[k+1].symStatment.posY-70],
+                    [this.treeStatment[k-1].symStatment.posX,this.treeStatment[k-1].symStatment.posY]);
+            }
+            this.treeStatment[k+1].putPosition( [this.treeStatment[k+1].symStatment.posX,this.treeStatment[k+1].symStatment.posY],
+                [this.treeStatment[k].symStatment.posX,this.treeStatment[k].symStatment.posY]);
+        }
     }
 });
 

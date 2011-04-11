@@ -71,6 +71,9 @@ function runInterface() {
 			app.paint();
         } else if (app.flagMove) {
 	        app.tree.varMove.changePos(new Array(x,y),app.tools);
+	        if (app.tree.varMove instanceof SynExpr) {
+	            app.tree.setPrev();
+	        }
 			app.paint();
 	    }
 	    xOld = x;

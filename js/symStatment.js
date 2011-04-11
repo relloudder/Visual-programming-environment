@@ -58,6 +58,14 @@ SymProgram = new Class ({
             }
 
         }
+    },
+    findVar: function(pos,tools) {
+        var x = pos[0]/tools.scale - tools.left;
+        var y = pos[1]/tools.scale - tools.top;
+        if (((this.posX-this.r) < x) && ((this.posX-this.r+60) > x) && ((this.posY-5) < y) && ((this.posY+15) > y)) {
+            return this;
+        }
+        return -1;
     }
 });
 
@@ -72,6 +80,14 @@ SymAssignment = new Class ({
                 tools.getAdjustedX(posX),tools.getAdjustedY(posY),6,'#555555');
             DrawForVis(ctx).rect(tools.getAdjustedX(posX),tools.getAdjustedY(posY),tools.getAdjustedX(r)/2,3,6,color,value,0);
         }
+    },
+    findVar: function(pos,tools) {
+        var x = pos[0]/tools.scale - tools.left;
+        var y = pos[1]/tools.scale - tools.top;
+        if (((this.posX-3*this.r) < x) && ((this.posX-this.r+90) > x) && ((this.posY-20) < y) && ((this.posY+20) > y)) {
+            return this;
+        }
+        return -1;
     }
 });
 
