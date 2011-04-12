@@ -27,7 +27,7 @@ LexicalAnalyzer = new Class ({
         if (this.currentLexeme.name.toLowerCase() == 'begin') {
             this.getBlock();
         } else {
-            this.exception.error('except BEGIN',this.currentLexeme);
+            this.exception.error('expect BEGIN ',this.currentLexeme);
         }  
     },
     getVar: function() {
@@ -46,16 +46,16 @@ LexicalAnalyzer = new Class ({
                 break;
             }
             if (this.currentLexeme.name != ',') {
-                this.exception.error('except , or :',this.currentLexeme);
+                this.exception.error('expect , or : ',this.currentLexeme);
             }
             pos = this.currentLexeme.nextLexemePos;
             this.currentLexeme = Scanner.next(this.currentLexeme.nextLexemePos);
             if (this.currentLexeme.type != 'Identifier') {
-                this.exception.error('except identefier ',this.currentLexeme);
+                this.exception.error('expect identifier ',this.currentLexeme);
             }
         }
         if (this.currentLexeme.name != ':') {
-            this.exception.error('except :',this.currentLexeme);
+            this.exception.error('expect : ',this.currentLexeme);
         }
         pos = this.currentLexeme.nextLexemePos;
         var typeLexeme = this.getType();
@@ -63,13 +63,13 @@ LexicalAnalyzer = new Class ({
             var curVar = typeLexeme.clone();
             curVar.name = tableVar[i];
             if (treeVar.push(curVar) == -1) {
-                this.exception.error('duplicate name variable ' + curVar.name, this.currentLexeme);
+                this.exception.error('duplicate variable name ' + curVar.name, this.currentLexeme);
             }
         }
         pos = this.currentLexeme.nextLexemePos;
         this.currentLexeme = Scanner.next(this.currentLexeme.nextLexemePos);
         if (this.currentLexeme.name != ';') {
-            this.exception.error('except ;',this.currentLexeme);
+            this.exception.error('expect ; ',this.currentLexeme);
         }
         this.currentLexeme = Scanner.next(this.currentLexeme.nextLexemePos);
     },
@@ -89,21 +89,21 @@ LexicalAnalyzer = new Class ({
         } else if(this.currentLexeme.name.toLowerCase() == 'record') {
             return this.getDeclarationRecord();
         } else {
-            this.exception.error('error type of var',this.currentLexeme);
+            this.exception.error('error type ',this.currentLexeme);
         }
     },
     getDeclarationArray: function() {
         var pos = this.currentLexeme.nextLexemePos;
         this.currentLexeme = Scanner.next(this.currentLexeme.nextLexemePos);
         if(this.currentLexeme.name != '[')  
-            this.exception.error('except [ ',this.currentLexeme);
+            this.exception.error('expect [ ',this.currentLexeme);
         var bounder = this.getBounders();
         if(this.currentLexeme.name != ']') 
-            this.exception.error('except ] ',this.currentLexeme); 
+            this.exception.error('expect ] ',this.currentLexeme);
         pos = this.currentLexeme.nextLexemePos;	   
         this.currentLexeme = Scanner.next(this.currentLexeme.nextLexemePos);
         if(this.currentLexeme.name.toLowerCase() != 'of') 
-            this.exception.error('except of ',this.currentLexeme); 
+            this.exception.error('expect of ',this.currentLexeme);
         return new SymArray(0,0,(bounder[1]-bounder[0]),bounder[0]*1,this.getType(),'');
     },
     getBounders: function() {
@@ -116,12 +116,12 @@ LexicalAnalyzer = new Class ({
         pos = this.currentLexeme.nextLexemePos;
         this.currentLexeme = Scanner.next(this.currentLexeme.nextLexemePos);
         if (this.currentLexeme.name != '..') {
-            this.exception.error('except .. ',this.currentLexeme);
+            this.exception.error('expect .. ',this.currentLexeme);
         }
         pos = this.currentLexeme.nextLexemePos;
         this.currentLexeme = Scanner.next(this.currentLexeme.nextLexemePos);
         if (this.currentLexeme.type != 'NumberInt') {
-            this.exception.error('must be INTEGER constant  ',this.currentLexeme);
+            this.exception.error('must be INTEGER constant ',this.currentLexeme);
         }
         var high = this.currentLexeme.name;
         this.currentLexeme = Scanner.next(this.currentLexeme.nextLexemePos);
@@ -146,7 +146,7 @@ LexicalAnalyzer = new Class ({
                 var varLeft = app.tree.getVarByName(app.tree.treeVar,this.currentLexeme.name);
                 this.currentLexeme = Scanner.next(this.currentLexeme.nextLexemePos);
                 if (this.currentLexeme.name != ':=') {
-                    this.exception.error('except :=',this.currentLexeme);
+                    this.exception.error('expect := ',this.currentLexeme);
                 }
                 this.currentLexeme = Scanner.next(this.currentLexeme.nextLexemePos);
                 expression = this.parseExpr(app.tree.treeVar,';');
@@ -207,14 +207,14 @@ LexicalAnalyzer = new Class ({
             this.currentLexeme = Scanner.next(this.currentLexeme.nextLexemePos);
             result = this.parseCompare(treeVar,endLexeme);
         } else {
-            this.exception.error('error in token', this.currentLexeme);
+            this.exception.error('error in token ', this.currentLexeme);
         }
 	    this.currentLexeme = Scanner.next(this.currentLexeme.nextLexemePos);
         if ((this.currentLexeme.type != 'MathOperation') && (this.currentLexeme.name !=')')
 	        && (this.currentLexeme.type != 'Comparison') && (this.currentLexeme.name != 'or')) {
             if (this.currentLexeme.name == endLexeme) {}
             else {
-                this.exception.error('error in token', this.currentLexeme);
+                this.exception.error('error in token ', this.currentLexeme);
             }
         }
         return result;
@@ -222,7 +222,7 @@ LexicalAnalyzer = new Class ({
     parseIdentifier: function(treeVar) {
         var item = app.tree.getVarByName(treeVar,this.currentLexeme.name);
         if (item == -1) {
-            this.exception.error('variable has no name',this.currentLexeme);
+            this.exception.error('variable has no name ',this.currentLexeme);
         }
         if (item instanceof SymArray) {
             return this.parseSymArr(item,treeVar);
@@ -231,13 +231,13 @@ LexicalAnalyzer = new Class ({
         } else if (item instanceof SymVarName) {
             return new SynVar(item);
         } else {
-            this.exception.error('error type lexeme',this.currentLexeme);
+            this.exception.error('error type ',this.currentLexeme);
         }
     },
     parseSymArr: function(item,treeVar) {
         this.currentLexeme = Scanner.next(this.currentLexeme.nextLexemePos);
         if (this.currentLexeme.name!='[') {
-            this.exception.error('except [ ',this.currentLexeme);
+            this.exception.error('expect [ ',this.currentLexeme);
         }
         text = Scanner.popCodePart('')
         this.currentLexeme = Scanner.next(this.currentLexeme.nextLexemePos);
@@ -263,21 +263,21 @@ LexicalAnalyzer = new Class ({
             newSynExpr = this.parseIndexArray(item,treeVar,endLexeme);
         } else if (this.currentLexeme.name == ']') {
             if (item instanceof SymArray) {
-                this.exception.error('except index array',this.currentLexeme);
+                this.exception.error('expect index of array ',this.currentLexeme);
             } else if (item instanceof SymRecord) {
                 newSynExpr = this.parseSymRecord(item,item.itemsRecord);
             } else {
                 newSynExpr = new SynVar(item);
             }
         } else {
-            this.exception.error('except ] ',this.currentLexeme);
+            this.exception.error('expect ] ',this.currentLexeme);
         }
         return new SynArray(itemSymb,arrIndex,newSynExpr);
     },
     parseSymRecord: function(item,treeVar) {
         this.currentLexeme = Scanner.next(this.currentLexeme.nextLexemePos);
         if (this.currentLexeme.name != '.') {
-            this.exception.error('except . ',this.currentLexeme);
+            this.exception.error('expect . ',this.currentLexeme);
         }
         this.currentLexeme = Scanner.next(this.currentLexeme.nextLexemePos);
         return new SynRecord(item,this.parseIdentifier(item.itemsElement));
