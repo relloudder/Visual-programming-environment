@@ -116,6 +116,7 @@ function runInterface() {
 
 function initApplication() {
     var canvas, ctx;
+    $('#errorPanel').attr('value','');
     canvas = document.getElementById("canvas");
     if (canvas.getContext) {
         ctx = canvas.getContext("2d");
