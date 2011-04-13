@@ -25,14 +25,8 @@ textarea {
     line-height: 130%;
     font-size: 12px;
     font-family: monaco, sans-serif;
+    background-color: #C2DFFF;
     border: 1px solid gray;
-    background-color: #7cb7e3;
-    background-image: -webkit-gradient(linear, 0 0, 0 100%, color-stop(.5, rgba(255, 255, 255, .2)), color-stop(.5, transparent), to(transparent));
-    background-image: -moz-linear-gradient(rgba(255, 255, 255, .2) 50%, transparent 50%, transparent);
-    background-image: linear-gradient(rgba(255, 255, 255, .2) 50%, transparent 50%, transparent);
-    -webkit-background-size: 40px 40px;
-    -moz-background-size: 40px 40px;
-    background-size: 30px 30px; /* Controls the size of the stripes */
     -moz-box-shadow: 1px 1px 8px gray;
     -webkit-box-shadow: 1px 1px 8px gray;
     box-shadow: 1px 1px 8px gray;
@@ -43,10 +37,13 @@ textarea {
     height: 5%;
     font-size: 12px;
     font-family: monaco, sans-serif;
-    border: 1px solid gray;
     background-color: #7cb7e3;
     margin-top: 5px;
     color: red;
+    border: 1px solid gray;
+    -moz-box-shadow: 1px 1px 8px gray;
+    -webkit-box-shadow: 1px 1px 8px gray;
+    box-shadow: 1px 1px 8px gray;
 }
 
 canvas:active {
