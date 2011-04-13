@@ -6,9 +6,8 @@ VariableTree = new Class({
     treeVar: null,
 	treeStatment: null,
     varMove: null,
-    draw: function(ctx,tools) {
-        //remove canvas
-        DrawForVis(ctx).back("#7cb7e3","#cccccc",canvas.width,canvas.height);
+    draw: function(ctx,tools,width,height) {
+        DrawForVis(ctx).back("#7cb7e3","#cccccc",width,height);
 		for (var i = 0; i < this.treeStatment.length; i++) {
             this.treeStatment[i].draw(ctx,tools);
         }
@@ -172,7 +171,7 @@ Application = new Class({
     drawTreeVis: function() {
         with(this) {
             DrawForVis(ctx).back('#202020','#aaa',width,height);
-            tree.draw(ctx,tools);
+            tree.draw(ctx,tools,width,height);
             var stopPaint = 0;
             if (treeVis[0] != null) {
                 for (var i = 0; i < treeVis[0].length; i++) {
