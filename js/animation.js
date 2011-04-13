@@ -178,7 +178,7 @@ SymVarMerge = new Class ({
 SymVarChange = new Class ({
     Extends: SymVarModifiable,
     initialize: function(change) {
-        this.parent(change.val,change.posX,change.posY,change.colVar,change.rVar,30);
+        this.parent(change.val,change.posX,change.posY,change.colVar,change.rVar,20);
         this.changeableObject = change;
 	    this.rVar = change.rVar;
     },

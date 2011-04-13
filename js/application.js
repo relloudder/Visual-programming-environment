@@ -142,7 +142,7 @@ Application = new Class({
         this.ctx = ctx;
         this.treeVis = [];
         this.dTime = 25;
-		this.speed = 0.17;
+		this.speed = 0.3;
     },
     flagMove: false,
     flagCanvasMove: false,
