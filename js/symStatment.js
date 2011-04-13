@@ -52,7 +52,7 @@ SymProgram = new Class ({
             if (beginOrEnd) {
                 DrawForVis(ctx).text("begin",tools.getAdjustedX(this.posX),tools.getAdjustedY(this.posY+5),25,0,"");
             } else {
-                DrawForVis(ctx).connect(tools.getAdjustedX(begX),tools.getAdjustedY(begY+r*1.3),
+                DrawForVis(ctx).connect(tools.getAdjustedX(begX),tools.getAdjustedY(begY),
                     tools.getAdjustedX(posX),tools.getAdjustedY(posY),6,'#555555');
                 DrawForVis(ctx).text("end",tools.getAdjustedX(this.posX),tools.getAdjustedY(this.posY+5),18,0,"");
             }
@@ -76,7 +76,7 @@ SymAssignment = new Class ({
     },
     draw: function(ctx,tools) {
         with(this) {
-            DrawForVis(ctx).connect(tools.getAdjustedX(begX),tools.getAdjustedY(begY+r*1.3),
+            DrawForVis(ctx).connect(tools.getAdjustedX(begX),tools.getAdjustedY(begY),
                 tools.getAdjustedX(posX),tools.getAdjustedY(posY),6,'#555555');
             DrawForVis(ctx).rect(tools.getAdjustedX(posX),tools.getAdjustedY(posY),tools.getAdjustedX(r)/2,3,6,color,value,0);
         }
