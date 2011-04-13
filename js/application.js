@@ -7,6 +7,7 @@ VariableTree = new Class({
 	treeStatment: null,
     varMove: null,
     draw: function(ctx,tools) {
+        //remove canvas
         DrawForVis(ctx).back("#7cb7e3","#cccccc",canvas.width,canvas.height);
 		for (var i = 0; i < this.treeStatment.length; i++) {
             this.treeStatment[i].draw(ctx,tools);

@@ -1,12 +1,22 @@
+#wCanvas {
+   float: left;
+   width: 60%;
+   height: 80%;
+   margin: 10px;
+}
+
+#code {
+   float: right;
+   width: 30%;
+   height: 89%;
+   margin: 10px;
+}
+
 canvas {
     border: 1px solid gray;
     -moz-box-shadow: 1px 1px 8px gray;
     -webkit-box-shadow: 1px 1px 8px gray;
     box-shadow: 1px 1px 8px gray;
-}
-
-canvas:active {
-   cursor: crosshair;
 }
 
 textarea {
@@ -41,20 +51,6 @@ textarea {
 
 canvas:active {
 	cursor: default;
-}
-
-#wCanvas,#code {
-   float: left;
-   width: 60%;
-   height: 80%;
-   margin: 10px;
-}
-
-#code {
-   float: right;
-   width: 30%;
-   height: 89%;
-   margin: 10px;
 }
 
 body {
