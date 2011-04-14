@@ -38,25 +38,40 @@ SymStatment = new Class ({
     draw: function(ctx,tools) {}
 });
 
-SymProgram = new Class ({
+SymBegin = new Class ({
     Extends: SymStatment,
-    initialize: function(pX,pY,color,beginOrEnd,begX,begY) {
+    initialize: function(pX,pY,color,begX,begY) {
         this.parent(pX,pY,color,"",begX,begY);
-        this.beginOrEnd = beginOrEnd;
     },
-    beginOrEnd: null,
     draw: function(ctx,tools) {
         with(this) {
             DrawForVis(ctx).roundedRect(tools.getAdjustedX(posX-r),tools.getAdjustedY(posY),
                 60,20,4,color,"#C8C8C8",3);
-            if (beginOrEnd) {
-                DrawForVis(ctx).text("begin",tools.getAdjustedX(this.posX),tools.getAdjustedY(this.posY+5),25,0,"");
-            } else {
-                DrawForVis(ctx).connect(tools.getAdjustedX(begX),tools.getAdjustedY(begY),
-                    tools.getAdjustedX(posX),tools.getAdjustedY(posY),6,'#555555');
-                DrawForVis(ctx).text("end",tools.getAdjustedX(this.posX),tools.getAdjustedY(this.posY+5),18,0,"");
-            }
+            DrawForVis(ctx).text("begin",tools.getAdjustedX(this.posX),tools.getAdjustedY(this.posY+5),25,0,"");
+        }
+    },
+    findVar: function(pos,tools) {
+        var x = pos[0]/tools.scale - tools.left;
+        var y = pos[1]/tools.scale - tools.top;
+        if (((this.posX-this.r) < x) && ((this.posX-this.r+60) > x) && ((this.posY-5) < y) && ((this.posY+15) > y)) {
+            return this;
+        }
+        return -1;
+    }
+});
 
+SymEnd = new Class ({
+    Extends: SymStatment,
+    initialize: function(pX,pY,color,begX,begY) {
+        this.parent(pX,pY,color,"",begX,begY);
+    },
+    draw: function(ctx,tools) {
+        with(this) {
+            DrawForVis(ctx).roundedRect(tools.getAdjustedX(posX-r),tools.getAdjustedY(posY),
+                60,20,4,color,"#C8C8C8",3);
+            DrawForVis(ctx).connect(tools.getAdjustedX(begX),tools.getAdjustedY(begY),
+                    tools.getAdjustedX(posX),tools.getAdjustedY(posY),6,'#555555');
+            DrawForVis(ctx).text("end",tools.getAdjustedX(this.posX),tools.getAdjustedY(this.posY+5),18,0,"");
         }
     },
     findVar: function(pos,tools) {

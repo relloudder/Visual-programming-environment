@@ -138,7 +138,7 @@ LexicalAnalyzer = new Class ({
     getBlock: function() {
         Scanner.popCodePart('');
         this.currentLexeme = Scanner.next(this.currentLexeme.nextLexemePos);
-        var symBeg = new SymProgram(400,5,'#E8E8E8',true,0,0);
+        var symBeg = new SymBegin(400,5,'#E8E8E8',0,0);
         var synBeg = new SynProgram(symBeg);
         app.tree.treeStatment.push(synBeg);
         while (this.currentLexeme.name != 'end') {
@@ -158,7 +158,7 @@ LexicalAnalyzer = new Class ({
                 this.exception.error('missing identifier',this.currentLexeme);
             }
         }
-        var symEnd = new SymProgram(440,200,'#E8E8E8',false,470,200);
+        var symEnd = new SymEnd(440,200,'#E8E8E8',470,200);
         var synEnd = new SynProgram(symEnd);
         app.tree.treeStatment.push(synEnd);
     },
