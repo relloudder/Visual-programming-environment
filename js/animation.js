@@ -40,14 +40,14 @@ SymVarMove = new Class ({
     draw: function(ctx,tools) {
         with(this) {
             var t = timeOneMove; //time of one move
-            if (createSymVar(ctx,tools) == 1) {
+            if(createSymVar(ctx,tools) == 1) {
                 return 1;
             }
-            DrawForVis(ctx).ball(tools.getAdjustedX(posX),tools.getAdjustedY(posY),tools.getAdjustedR(rVar),colVar);
-            DrawForVis(ctx).text(val,tools.getAdjustedX(posX),tools.getAdjustedY(posY),tools.getAdjustedR(rVar),angle,'int');
-	        if(numberOfMove <= 0) {
+            if(numberOfMove <= 0) {
 	            return deleteSymVar(ctx,tools);
 	        }
+            DrawForVis(ctx).ball(tools.getAdjustedX(posX),tools.getAdjustedY(posY),tools.getAdjustedR(rVar),colVar);
+            DrawForVis(ctx).text(val,tools.getAdjustedX(posX),tools.getAdjustedY(posY),tools.getAdjustedR(rVar),angle,'int');
 			numberOfMove--;
             vY = vY - aY*t;
             var hx = vX*t;
@@ -280,6 +280,7 @@ SymVarDown = new Class ({
         this.parent(from,to,g);
     },
     createSymVar: function(ctx,tools) {
+        this.to.setVisible(false);
         this.from.setVisible(false);
         return 0;
     }

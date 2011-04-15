@@ -346,7 +346,7 @@ var DrawForVis = function(ctx) {
 	        ctx.restore();
         },
 
-        rect: function(x0,y0,r,k,h,col,val,alpha){
+        rect: function(x0,y0,r,k,h,col,val,alpha,tr){
             ctx.save();
             ctx.translate(x0,y0);
             ctx.rotate(alpha);
@@ -356,7 +356,7 @@ var DrawForVis = function(ctx) {
             ctx.lineTo(k/2*r,r+h);
             ctx.lineTo(-2*k*r,r+h);
             ctx.lineTo(-2*k*r,r);
-            ctx.fillStyle = '#FFCCCC';
+            ctx.fillStyle = 'rgba(250,200,200,'+tr+')';
             ctx.fill();
             ctx.closePath();
             ctx.beginPath();
@@ -367,7 +367,7 @@ var DrawForVis = function(ctx) {
             ctx.lineTo(-2*k*r,r);
             ctx.fill();
             ctx.closePath();
-            this.roundedRect(-k*r+h,-k*r+h,2.5*k*r,r*2,4,'#E8E8E8','#C8C8C8',3);
+            this.roundedRect(-k*r+h,-k*r+h,2.5*k*r,r*2,4,'rgba(255,255,255,'+tr+')','rgba(200,200,200,'+tr+')',3);
             ctx.fillStyle = '#000';
             //найти длинну val.length и либо уменьшить либо обрезать
             ctx.font = r*0.8+'px Arial';

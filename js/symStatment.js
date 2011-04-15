@@ -93,7 +93,7 @@ SymAssignment = new Class ({
         with(this) {
             DrawForVis(ctx).connect(tools.getAdjustedX(begX),tools.getAdjustedY(begY),
                 tools.getAdjustedX(posX),tools.getAdjustedY(posY),6,'#555555');
-            DrawForVis(ctx).rect(tools.getAdjustedX(posX),tools.getAdjustedY(posY),tools.getAdjustedX(r)/2,3,6,color,value,0);
+            DrawForVis(ctx).rect(tools.getAdjustedX(posX),tools.getAdjustedY(posY),tools.getAdjustedX(r)/2,3,6,color,value,0,transp);
         }
     },
     findVar: function(pos,tools) {
@@ -106,3 +106,46 @@ SymAssignment = new Class ({
     }
 });
 
+SymChangeStatment = new Class ({
+    Extends: SymStatment,
+    initialize: function(symSt,biggerOrSmaller,transp) {
+        this.parent(symSt.pX,symSt.pY,symSt.color,symSt.value,symSt.begX,symSt.begY);
+        with(this) {
+            numberOfMove = 20;
+            maxNumberOfMove = 20;
+            symChange = symSt;
+            dr = biggerOrSmaller;
+            transp = transp;
+            if (dr < 0) {
+                r = (1 - dr)*r;
+                dr = dr/(1 - dr);
+            }
+        }
+    },
+    dr: null,
+    numberOfMove: null,
+    maxNumberOfMove: null,
+    symChange: null,
+    draw: function(ctx,tools) {
+        with(this) {
+            symChange.setVisible(false);
+            symChange.r = r;
+            symChange.transp = transp;
+            symChange.draw(ctx,tools);
+            if (numberOfMove == maxNumberOfMove) {
+                dr = r*dr/numberOfMove;
+            }
+            if (numberOfMove > 0) {
+                numberOfMove--;
+                r += dr;
+                if (dr < 0) {
+                    transp = transp - 0.02;
+                }
+                return 1;
+            } else {
+                symChange.setVisible(true);
+                return 0;
+            }
+        }
+    }
+});

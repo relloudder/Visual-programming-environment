@@ -143,7 +143,7 @@ LexicalAnalyzer = new Class ({
         app.tree.treeStatment.push(synBeg);
         while (this.currentLexeme.name != 'end') {
             if (this.currentLexeme.type == 'Identifier') {
-                var varLeft = app.tree.getVarByName(app.tree.treeVar,this.currentLexeme.name);
+                var varLeft = this.parseIdentifier(app.tree.treeVar);
                 this.currentLexeme = Scanner.next(this.currentLexeme.nextLexemePos);
                 if (this.currentLexeme.name != ':=') {
                     this.exception.error('expect := ',this.currentLexeme);

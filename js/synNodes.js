@@ -439,6 +439,25 @@ StmtAssignment = new Class ({
         }
         find = this.aRight.findSynExpr(pos,tools);
         return find;
+    },
+    visualization: function(ctx,tools) {
+        var k, varBeg, varGo, var1, st;
+        with(this) {
+            k = app.insertRowVis();
+            st = new SymChangeStatment(symStatment,0.4,1);
+            app.insertElementVis(k,st);
+            varBeg = aLeft.getSymbol();
+            k = app.insertRowVis();
+            aRight.interpretation([symStatment.getPosX(),symStatment.getPosY()]);
+            var1 = new SymVar(aRight.operation(true),symStatment.getPosX(),symStatment.getPosY()-10,'#999',varBeg.rVar);
+            k = app.insertRowVis();
+            varGo = new SymVarMerge(var1,varBeg,1/90);
+            app.insertElementVis(k,varGo);
+            k = app.insertRowVis();
+            st = new SymChangeStatment(symStatment,-0.4,1);
+            app.insertElementVis(k,st);
+        }
+        return -1;
     }
 });
 
