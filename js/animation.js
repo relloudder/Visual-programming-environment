@@ -199,7 +199,6 @@ SymVarBiggerSmaller = new Class ({
             DrawForVis(ctx).text(val,tools.getAdjustedX(posX),tools.getAdjustedY(posY),tools.getAdjustedR(rVar),0,changeableObject.type);
             if(numberOfMove == 0) {
                 changeableObject.rVar = rVar;
-                changeableObject.setVisible(true);
                 return 0;
             }
             numberOfMove--;

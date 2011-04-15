@@ -93,7 +93,7 @@ SymAssignment = new Class ({
         with(this) {
             DrawForVis(ctx).connect(tools.getAdjustedX(begX),tools.getAdjustedY(begY),
                 tools.getAdjustedX(posX),tools.getAdjustedY(posY),6,'#555555');
-            DrawForVis(ctx).rect(tools.getAdjustedX(posX),tools.getAdjustedY(posY),tools.getAdjustedX(r)/2,3,6,color,value,0,transp);
+            DrawForVis(ctx).rect(tools.getAdjustedX(posX),tools.getAdjustedY(posY),tools.getAdjustedR(r)/2,3,6,color,value,0,transp);
         }
     },
     findVar: function(pos,tools) {

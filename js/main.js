@@ -61,7 +61,7 @@ function runInterface() {
         } else if (app.flagMove) {
 	        app.tree.varMove.changePos(new Array(x,y),app.tools);
 	        if (app.tree.varMove instanceof Statment) {
-	            app.tree.setPrev([app.tree.varMove.posX,app.tree.varMove.posY]);
+	            app.tree.setPrev(app.tree.varMove.symStatment.posY);
 	        }
 			app.paint();
 	    }

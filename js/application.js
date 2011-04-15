@@ -187,5 +187,24 @@ Application = new Class({
                 }
             }
         }
+    },
+    setPrev: function(pos) {
+        var k = 0;
+        while((pos!=this.treeStatment[k].symStatment.posY)) {
+            k++;
+        }
+        if(k == 0) {
+            return;
+        }
+        if((this.treeStatment[k-1].symStatment.posY+70) > this.treeStatment[k].symStatment.posY) {
+            this.treeStatment[k].putPosition([this.treeStatment[k].symStatment.posX,this.treeStatment[k-1].symStatment.posY+70],
+                [this.treeStatment[k-1].symStatment.posX,this.treeStatment[k-1].symStatment.posY]);
+        } else if(this.treeStatment[k].symStatment.posY > (this.treeStatment[k+1].symStatment.posY-70)) {
+            this.treeStatment[k].putPosition([this.treeStatment[k].symStatment.posX,this.treeStatment[k+1].symStatment.posY-70],
+                [this.treeStatment[k-1].symStatment.posX,this.treeStatment[k-1].symStatment.posY]);
+        }
+        this.treeStatment[k+1].putPosition( [this.treeStatment[k+1].symStatment.posX,this.treeStatment[k+1].symStatment.posY],
+            [this.treeStatment[k].symStatment.posX,this.treeStatment[k].symStatment.posY]);
+        this.treeStatment[k].symStatment.height = -this.treeStatment[k-1].symStatment.posY+this.treeStatment[k].symStatment.posY;
     }
 });

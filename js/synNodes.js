@@ -1,9 +1,11 @@
 SynExpr = new Class({
     initialize: function() {
        this.symbolName = new SymbolName(0,0,'');
+       this.show = false;
     },
     type: '',
     symbolName: null,
+    show: null,
     getValue: function() {
         return 0;
     },
@@ -29,6 +31,7 @@ SynExpr = new Class({
     },
     interpretation: function(pos) {
         var varBeg, varEnd, varGo, k;
+        this.show = true;
         if (this instanceof SynBinOp) {
             var expression = this;
             this.getRight().interpretation(this.symBinOp.getPosSuch(false));
@@ -420,7 +423,9 @@ StmtAssignment = new Class ({
     },
     draw: function(ctx,tools) {
         this.symStatment.draw(ctx,tools);
-        this.aRight.draw(ctx,tools);
+        if(this.aRight.show) {
+            this.aRight.draw(ctx,tools);
+        }
     },
     putPosition: function(pos,prev) {
        this.parent(pos,prev);
