@@ -391,7 +391,7 @@ SymConst = new Class({
         this.parent(v,pX,pY,'int','1const');
     },
     draw: function(ctx, tools) {
-    with(this) {
+    /*with(this) {
         DrawForVis(ctx).ball(tools.getAdjustedX(posX),tools.getAdjustedY(posY),tools.getAdjustedR(rVar),colVar);
         DrawForVis(ctx).ball(tools.getAdjustedX(posX+20),tools.getAdjustedY(posY+5),tools.getAdjustedR(rVar),colVar);
         DrawForVis(ctx).text('13',tools.getAdjustedX(posX+20),tools.getAdjustedY(posY+5),tools.getAdjustedR(rVar),0,type);
@@ -401,5 +401,5 @@ SymConst = new Class({
         DrawForVis(ctx).text('44',tools.getAdjustedX(posX-18),tools.getAdjustedY(posY+15),tools.getAdjustedR(rVar),0,type);
         DrawForVis(ctx).ball(tools.getAdjustedX(posX+2),tools.getAdjustedY(posY+12),tools.getAdjustedR(rVar),colVar);
         DrawForVis(ctx).text('60',tools.getAdjustedX(posX+2),tools.getAdjustedY(posY+12),tools.getAdjustedR(rVar),0,type);
-    }}
+    }*/}
 });
