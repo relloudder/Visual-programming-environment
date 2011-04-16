@@ -453,7 +453,9 @@ StmtAssignment = new Class ({
             varBeg = aLeft.getSymbol();
             k = app.insertRowVis();
             aRight.interpretation([symStatment.getPosX(),symStatment.getPosY()]);
-            var1 = new SymVar(aRight.operation(true),symStatment.getPosX(),symStatment.getPosY()-10,'#999',varBeg.rVar);
+            aRight.operation(true);
+            //var1 = new SymVar(aRight.operation(true),symStatment.getPosX(),symStatment.getPosY()-10,'#999',varBeg.rVar);
+            var1 = app.tree.treeVar[app.tree.treeVar.length-1];
             k = app.insertRowVis();
             varGo = new SymVarMerge(var1,varBeg,1/90);
             app.insertElementVis(k,varGo);
