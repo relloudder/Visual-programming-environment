@@ -33,8 +33,8 @@ SynExpr = new Class({
         var varBeg, varEnd, varGo, k;
         if (this instanceof SynBinOp) {
             var expression = this;
-            this.getRight().interpretation(this.symBinOp.getPosSuch(false));
             this.getLeft().interpretation(this.symBinOp.getPosSuch(true));
+            this.getRight().interpretation(this.symBinOp.getPosSuch(false));
         } else {
             if ((this instanceof SynConstInt) || (this instanceof SynConstReal)) {
                 varBeg = app.tree.getVarByName(app.tree.treeVar,'1const');
