@@ -31,7 +31,6 @@ SynExpr = new Class({
     },
     interpretation: function(pos) {
         var varBeg, varEnd, varGo, k;
-        this.show = true;
         if (this instanceof SynBinOp) {
             var expression = this;
             this.getRight().interpretation(this.symBinOp.getPosSuch(false));
@@ -449,7 +448,7 @@ StmtAssignment = new Class ({
         var k, varBeg, varGo, var1, st;
         with(this) {
             k = app.insertRowVis();
-            st = new SymChangeStatment(symStatment,0.4,1);
+            st = new SymChangeStatment(this,0.4,1);
             app.insertElementVis(k,st);
             varBeg = aLeft.getSymbol();
             k = app.insertRowVis();
@@ -459,7 +458,7 @@ StmtAssignment = new Class ({
             varGo = new SymVarMerge(var1,varBeg,1/90);
             app.insertElementVis(k,varGo);
             k = app.insertRowVis();
-            st = new SymChangeStatment(symStatment,-0.4,1);
+            st = new SymChangeStatment(this,-0.4,1);
             app.insertElementVis(k,st);
         }
         return -1;

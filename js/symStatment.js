@@ -8,7 +8,7 @@ SymStatment = new Class ({
 	    this.begX = begX;
 	    this.begY = begY;
 	    this.angleOfRotation = 0;
-	    this.height = 150;
+	    this.height = 100;
     },
     value: null,
 	color: null,
@@ -69,8 +69,8 @@ SymEnd = new Class ({
         with(this) {
             DrawForVis(ctx).roundedRect(tools.getAdjustedX(posX-r),tools.getAdjustedY(posY),
                 60,20,4,color,"#C8C8C8",3);
-            DrawForVis(ctx).connect(tools.getAdjustedX(begX),tools.getAdjustedY(begY),
-                    tools.getAdjustedX(posX),tools.getAdjustedY(posY),6,'#555555');
+            //DrawForVis(ctx).connect(tools.getAdjustedX(begX),tools.getAdjustedY(begY),
+            //        tools.getAdjustedX(posX),tools.getAdjustedY(posY),6,'#555555');
             DrawForVis(ctx).text("end",tools.getAdjustedX(this.posX),tools.getAdjustedY(this.posY+5),18,0,"");
         }
     },
@@ -91,8 +91,8 @@ SymAssignment = new Class ({
     },
     draw: function(ctx,tools) {
         with(this) {
-            DrawForVis(ctx).connect(tools.getAdjustedX(begX),tools.getAdjustedY(begY),
-                tools.getAdjustedX(posX),tools.getAdjustedY(posY),6,'#555555');
+            //DrawForVis(ctx).connect(tools.getAdjustedX(begX),tools.getAdjustedY(begY),
+            //    tools.getAdjustedX(posX),tools.getAdjustedY(posY),6,'#555555');
             DrawForVis(ctx).rect(tools.getAdjustedX(posX),tools.getAdjustedY(posY),tools.getAdjustedR(r)/2,3,6,color,value,0,transp);
         }
     },
@@ -108,12 +108,12 @@ SymAssignment = new Class ({
 
 SymChangeStatment = new Class ({
     Extends: SymStatment,
-    initialize: function(symSt,biggerOrSmaller,transp) {
-        this.parent(symSt.pX,symSt.pY,symSt.color,symSt.value,symSt.begX,symSt.begY);
+    initialize: function(synSt,biggerOrSmaller,transp) {
         with(this) {
             numberOfMove = 20;
             maxNumberOfMove = 20;
-            symChange = symSt;
+            synChange = synSt;
+            r = synChange.symStatment.r;
             dr = biggerOrSmaller;
             transp = transp;
             if (dr < 0) {
@@ -125,25 +125,22 @@ SymChangeStatment = new Class ({
     dr: null,
     numberOfMove: null,
     maxNumberOfMove: null,
-    symChange: null,
+    synChange: null,
     draw: function(ctx,tools) {
         with(this) {
-            symChange.setVisible(false);
-            symChange.r = r;
-            symChange.transp = transp;
-            symChange.draw(ctx,tools);
+            synChange.aRight.show = true;
+            synChange.symStatment.r = r;
+            synChange.symStatment.transp = transp;
+            synChange.draw(ctx,tools);
             if (numberOfMove == maxNumberOfMove) {
                 dr = r*dr/numberOfMove;
             }
             if (numberOfMove > 0) {
                 numberOfMove--;
                 r += dr;
-                if (dr < 0) {
-                    transp = transp - 0.02;
-                }
+                if (dr < 0) transp -= 0.02;
                 return 1;
             } else {
-                symChange.setVisible(true);
                 return 0;
             }
         }

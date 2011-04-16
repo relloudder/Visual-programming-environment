@@ -8,11 +8,13 @@ VariableTree = new Class({
     varMove: null,
     draw: function(ctx,tools,width,height) {
         DrawForVis(ctx).back("#7cb7e3","#cccccc",width,height);
-		for (var i = this.treeStatment.length - 1; i >= 0; i--) {
+		for (var i = 0; i < this.treeStatment.length; i++) {
             this.treeStatment[i].draw(ctx,tools);
         }
         for (var i = 0; i < this.treeVar.length; i++) {
-            if( this.treeVar[i].visible) this.treeVar[i].draw(ctx,tools);
+            if(this.treeVar[i].visible) {
+                this.treeVar[i].draw(ctx,tools);
+            }
         }
     },
     push: function(item) {
