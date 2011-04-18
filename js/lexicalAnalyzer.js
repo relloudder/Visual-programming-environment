@@ -139,7 +139,7 @@ LexicalAnalyzer = new Class ({
         Scanner.popCodePart('');
         this.currentLexeme = Scanner.next(this.currentLexeme.nextLexemePos);
         var symBeg = new SymBegin(400,5,'#E8E8E8',0,0);
-        var synBeg = new SynProgram(symBeg);
+        var synBeg = new SynBegin(symBeg);
         app.tree.treeStatment.push(synBeg);
         while (this.currentLexeme.name != 'end') {
             if (this.currentLexeme.type == 'Identifier') {
@@ -159,7 +159,7 @@ LexicalAnalyzer = new Class ({
             }
         }
         var symEnd = new SymEnd(440,200,'#E8E8E8',470,200);
-        var synEnd = new SynProgram(symEnd);
+        var synEnd = new SynEnd(symEnd);
         app.tree.treeStatment.push(synEnd);
     },
     parseExpr: function(treeVar,endLexeme) {
@@ -167,31 +167,31 @@ LexicalAnalyzer = new Class ({
     },
     parseCompare: function(treeVar,endLexeme) {
         var left = this.parseAdd(treeVar,endLexeme);
-        if (this.currentLexeme.type == 'Comparison') {
+        while (this.currentLexeme.type == 'Comparison') {
             var binOp = new SymBinOp(this.currentLexeme.name,0,0,'#5500ff',Math.random()-0.5);
             this.currentLexeme = Scanner.next(this.currentLexeme.nextLexemePos);
-            left = new SynBinOp(binOp,left,this.parseCompare(treeVar,endLexeme));
+            left = new SynBinOp(binOp,left,this.parseAdd(treeVar,endLexeme));
             left.type = 'boolean';
         }
         return left;
     },
     parseAdd: function(treeVar,endLexeme) {
         var left = this.parseTerm(treeVar,endLexeme);
-        if ((this.currentLexeme.name == '+') || (this.currentLexeme.name == '-') ||
+        while ((this.currentLexeme.name == '+') || (this.currentLexeme.name == '-') ||
 	        (this.currentLexeme.name.toLowerCase() == 'or')) {
 		    var binOp = new SymBinOp(this.currentLexeme.name,0,0,'#5500ff',Math.random()-0.5);
 		    this.currentLexeme = Scanner.next(this.currentLexeme.nextLexemePos);
-            left = new SynBinOp(binOp,left,this.parseAdd(treeVar,endLexeme));
+            left = new SynBinOp(binOp,left,this.parseTerm(treeVar,endLexeme));
         }
         return left;
     },
     parseTerm: function(treeVar,endLexeme) {
         var left = this.parseFactor(treeVar,endLexeme);
-        if ((this.currentLexeme.name == '*') || (this.currentLexeme.name == '/')||
+        while ((this.currentLexeme.name == '*') || (this.currentLexeme.name == '/')||
             (this.currentLexeme.name.toLowerCase() == 'and') || (this.currentLexeme.name.toLowerCase() == 'div')) {
             var binOp = new SymBinOp(this.currentLexeme.name,0,0,'#5500ff',Math.random()-0.5);
             this.currentLexeme = Scanner.next(this.currentLexeme.nextLexemePos);
-            left = new SynBinOp(binOp,left,this.parseTerm(treeVar,endLexeme));
+            left = new SynBinOp(binOp,left,this.parseFactor(treeVar,endLexeme));
         }
         return left;
     },

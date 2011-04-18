@@ -389,7 +389,6 @@ SymRecord = new Class({
 SymConst = new Class({
     Extends: SymVarName,
     initialize: function (v,pX,pY,type) {
-        alert(type);
         this.parent(v,pX,pY,type,'');
         this.colVar = '#999';
     },
