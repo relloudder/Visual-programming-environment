@@ -8,13 +8,14 @@ VariableTree = new Class({
     varMove: null,
     draw: function(ctx,tools,width,height) {
         DrawForVis(ctx).back("#7cb7e3","#cccccc",width,height);
-		for (var i = 0; i < this.treeStatment.length; i++) {
+        for (var i = 0; i < this.treeStatment.length; i++) {
+            this.treeStatment[i].drawLine(ctx,tools);
+        }
+        for (var i = 0; i < this.treeStatment.length; i++) {
             this.treeStatment[i].draw(ctx,tools);
         }
         for (var i = 0; i < this.treeVar.length; i++) {
-            if(this.treeVar[i].visible) {
-                this.treeVar[i].draw(ctx,tools);
-            }
+            if ( this.treeVar[i].visible) this.treeVar[i].draw(ctx,tools);
         }
     },
     push: function(item) {
@@ -74,26 +75,29 @@ VariableTree = new Class({
         }
         return -1;
     },
-    putPosition: function(pos,prev){
-        this.treeStatment[0].putPosition(pos,prev);
-        for (var k = 1; k < this.treeStatment.length; k++) {
-            prev = [pos[0],pos[1]];
+    putPosition: function(pos,prev) {
+        for(var k = 1; k < this.treeStatment.length; k++) {
             pos[1] += this.treeStatment[k].getHeight();
-            this.treeStatment[k].putPosition(pos,prev);
+            this.treeStatment[k].putPosition(pos);
         }
     },
-    setPrev: function() {
-        for (var k = 1; k < this.treeStatment.length - 1; k++) {
-            if ((this.treeStatment[k-1].symStatment.posY+70) > this.treeStatment[k].symStatment.posY) {
-                this.treeStatment[k].putPosition([this.treeStatment[k].symStatment.posX,this.treeStatment[k-1].symStatment.posY+70],
-                    [this.treeStatment[k-1].symStatment.posX,this.treeStatment[k-1].symStatment.posY]);
-            } else if (this.treeStatment[k].symStatment.posY > (this.treeStatment[k+1].symStatment.posY-70)) {
-                this.treeStatment[k].putPosition( [this.treeStatment[k].symStatment.posX,this.treeStatment[k+1].symStatment.posY-70],
-                    [this.treeStatment[k-1].symStatment.posX,this.treeStatment[k-1].symStatment.posY]);
-            }
-            this.treeStatment[k+1].putPosition( [this.treeStatment[k+1].symStatment.posX,this.treeStatment[k+1].symStatment.posY],
-                [this.treeStatment[k].symStatment.posX,this.treeStatment[k].symStatment.posY]);
+    setPrev: function(pos) {
+        var k = 0;
+        while ((pos != this.treeStatment[k].symStatment.posY)) {
+            k++;
         }
+        if (k == 0) {
+            return;
+        }
+        if ((this.treeStatment[k-1].symStatment.posY+70) > this.treeStatment[k].symStatment.posY) {
+            this.treeStatment[k].putPosition([this.treeStatment[k].symStatment.posX,this.treeStatment[k-1].symStatment.posY+70]);
+        }
+        if (k < (this.treeStatment.length-1)) {
+            if (this.treeStatment[k].symStatment.posY > (this.treeStatment[k+1].symStatment.posY-70))
+                this.treeStatment[k].putPosition([this.treeStatment[k].symStatment.posX,this.treeStatment[k+1].symStatment.posY-70]);
+            this.treeStatment[k+1].symStatment.height = this.treeStatment[k+1].symStatment.posY-this.treeStatment[k].symStatment.posY;
+        }
+        this.treeStatment[k].symStatment.height = this.treeStatment[k].symStatment.posY-this.treeStatment[k-1].symStatment.posY;
     }
 });
 
@@ -175,7 +179,7 @@ Application = new Class({
             DrawForVis(ctx).back('#202020','#aaa',width,height);
             tree.draw(ctx,tools,width,height);
             var stopPaint = 0;
-            if (treeVis[0] != null) {
+            if(treeVis[0] != null) {
                 for (var i = 0; i < treeVis[0].length; i++) {
                     stopPaint += treeVis[0][i].draw(ctx,tools);
                 }
@@ -189,24 +193,5 @@ Application = new Class({
                 }
             }
         }
-    },
-    setPrev: function(pos) {
-        var k = 0;
-        while((pos!=this.treeStatment[k].symStatment.posY)) {
-            k++;
-        }
-        if(k == 0) {
-            return;
-        }
-        if((this.treeStatment[k-1].symStatment.posY+70) > this.treeStatment[k].symStatment.posY) {
-            this.treeStatment[k].putPosition([this.treeStatment[k].symStatment.posX,this.treeStatment[k-1].symStatment.posY+70],
-                [this.treeStatment[k-1].symStatment.posX,this.treeStatment[k-1].symStatment.posY]);
-        } else if(this.treeStatment[k].symStatment.posY > (this.treeStatment[k+1].symStatment.posY-70)) {
-            this.treeStatment[k].putPosition([this.treeStatment[k].symStatment.posX,this.treeStatment[k+1].symStatment.posY-70],
-                [this.treeStatment[k-1].symStatment.posX,this.treeStatment[k-1].symStatment.posY]);
-        }
-        this.treeStatment[k+1].putPosition( [this.treeStatment[k+1].symStatment.posX,this.treeStatment[k+1].symStatment.posY],
-            [this.treeStatment[k].symStatment.posX,this.treeStatment[k].symStatment.posY]);
-        this.treeStatment[k].symStatment.height = -this.treeStatment[k-1].symStatment.posY+this.treeStatment[k].symStatment.posY;
     }
 });

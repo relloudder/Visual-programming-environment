@@ -123,7 +123,8 @@ SymVarName = new Class({
     	    'boolean': new colorAndRadius('blue', 15),
     	    'char': new colorAndRadius('pink', 15),
     	    'array': new colorAndRadius('black', 20),
-    	    'binOp': new colorAndRadius('IndianRed', 30)
+    	    'binOp': new colorAndRadius('IndianRed', 30),
+    	    'const': new colorAndRadius('gray', 25)
     	}
     	var t = typeAndValue[type];
         this.parent(v,pX,pY,t.color,t.radius);
@@ -387,19 +388,14 @@ SymRecord = new Class({
 
 SymConst = new Class({
     Extends: SymVarName,
-    initialize: function (v,pX,pY) {
-        this.parent(v,pX,pY,'int','1const');
+    initialize: function (v,pX,pY,type) {
+        alert(type);
+        this.parent(v,pX,pY,type,'');
+        this.colVar = '#999';
     },
     draw: function(ctx, tools) {
-    /*with(this) {
+    with(this) {
         DrawForVis(ctx).ball(tools.getAdjustedX(posX),tools.getAdjustedY(posY),tools.getAdjustedR(rVar),colVar);
-        DrawForVis(ctx).ball(tools.getAdjustedX(posX+20),tools.getAdjustedY(posY+5),tools.getAdjustedR(rVar),colVar);
-        DrawForVis(ctx).text('13',tools.getAdjustedX(posX+20),tools.getAdjustedY(posY+5),tools.getAdjustedR(rVar),0,type);
-        DrawForVis(ctx).ball(tools.getAdjustedX(posX+10),tools.getAdjustedY(posY-2),tools.getAdjustedR(rVar),colVar);
-        DrawForVis(ctx).text('60',tools.getAdjustedX(posX+10),tools.getAdjustedY(posY-2),tools.getAdjustedR(rVar),0,type);
-        DrawForVis(ctx).ball(tools.getAdjustedX(posX-18),tools.getAdjustedY(posY+15),tools.getAdjustedR(rVar),colVar);
-        DrawForVis(ctx).text('44',tools.getAdjustedX(posX-18),tools.getAdjustedY(posY+15),tools.getAdjustedR(rVar),0,type);
-        DrawForVis(ctx).ball(tools.getAdjustedX(posX+2),tools.getAdjustedY(posY+12),tools.getAdjustedR(rVar),colVar);
-        DrawForVis(ctx).text('60',tools.getAdjustedX(posX+2),tools.getAdjustedY(posY+12),tools.getAdjustedR(rVar),0,type);
-    }*/}
+        DrawForVis(ctx).text(val,tools.getAdjustedX(posX),tools.getAdjustedY(posY),tools.getAdjustedR(rVar),0,type);
+   }}
 });

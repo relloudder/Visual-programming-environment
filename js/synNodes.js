@@ -36,17 +36,16 @@ SynExpr = new Class({
             this.getLeft().interpretation(this.symBinOp.getPosSuch(true));
             this.getRight().interpretation(this.symBinOp.getPosSuch(false));
         } else {
-            if ((this instanceof SynConstInt) || (this instanceof SynConstReal)) {
-                varBeg = app.tree.getVarByName(app.tree.treeVar,'1const');
-                varBeg.setValue(this.getValue());
-            } else {
-                varBeg = this.getSymbol();
-            }
-            var  k = app.treeVis.length - 1;
+            k = app.treeVis.length - 1;
+            varBeg = this.getSymbol();
             varEnd = new SymVar(varBeg.getValue(),this.getPosX(),this.getPosY(),'#999',varBeg.rVar);
             varEnd.setVisible(false);
+            if ((this instanceof SynConstInt) || (this instanceof SynConstReal)) {
+                varGo = new SymVarDown(varBeg,varEnd,0);
+            } else {
+                varGo = new SymVarSeparation(varBeg,varEnd,1/90);
+            }
             app.tree.push(varEnd);
-            varGo = new SymVarSeparation(varBeg,varEnd,1/(90));
             app.insertElementVis(k,varGo);
         }
     },
@@ -253,18 +252,40 @@ SynConstInt = new Class({
     initialize: function(constValue) {
         this.constValue = constValue;
         this.type = 'int';
-        this.symbolName = new SymbolName(200,200,constValue);
+        this.symbolName = new SymbolName(0,0,constValue);
+        this.symConst = new SymConst(constValue,0,0,this.type);
     },
     constValue: null,
+    symConst: null,
     getValue: function() {
         return this.constValue;
+    },
+    draw: function(ctx,tools) {
+        this.symConst.draw(ctx,tools)
+    },
+    getPosX: function() {
+        return this.symConst.posX;
+    },
+    getPosY: function() {
+        return this.symConst.posY;
+    },
+    setPosX: function(pX) {
+        this.symConst.posX = pX;
+    },
+    setPosY : function(pY) {
+        this.symConst.posY = pY;
+    },
+    getSymbol : function(){
+         return this.symConst;
     }
 });
 
 SynConstReal = new Class({
     Extends: SynConstInt,
     initialize: function(constValue) {
+        this.parent(constValue);
         this.type = 'real';
+        this.symConst.type = 'real';
     }
 });
 
@@ -371,6 +392,7 @@ Statment = new Class ({
     getPosY: function() {
         this.symStatment.getPosX();
     },
+    drawLine: function(ctx,tools) {},
     draw: function(ctx,tools) {
         this.symStatment.draw(ctx,tools);
     },
@@ -380,8 +402,6 @@ Statment = new Class ({
     putPosition: function(pos,prev) {
         this.symStatment.posX = pos[0];
         this.symStatment.posY = pos[1];
-        this.symStatment.begX = prev[0];
-        this.symStatment.begY = prev[1];
     },
     findSynExpr: function(pos,tools) {
         var find = this.symStatment.findVar(pos,tools);
@@ -392,7 +412,7 @@ Statment = new Class ({
     }
 });
 
-SynProgram = new Class ({
+SynBegin = new Class ({
     Extends: Statment,
     initialize: function(symStatment) {
         this.parent(symStatment);
@@ -400,8 +420,29 @@ SynProgram = new Class ({
     draw: function(ctx,tools) {
         this.symStatment.draw(ctx,tools);
     },
+    drawLine: function(ctx,tools) {},
     changePos: function(pos,tools) {
+        this.symStatment.posY = pos[1]/tools.scale - tools.top;
+        this.symStatment.posX = pos[0]/tools.scale - tools.left;
         app.tree.putPosition(pos,[0,0]);
+    }
+});
+
+SynEnd = new Class ({
+    Extends: Statment,
+    initialize: function(symStatment) {
+        this.parent(symStatment);
+    },
+    draw: function(ctx,tools) {
+        this.symStatment.draw(ctx,tools);
+    },
+    drawLine: function(ctx,tools) {
+        with(this.symStatment)
+            DrawForVis(ctx).connect(tools.getAdjustedX(posX),tools.getAdjustedY(posY-height),
+                tools.getAdjustedX(posX),tools.getAdjustedY(posY),6,'#555555');
+    },
+    changePos: function(pos,tools) {
+        this.symStatment.posY = pos[1]/tools.scale - tools.top;
     }
 });
 
@@ -422,8 +463,12 @@ StmtAssignment = new Class ({
     },
     draw: function(ctx,tools) {
         this.symStatment.draw(ctx,tools);
-        if(this.aRight.show) {
-            this.aRight.draw(ctx,tools);
+        if (this.aRight.show) this.aRight.draw(ctx,tools);
+    },
+    drawLine: function(ctx,tools) {
+        with(this.symStatment) {
+            DrawForVis(ctx).connect(tools.getAdjustedX(posX),tools.getAdjustedY(posY - height),
+                tools.getAdjustedX(posX),tools.getAdjustedY(posY),6,'#555555');
         }
     },
     putPosition: function(pos,prev) {
@@ -432,7 +477,7 @@ StmtAssignment = new Class ({
        this.aRight.putPosition(pos,prev);
     },
     changePos: function(pos,tools) {
-        this.symStatment.posY = pos[1]/tools.scale - tools.top;
+        this.symStatment.posY = y = pos[1]/tools.scale - tools.top;
         var pos1 = [this.symStatment.posX,this.symStatment.posY - 15];
         this.aRight.putPosition(pos1,[0,0]);
     },
@@ -453,10 +498,10 @@ StmtAssignment = new Class ({
             varBeg = aLeft.getSymbol();
             k = app.insertRowVis();
             aRight.interpretation([symStatment.getPosX(),symStatment.getPosY()]);
-            aRight.operation(true);
             //var1 = new SymVar(aRight.operation(true),symStatment.getPosX(),symStatment.getPosY()-10,'#999',varBeg.rVar);
+			aRight.operation(true);
             var1 = app.tree.treeVar[app.tree.treeVar.length-1];
-            k = app.insertRowVis();
+			k = app.insertRowVis();
             varGo = new SymVarMerge(var1,varBeg,1/90);
             app.insertElementVis(k,varGo);
             k = app.insertRowVis();
@@ -466,4 +511,3 @@ StmtAssignment = new Class ({
         return -1;
     }
 });
-

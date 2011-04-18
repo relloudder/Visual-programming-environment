@@ -1,20 +1,16 @@
 SymStatment = new Class ({
     Extends: Symbol,
-    initialize: function(pX,pY,color,value,begX,begY) {
+    initialize: function(pX,pY,color,value) {
         this.parent(pX,pY);
         this.value = value;
 	    this.color = color;
 	    this.r = 25;
-	    this.begX = begX;
-	    this.begY = begY;
 	    this.angleOfRotation = 0;
 	    this.height = 100;
     },
     value: null,
 	color: null,
 	r: null,
-	begX: null,
-	begY: null,
 	angleOfRotation: null,
 	height : null,
     getValue: function() {
@@ -40,8 +36,8 @@ SymStatment = new Class ({
 
 SymBegin = new Class ({
     Extends: SymStatment,
-    initialize: function(pX,pY,color,begX,begY) {
-        this.parent(pX,pY,color,"",begX,begY);
+    initialize: function(pX,pY,color) {
+        this.parent(pX,pY,color,"");
     },
     draw: function(ctx,tools) {
         with(this) {
@@ -62,15 +58,13 @@ SymBegin = new Class ({
 
 SymEnd = new Class ({
     Extends: SymStatment,
-    initialize: function(pX,pY,color,begX,begY) {
-        this.parent(pX,pY,color,"",begX,begY);
+    initialize: function(pX,pY,color) {
+        this.parent(pX,pY,color,"");
     },
     draw: function(ctx,tools) {
         with(this) {
             DrawForVis(ctx).roundedRect(tools.getAdjustedX(posX-r),tools.getAdjustedY(posY),
                 60,20,4,color,"#C8C8C8",3);
-            //DrawForVis(ctx).connect(tools.getAdjustedX(begX),tools.getAdjustedY(begY),
-            //        tools.getAdjustedX(posX),tools.getAdjustedY(posY),6,'#555555');
             DrawForVis(ctx).text("end",tools.getAdjustedX(this.posX),tools.getAdjustedY(this.posY+5),18,0,"");
         }
     },
@@ -91,8 +85,6 @@ SymAssignment = new Class ({
     },
     draw: function(ctx,tools) {
         with(this) {
-            //DrawForVis(ctx).connect(tools.getAdjustedX(begX),tools.getAdjustedY(begY),
-            //    tools.getAdjustedX(posX),tools.getAdjustedY(posY),6,'#555555');
             DrawForVis(ctx).rect(tools.getAdjustedX(posX),tools.getAdjustedY(posY),tools.getAdjustedR(r)/2,3,6,color,value,0,transp);
         }
     },
