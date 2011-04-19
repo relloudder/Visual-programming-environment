@@ -152,6 +152,7 @@ SymVarMerge = new Class ({
     createSymVar: function (ctx,tools) {
         this.from.setVisible(false);
 		this.val = this.from.val;
+		this.rVar = this.to.rVar;
         return 0;
     },
     deleteSymVar: function (ctx,tools) {

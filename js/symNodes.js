@@ -82,6 +82,12 @@ SymVar = new Class({
     getColVar: function() {
         return this.colVar;
     },
+    setType: function(type) {
+        this.type = type;
+        this.rVar  = 15;
+        if (type == 'real') this.rVar = 25;
+        if (type == 'int') this.rVar = 20;
+    },
 	inputRandom: function(maxValue) {
 	    this.val = Math.floor(Math.random() * maxValue);
 	},

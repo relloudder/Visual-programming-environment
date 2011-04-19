@@ -13,6 +13,16 @@ SynExpr = new Class({
     getType : function() {
         return this.type;
     },
+    setType: function (type) {
+        this.type = type;
+    },
+    compareType: function(expr1,expr2) {
+        if (expr1 == expr2) return expr1;
+        if ((expr2 == 'real') && (expr1 == 'int')) return 'real';
+        if ((expr2 == 'int') && (expr1 == 'real')) return 'real';
+        if ((expr1 == 'char') || (expr2 == 'char')) return -1;
+        if ((expr1 == 'booblean') || (expr2 == 'boolean')) return -1;
+    },
     getPosX: function() {
         return this.symbolName.posX;
     },
@@ -154,6 +164,7 @@ SynArray = new Class({
         this.left = left;
         this.right = right;
         this.symbolArray = symbol;
+        this.type = this.symbolArray.type;
         this.symbolName = new SymbolName(0,0,this.getAllName(this.left.name+'['));
     },
     left: null, //link for synArray
@@ -202,6 +213,7 @@ SynRecord = new Class({
     initialize: function(left,right) {
         this.left = left; //link for symRecord
         this.right = right; //record's fields
+        this.type = right.type;
         this.symbolName = new SymbolName(0,0,this.getAllName(this.left.name));
     },
     left: null,
@@ -285,7 +297,7 @@ SynConstReal = new Class({
     initialize: function(constValue) {
         this.parent(constValue);
         this.type = 'real';
-        this.symConst.type = 'real';
+        this.symConst.setType('real');
     }
 });
 
@@ -297,8 +309,15 @@ SynBinOp = new Class({
         this.right = right;
         this.binOp = op.val;
         this.symbolName = new SymbolName(0,0,'');
+        var typeLeft = left.getType();
+        var typeRight = right.getType();
+        this.setType(this.compareType(typeLeft,typeRight));
+        if (this.type == -1) {
+            this.errorType  = 'Incompatible type ' + typeLeft + ' ' + typeRight;
+        }
     },
     constValue: null,
+    errorType: '',
     getValue: function() {
         return this.constValue;
     },

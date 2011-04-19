@@ -149,7 +149,14 @@ LexicalAnalyzer = new Class ({
                     this.exception.error('expect := ',this.currentLexeme);
                 }
                 this.currentLexeme = Scanner.next(this.currentLexeme.nextLexemePos);
-                expression = this.parseExpr(app.tree.treeVar,';');
+                var expression = this.parseExpr(app.tree.treeVar,';');
+                var typeCompare = expression.compareType(varLeft.type,expression.type);
+                if (((typeCompare == 'real') && (varLeft.type == 'int')) || (typeCompare == -1)) {
+                    this.exception.error('Incompatible types ' + varLeft.type + ' and ' + expression.type,this.currentLexeme);
+                }
+                if ((typeCompare == 'real') && (expression.type == 'int')) {
+                    expression.setType('real');
+                }
                 var st2 = new SymAssignment(440,200,'#66CC99',Scanner.popCodePart(''),470,5);
                 var statment = new StmtAssignment(varLeft,expression,st2);
                 app.tree.treeStatment.push(statment);
@@ -171,6 +178,9 @@ LexicalAnalyzer = new Class ({
             var binOp = new SymBinOp(this.currentLexeme.name,0,0,'#5500ff',Math.random()-0.5);
             this.currentLexeme = Scanner.next(this.currentLexeme.nextLexemePos);
             left = new SynBinOp(binOp,left,this.parseAdd(treeVar,endLexeme));
+            if (left.errorType != '') {
+                this.exception.error(left.errorType,this.currentLexeme);
+            }
             left.type = 'boolean';
         }
         return left;
@@ -182,6 +192,9 @@ LexicalAnalyzer = new Class ({
 		    var binOp = new SymBinOp(this.currentLexeme.name,0,0,'#5500ff',Math.random()-0.5);
 		    this.currentLexeme = Scanner.next(this.currentLexeme.nextLexemePos);
             left = new SynBinOp(binOp,left,this.parseTerm(treeVar,endLexeme));
+            if (left.errorType != '') {
+                this.exception.error(left.errorType,this.currentLexeme);
+            }
         }
         return left;
     },
@@ -192,6 +205,9 @@ LexicalAnalyzer = new Class ({
             var binOp = new SymBinOp(this.currentLexeme.name,0,0,'#5500ff',Math.random()-0.5);
             this.currentLexeme = Scanner.next(this.currentLexeme.nextLexemePos);
             left = new SynBinOp(binOp,left,this.parseFactor(treeVar,endLexeme));
+            if (left.errorType != '') {
+                this.exception.error(left.errorType,this.currentLexeme);
+            }
         }
         return left;
     },
