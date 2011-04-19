@@ -48,6 +48,7 @@ SynExpr = new Class({
         } else {
             k = app.treeVis.length - 1;
             varBeg = this.getSymbol();
+            varBeg.jump = true;
             varEnd = new SymVar(varBeg.getValue(),this.getPosX(),this.getPosY(),'#999',varBeg.rVar);
             varEnd.setVisible(false);
             if ((this instanceof SynConstInt) || (this instanceof SynConstReal)) {
@@ -515,6 +516,7 @@ StmtAssignment = new Class ({
             st = new SymChangeStatment(this,0.4,1);
             app.insertElementVis(k,st);
             varBeg = aLeft.getSymbol();
+            varBeg.jump = true;
             k = app.insertRowVis();
             aRight.interpretation([symStatment.getPosX(),symStatment.getPosY()]);
             //var1 = new SymVar(aRight.operation(true),symStatment.getPosX(),symStatment.getPosY()-10,'#999',varBeg.rVar);

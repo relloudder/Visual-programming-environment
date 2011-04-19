@@ -122,6 +122,7 @@ SymVarSeparation = new Class ({
     },
 	deleteSymVar: function (ctx,tools) {
         this.to.setVisible(true);
+        this.from.jump = false;
         return 0;
     },
 
@@ -162,6 +163,7 @@ SymVarMerge = new Class ({
 	    }
 		if (numberOfMerSep == 0) {
             to.setValue(from.getValue());
+            to.jump = false;
             return 0;
         }
         posX += (to.posX - posX)/numberOfMerSep;

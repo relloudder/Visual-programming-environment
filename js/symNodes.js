@@ -63,10 +63,12 @@ SymVar = new Class({
         this.val = val;
         this.colVar = colVar;
         this.rVar = rVar;
+        this.jump = false;
     },
     val: 0,
     colVar: 0,
     rVar: 0,
+    jump: false,
     getRVar: function() {
         return this.rVar;
     },
@@ -160,17 +162,21 @@ SymVarName = new Class({
         return element;
     },
     draw: function(ctx,tools) {
-        DrawForVis(ctx).ball(tools.getAdjustedX(this.posX),tools.getAdjustedY(this.posY),tools.getAdjustedR(this.rVar),this.colVar);
-        DrawForVis(ctx).text(this.val,tools.getAdjustedX(this.posX),tools.getAdjustedY(this.posY),tools.getAdjustedR(this.rVar),0,this.type);
+        var dY = 0;
+        if (this.jump) dY = 3;
+        var y = -dY + Math.ceil(Math.random()*2*dY);
+        DrawForVis(ctx).ball(tools.getAdjustedX(this.posX),tools.getAdjustedY(this.posY+y/2),tools.getAdjustedR(this.rVar+y/4),this.colVar);
+        DrawForVis(ctx).text(this.val,tools.getAdjustedX(this.posX),tools.getAdjustedY(this.posY+y/2),
+            tools.getAdjustedR(this.rVar+y/4),0,this.type);
         if (this.owner == 'array') {
-            DrawForVis(ctx).hat(tools.getAdjustedX(this.posX),tools.getAdjustedY(this.posY-2.25*this.rVar),
+            DrawForVis(ctx).hat(tools.getAdjustedX(this.posX),tools.getAdjustedY(this.posY-2.25*this.rVar+y/2),
                 tools.getAdjustedR(this.rVar),'yellow',this.name);
         } else if (this.owner == 'record') {
-            DrawForVis(ctx).hatRecord(tools.getAdjustedX(this.posX),tools.getAdjustedY(this.posY),tools.getAdjustedR(this.rVar),
-                this.colVar,this.name,this.turn);
+            DrawForVis(ctx).hatRecord(tools.getAdjustedX(this.posX),tools.getAdjustedY(this.posY+y/2),tools.getAdjustedR(this.rVar),
+                this.colVar,this.name,this.turn+y*Math.PI/180);
         } else {
-            DrawForVis(ctx).flag(tools.getAdjustedX(this.posX-this.rVar),tools.getAdjustedY(this.posY-4),this.rVar/5,6,this.colVar,
-                this.name,tools.getAdjustedR(this.rVar),155*Math.PI/180);
+            DrawForVis(ctx).flag(tools.getAdjustedX(this.posX-this.rVar),tools.getAdjustedY(this.posY-4+y/2),this.rVar/5,6,this.colVar,
+                this.name,tools.getAdjustedR(this.rVar),(155+y)*Math.PI/180);
         }
     }
 })
