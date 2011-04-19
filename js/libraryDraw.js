@@ -375,6 +375,65 @@ var DrawForVis = function(ctx) {
             ctx.restore();
         },
 
+        conditionIf: function(x,y,r,k,h,col,val,alpha,tr,width,height) {
+            ctx.save();
+            ctx.translate(x, y);
+            ctx.rotate(alpha);
+            ctx.beginPath();
+            ctx.moveTo(0,-r*k);
+            ctx.lineTo(h,-r*k-h/2);
+            ctx.lineTo(k*2*r,-h);
+            ctx.lineTo(k*2*r,0);
+            ctx.fillStyle = 'rgba(250,200,200,'+tr+')';
+            var w = width - 2*k*r;
+            if (w > 0) {
+                ctx.moveTo(-2*k*r-w/Math.cos(1.6*alpha),0);
+                ctx.lineTo(-2*k*r-w/Math.cos(1.6*alpha)+h,-h);
+                ctx.lineTo(-2*k*r+h*2,-h);
+                ctx.lineTo(-2*k*r+h*2,0);
+                ctx.fill();
+                ctx.moveTo(2*k*r+w/Math.cos(1.6*alpha),0);
+                ctx.lineTo(2*k*r+w/Math.cos(1.6*alpha)+h,-h);
+                ctx.lineTo(2*k*r-h*2,-h);
+                ctx.lineTo(2*k*r-h*2,0);
+                ctx.fill();
+            }
+            ctx.fill();
+            ctx.closePath();
+            ctx.beginPath();
+            if (w > 0) {
+                ctx.fillStyle = col;
+                ctx.fillRect(-2*k*r+2*h,-h/6,-w/Math.cos(1.6*alpha)-2*h,h/3);
+                ctx.fillRect(2*k*r-2,-h/6,w/Math.cos(1.6*alpha)+2,h/3);
+            }
+            colorFigure(col,getGradient(col),k*r,r);
+            ctx.moveTo(-k*2*r,0);
+            ctx.lineTo(0,-r*k);
+            ctx.lineTo(k*2*r,0);
+            ctx.lineTo(0,r*k);
+            ctx.fill();
+            ctx.closePath();
+            ctx.beginPath();
+            this.roundedRect(-k*r,-r*k/2+r/4,2*k*r,r*k-r/2,4,'rgba(255,255,255,'+tr+')','rgba(200,200,200,'+tr+')',3);
+            ctx.fillStyle = '#000';
+            ctx.font = r+'px Arial';
+            ctx.fillText(val,-r*k+r*0.8,r/4);
+            ctx.closePath();
+            ctx.restore();
+            ctx.save();
+            ctx.beginPath();
+            ctx.fillStyle = 'rgba(250,200,200,'+tr+')';
+            ctx.moveTo(x-width,y+height);
+            ctx.lineTo(x-width+h,y+height-h);
+            ctx.lineTo(x+width+h,y+height-h);
+            ctx.lineTo(x+width,y+height);
+            ctx.fill();
+            ctx.closePath();
+            ctx.fillStyle = col;
+            ctx.fillRect(x-width,y+height,width*2,h/3);
+            ctx.restore();
+        },
+
         roundedRect: function(x,y,width,height,radius,col1,col2,h) {
             ctx.save();
             ctx.beginPath();

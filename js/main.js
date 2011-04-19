@@ -20,8 +20,12 @@ function runInterface() {
 		app.paint();
     });
 
-    $('#stop, #new, #reset').click(function() {
+    $('#new, #reset').click(function() {
         initApplication();
+    });
+
+    $('#stop').click(function() {
+        DrawForVis(app.ctx).conditionIf(200,200,15,2,6,'#66CC99','a[i]>1',0,1,100,120);
     });
 
     $('#zoomIn, #zoomInMenu').click(function() {
