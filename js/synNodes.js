@@ -55,6 +55,7 @@ SynExpr = new Class({
                 varGo = new SymVarDown(varBeg,varEnd,0);
             } else {
                 varGo = new SymVarSeparation(varBeg,varEnd,1/90);
+                varGo.visualConnect = true;
             }
             app.tree.push(varEnd);
             app.insertElementVis(k,varGo);

@@ -460,6 +460,22 @@ var DrawForVis = function(ctx) {
             ctx.fill();
             ctx.closePath();
             ctx.restore();
+        },
+
+        lineVar: function(x1,y1,x0,y0,radius,col) {
+            ctx.save();
+            ctx.beginPath();
+            ctx.translate(x1,y1);
+            var alpha = Math.atan((y1-y0)/(x1-x0));
+            ctx.rotate(alpha);
+            ctx.moveTo(-(x1-x0)/Math.cos(alpha),0);
+            ctx.lineTo(0,-radius);
+            ctx.lineTo(0,radius);
+            ctx.lineTo(-(x1-x0)/Math.cos(alpha),0);
+            ctx.fillStyle = col;
+            ctx.fill();
+            ctx.closePath();
+            ctx.restore();
         }
     };
 }

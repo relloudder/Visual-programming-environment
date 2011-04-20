@@ -79,7 +79,16 @@ SymVarInteraction = new Class ({
     to: null,
 	maxNumberOfMerSep : 0, // max number of steps of merge and separation
     numberOfMerSep: 0,
-    directInteractive: 0 // derection for separation or marge
+    directInteractive: 0, // derection for separation or marge
+    visualConnect: false,﻿
+    draw : function (ctx,tools) {
+        var vis = this.parent(ctx,tools);
+        if ((this.visualConnect) && (vis == 1)) {
+            DrawForVis(ctx).lineVar(tools.getAdjustedX(this.from.posX),tools.getAdjustedY(this.from.posY),
+                tools.getAdjustedX(this.to.posX),tools.getAdjustedY(this.to.posY),tools.getAdjustedR(4),'rgba(255,106,106,0.7)');
+        }
+        return vis;
+    }
 });
 
 SymVarSeparation = new Class ({
