@@ -75,7 +75,7 @@ VariableTree = new Class({
         }
         return -1;
     },
-    putPosition: function(pos,prev) {
+    putPosition: function(pos) {
         for(var k = 1; k < this.treeStatment.length; k++) {
             pos[1] += this.treeStatment[k].getHeight();
             this.treeStatment[k].putPosition(pos);

@@ -35,7 +35,7 @@ SynExpr = new Class({
     setPosY : function(pY) {
         this.symbolName.posY = pY;
     },
-    putPosition: function(pos,prev) {
+    putPosition: function(pos) {
         this.setPosX(pos[0]);
         this.setPosY(pos[1]);
     },
@@ -389,12 +389,12 @@ SynBinOp = new Class({
         this.setPosX(pos[0]/tools.scale-tools.left);
         this.setPosY(pos[1]/tools.scale-tools.top);
     },
-    putPosition: function(pos,prev) {
-        this.parent(pos,prev);
+    putPosition: function(pos) {
+        this.parent(pos);
         var pos0 = this.getSymBinOp().getPosSuch(true);
         var pos1 = this.getSymBinOp().getPosSuch(false);
-        this.getLeft().putPosition(pos0,prev);
-        this.getRight().putPosition(pos1,prev);
+        this.getLeft().putPosition(pos0);
+        this.getRight().putPosition(pos1);
     }
 });
 
@@ -420,7 +420,7 @@ Statment = new Class ({
     getHeight: function() {
         return this.symStatment.getHeight();
     },
-    putPosition: function(pos,prev) {
+    putPosition: function(pos) {
         this.symStatment.posX = pos[0];
         this.symStatment.posY = pos[1];
     },
@@ -445,7 +445,7 @@ SynBegin = new Class ({
     changePos: function(pos,tools) {
         this.symStatment.posY = pos[1]/tools.scale - tools.top;
         this.symStatment.posX = pos[0]/tools.scale - tools.left;
-        app.tree.putPosition(pos,[0,0]);
+        app.tree.putPosition(pos);
     }
 });
 
@@ -492,15 +492,15 @@ StmtAssignment = new Class ({
                 tools.getAdjustedX(posX),tools.getAdjustedY(posY),6,'#555555');
         }
     },
-    putPosition: function(pos,prev) {
-       this.parent(pos,prev);
+    putPosition: function(pos) {
+       this.parent(pos);
        pos[1]-=15;
-       this.aRight.putPosition(pos,prev);
+       this.aRight.putPosition(pos);
     },
     changePos: function(pos,tools) {
-        this.symStatment.posY = y = pos[1]/tools.scale - tools.top;
+        this.symStatment.posY = pos[1]/tools.scale - tools.top;
         var pos1 = [this.symStatment.posX,this.symStatment.posY - 15];
-        this.aRight.putPosition(pos1,[0,0]);
+        this.aRight.putPosition(pos1);
     },
     findSynExpr: function(pos,tools) {
         var find = this.symStatment.findVar(pos,tools);
