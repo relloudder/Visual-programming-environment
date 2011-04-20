@@ -183,6 +183,9 @@ SynArray = new Class({
     },
     getSymbol: function() { //returns sym from treeVar
         var result = this.right.operation(false); //create calculating index expression
+        if (Math.ceil(result) != result) {
+            alert('Error type of index of array '+this.left.name); error;
+        }
         var item = this.left.getItemArrByNum(result);
         if((this.symbolArray instanceof SynArray)||(this.symbolArray instanceof SynRecord)) {
             this.symbolArray.setItemLeft(item);

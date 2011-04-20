@@ -280,7 +280,7 @@ SymArray = new Class({
     },
     getItemArrByNum : function(num) {
         if (((num - this.firstIndex) < 0) || ((num - this.firstIndex) > this.sizeElement)) {
-            alert('элемента с номером ' + num + ' в массиве нет');
+            alert('Element with number ' + num + ' does not exist'); error;
             return -1;
         }
         return this.itemsElement[num - this.firstIndex];
