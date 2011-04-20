@@ -532,6 +532,7 @@ StmtAssignment = new Class ({
             k = app.insertRowVis();
             st = new SymChangeStatment(this,-0.4,1);
             app.insertElementVis(k,st);
+            app.paint();
         }
         return -1;
     }

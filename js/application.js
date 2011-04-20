@@ -149,6 +149,7 @@ Application = new Class({
         this.treeVis = [];
         this.dTime = 25;
 		this.speed = 0.3;
+		this.numberOfStatement = -1;
     },
     flagMove: false,
     flagCanvasMove: false,
@@ -162,6 +163,7 @@ Application = new Class({
     speed: null,
 	dTime: null,
     treeVis: null,
+    numberOfStatement: null,
     insertRowVis: function() {
         this.treeVis.push([]);
         return (this.treeVis.length - 1);
@@ -190,6 +192,9 @@ Application = new Class({
                     treeVis.splice(0,1); //delete 0 row
                     selfNew = this;
                     idTimer = setInterval('selfNew.drawTreeVis()',this.dTime);
+                } else if (numberOfStatement >= 0) {
+                    numberOfStatement++;
+                    tree.treeStatment[numberOfStatement].visualization(ctx,tools);
                 }
             }
         }

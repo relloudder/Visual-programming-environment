@@ -85,10 +85,8 @@ function runInterface() {
     });
 
     $("#move").click(function() {
-        for(var i = 1; i < app.tree.treeStatment.length - 1; i++) {
-            app.tree.treeStatment[i].visualization(app.ctx,app.tools);
-        }
-		app.paint();
+        app.numberOfStatement += 2;
+        app.tree.treeStatment[app.numberOfStatement].visualization(app.ctx,app.tools);
     });
 
     $("#SpeedMin").click(function() {

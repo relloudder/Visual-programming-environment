@@ -135,13 +135,14 @@
     <div id="code">
         <textarea cols=30 rows=40 id="programPanel">
 var
-    min,max: integer;
+    min,max,sum: integer;
     a:array[1..2] of integer;
     b:record i,j: integer;
     end;
 begin
     min:=5*3+b.i*a[2];
     max:=5*3+a[1];
+    sum := min + max;
 end.            
         </textarea>
         <input type="text" id="errorPanel" value="">
