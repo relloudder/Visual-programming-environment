@@ -141,9 +141,16 @@ var
     end;
 begin
     min:=5*3+b.i*a[2];
-    max:=5*3+a[1];
-    sum := min + max;
-end.            
+    if min<0 then
+        if (a[1]+3)<min then
+            min:=max-2;
+        else if (a[1]+3)<min then
+            min:=max-2;
+        else min:=max+2;
+    else if (a[1]+3)<min then
+        min:=max-2;
+    else min:=max+2;
+end.
         </textarea>
         <input type="text" id="errorPanel" value="">
     </div>

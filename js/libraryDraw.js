@@ -367,7 +367,7 @@ var DrawForVis = function(ctx) {
             ctx.lineTo(-2*k*r,r);
             ctx.fill();
             ctx.closePath();
-            this.roundedRect(-k*r+h,-k*r+h,2.5*k*r,r*2,4,'rgba(255,255,255,'+tr+')','rgba(200,200,200,'+tr+')',3);
+            this.roundedRect(-k*r+h,-k*r+h*2,2.5*k*r,r*1.5,h/2,'rgba(255,255,255,'+tr+')','rgba(200,200,200,'+tr+')',3);
             ctx.fillStyle = '#000';
             //найти длинну val.length и либо уменьшить либо обрезать
             ctx.font = r*0.8+'px Arial';
@@ -414,10 +414,10 @@ var DrawForVis = function(ctx) {
             ctx.fill();
             ctx.closePath();
             ctx.beginPath();
-            this.roundedRect(-k*r,-r*k/2+r/4,2*k*r,r*k-r/2,4,'rgba(255,255,255,'+tr+')','rgba(200,200,200,'+tr+')',3);
+            this.roundedRect(-k*r,-r*k/2+r/4,2*k*r,r*k-r/2,h/2,'rgba(255,255,255,'+tr+')','rgba(200,200,200,'+tr+')',3);
             ctx.fillStyle = '#000';
-            ctx.font = r+'px Arial';
-            ctx.fillText(val,-r*k+r*0.8,r/4);
+            ctx.font = r/3*2+'px Arial';
+            ctx.fillText(val,-r*k+r*0.1,r/4);
             ctx.closePath();
             ctx.restore();
             ctx.save();

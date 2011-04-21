@@ -404,6 +404,7 @@ SynBinOp = new Class({
 Statment = new Class ({
     Extends: SynExpr,
     initialize: function(symStatment) {
+	    this.symbolName = new SymbolName(0,0,'');
         this.symStatment = symStatment;
     },
     symStatment: null,
@@ -422,6 +423,12 @@ Statment = new Class ({
     },
     getHeight: function() {
         return this.symStatment.getHeight();
+    },
+    getHeightStatment: function() {
+        return this.symStatment.heightStatment+this.symStatment.getHeight();
+    },
+    getWidth: function(){
+        return this.symStatment.width;
     },
     putPosition: function(pos) {
         this.symStatment.posX = pos[0];
@@ -448,7 +455,7 @@ SynBegin = new Class ({
     changePos: function(pos,tools) {
         this.symStatment.posY = pos[1]/tools.scale - tools.top;
         this.symStatment.posX = pos[0]/tools.scale - tools.left;
-        app.tree.putPosition(pos);
+        app.tree.putPosition([this.symStatment.posX, this.symStatment.posY]);
     }
 });
 
@@ -463,7 +470,7 @@ SynEnd = new Class ({
     drawLine: function(ctx,tools) {
         with(this.symStatment)
             DrawForVis(ctx).connect(tools.getAdjustedX(posX),tools.getAdjustedY(posY-height),
-                tools.getAdjustedX(posX),tools.getAdjustedY(posY),6,'#555555');
+                tools.getAdjustedX(posX),tools.getAdjustedY(posY),tools.getAdjustedR(6),'#555555');
     },
     changePos: function(pos,tools) {
         this.symStatment.posY = pos[1]/tools.scale - tools.top;
@@ -492,7 +499,7 @@ StmtAssignment = new Class ({
     drawLine: function(ctx,tools) {
         with(this.symStatment) {
             DrawForVis(ctx).connect(tools.getAdjustedX(posX),tools.getAdjustedY(posY - height),
-                tools.getAdjustedX(posX),tools.getAdjustedY(posY),6,'#555555');
+                tools.getAdjustedX(posX),tools.getAdjustedY(posY),tools.getAdjustedR(6),'#555555');
         }
     },
     putPosition: function(pos) {
@@ -535,5 +542,78 @@ StmtAssignment = new Class ({
             app.paint();
         }
         return -1;
+    }
+});
+
+StmtIf = new Class({
+    Extends: Statment,
+    initialize: function (exprIf, sThen, sElse, symStatment) {
+        this.parent(symStatment);
+        this.exprIf = exprIf;
+        this.stmtThen = sThen;
+        this.stmtElse = sElse;
+    },
+    exprIf: null,
+    stmtThen: null,
+    stmtElse: null,
+    getExprIf: function() {
+        return this.exprIf;
+    },
+    getWidth: function () {
+        var wElse = 0;
+        if (this.stmtElse!=null)wElse = this.stmtElse.getWidth();
+            return (this.symStatment.width+(wElse+this.stmtThen.getWidth())/3);
+    },
+    drawLine: function(ctx,tools) {
+        with(this.symStatment) {
+            DrawForVis(ctx).connect(tools.getAdjustedX(posX),tools.getAdjustedY(posY - height),
+                tools.getAdjustedX(posX),tools.getAdjustedY(posY),tools.getAdjustedR(6),'#555555');
+            this.stmtThen.drawLine(ctx,tools);
+            DrawForVis(ctx).connect(tools.getAdjustedX(posX+width),tools.getAdjustedY(posY + heightStatment),
+                tools.getAdjustedX(posX+width),tools.getAdjustedY(this.stmtThen.symStatment.posY
+                +this.stmtThen.symStatment.heightStatment),tools.getAdjustedR(6),'#555555');
+            if (this.stmtElse != null) {
+                this.stmtElse.drawLine(ctx,tools);
+                DrawForVis(ctx).connect(tools.getAdjustedX(posX-width),tools.getAdjustedY(posY + heightStatment),
+                    tools.getAdjustedX(posX-width),tools.getAdjustedY(this.stmtElse.symStatment.posY
+                    +this.stmtElse.symStatment.heightStatment),tools.getAdjustedR(6),'#555555');
+            } else {
+                DrawForVis(ctx).connect(tools.getAdjustedX(posX-width),tools.getAdjustedY(posY + heightStatment),
+                    tools.getAdjustedX(posX-width),tools.getAdjustedY(posY),tools.getAdjustedR(6),'#555555');
+            }
+        }
+    },
+    draw: function(ctx,tools) {
+        this.symStatment.draw(ctx,tools);
+        this.stmtThen.draw(ctx,tools);
+        if (this.stmtElse != null) this.stmtElse.draw(ctx,tools);
+    },
+    putPosition: function(pos) {
+        this.parent(pos);
+        var x = pos[0] + this.symStatment.width;
+        var y = pos[1] + this.stmtThen.getHeight();
+        this.stmtThen.putPosition([x,y]);
+        x -= 2*this.symStatment.width;
+        if (this.stmtElse != null) {
+            y = pos[1] + this.stmtElse.getHeight();
+            this.stmtElse.putPosition([x,y]);
+        }
+        pos[1] += this.symStatment.heightStatment;
+    },
+    changePos: function(pos,tools) {
+        this.symStatment.posY = pos[1]/tools.scale - tools.top;
+        var pos1 = [this.symStatment.posX + this.symStatment.width,this.symStatment.posY + this.stmtThen.getHeight()];
+        this.stmtThen.putPosition(pos1);
+        var pos1 = [this.symStatment.posX - this.symStatment.width,this.symStatment.posY + this.stmtThen.getHeightStatment()];
+        if (this.stmtElse != null) this.stmtElse.putPosition(pos1);
+    },
+    findSynExpr: function(pos,tools) {
+        var find = this.symStatment.findVar(pos,tools);
+        if (find != -1) {
+            return this;
+        }
+        find = this.stmtThen.findSynExpr(pos,tools);
+        if ((find == -1) && (this.stmtElse != null)) find = this.stmtElse.findSynExpr(pos,tools);
+        return find;
     }
 });

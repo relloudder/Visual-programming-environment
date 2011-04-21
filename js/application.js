@@ -41,6 +41,11 @@ VariableTree = new Class({
         return -1;
     },
     treeLocation: function(width,height) {
+        for (var i = 1; i < this.treeStatment.length - 1; i++) {
+            var w = this.treeStatment[i].symStatment.width;
+            var wNew = this.treeStatment[i].getWidth();
+            if (w < wNew) this.treeStatment[i].symStatment.width = wNew;
+        }
         var length = this.treeVar.length;
         if (length/2 != Math.ceil(length/2)) {
             length++;
@@ -82,7 +87,7 @@ VariableTree = new Class({
         }
     },
     setPrev: function(pos) {
-        var k = 0;
+        /* var k = 0;
         while ((pos != this.treeStatment[k].symStatment.posY)) {
             k++;
         }
@@ -98,7 +103,8 @@ VariableTree = new Class({
             this.treeStatment[k+1].symStatment.height = this.treeStatment[k+1].symStatment.posY-this.treeStatment[k].symStatment.posY;
         }
         this.treeStatment[k].symStatment.height = this.treeStatment[k].symStatment.posY-this.treeStatment[k-1].symStatment.posY;
-    }
+        */
+	}
 });
 
 Tools = new Class({

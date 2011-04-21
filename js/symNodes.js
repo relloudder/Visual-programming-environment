@@ -175,7 +175,7 @@ SymVarName = new Class({
             DrawForVis(ctx).hatRecord(tools.getAdjustedX(this.posX),tools.getAdjustedY(this.posY+y/2),tools.getAdjustedR(this.rVar),
                 this.colVar,this.name,this.turn+y*Math.PI/180);
         } else {
-            DrawForVis(ctx).flag(tools.getAdjustedX(this.posX-this.rVar),tools.getAdjustedY(this.posY-4+y/2),this.rVar/5,6,this.colVar,
+            DrawForVis(ctx).flag(tools.getAdjustedX(this.posX-this.rVar),tools.getAdjustedY(this.posY-4+y/2),tools.getAdjustedR(this.rVar/5),tools.getAdjustedR(6),this.colVar,
                 this.name,tools.getAdjustedR(this.rVar),(155+y)*Math.PI/180);
         }
     }

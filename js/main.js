@@ -60,10 +60,10 @@ function runInterface() {
             app.tools.setLeft(app.tools.getLeft() - (xOld - x)/app.tools.getScale());
 			app.paint();
         } else if (app.flagMove) {
-	        app.tree.varMove.changePos(new Array(x,y),app.tools);
-	        if (app.tree.varMove instanceof Statment) {
-	            app.tree.setPrev(app.tree.varMove.symStatment.posY);
-	        }
+	        app.tree.varMove.changePos([x,y],app.tools);
+	        //if (app.tree.varMove instanceof Statment) {
+	        //app.tree.setPrev(app.tree.varMove.symStatment.posY);
+	        //}
 			app.paint();
 	    }
 	    xOld = x;
