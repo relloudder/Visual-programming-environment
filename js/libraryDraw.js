@@ -416,8 +416,8 @@ var DrawForVis = function(ctx) {
             ctx.beginPath();
             this.roundedRect(-k*r,-r*k/2+r/4,2*k*r,r*k-r/2,h/2,'rgba(255,255,255,'+tr+')','rgba(200,200,200,'+tr+')',3);
             ctx.fillStyle = '#000';
-            ctx.font = r/3*2+'px Arial';
-            ctx.fillText(val,-r*k+r*0.1,r/4);
+            ctx.font = r/4*2+'px Arial';
+            ctx.fillText(val,-r*k+r,r/4);
             ctx.closePath();
             ctx.restore();
             ctx.save();

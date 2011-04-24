@@ -424,12 +424,15 @@ Statment = new Class ({
     getHeight: function() {
         return this.symStatment.getHeight();
     },
-    getHeightStatment: function() {
-        return this.symStatment.heightStatment+this.symStatment.getHeight();
+	getHeightStatment: function() {
+        return this.symStatment.heightStatment;
     },
-    getWidth: function(){
-        return this.symStatment.width;
+    setHeightStatment: function(val) {
+        this.symStatment.heightStatment = val;
     },
+	getWidth: function(){
+	    return this.symStatment.width;
+	},
     putPosition: function(pos) {
         this.symStatment.posX = pos[0];
         this.symStatment.posY = pos[1];
@@ -440,23 +443,8 @@ Statment = new Class ({
             return this;
         }
         return -1;
-    }
-});
-
-SynBegin = new Class ({
-    Extends: Statment,
-    initialize: function(symStatment) {
-        this.parent(symStatment);
     },
-    draw: function(ctx,tools) {
-        this.symStatment.draw(ctx,tools);
-    },
-    drawLine: function(ctx,tools) {},
-    changePos: function(pos,tools) {
-        this.symStatment.posY = pos[1]/tools.scale - tools.top;
-        this.symStatment.posX = pos[0]/tools.scale - tools.left;
-        app.tree.putPosition([this.symStatment.posX, this.symStatment.posY]);
-    }
+    treeLocation: function() {}
 });
 
 SynEnd = new Class ({
@@ -504,8 +492,7 @@ StmtAssignment = new Class ({
     },
     putPosition: function(pos) {
        this.parent(pos);
-       pos[1]-=15;
-       this.aRight.putPosition(pos);
+       this.aRight.putPosition([pos[0],pos[1]-20]);
     },
     changePos: function(pos,tools) {
         this.symStatment.posY = pos[1]/tools.scale - tools.top;
@@ -530,10 +517,9 @@ StmtAssignment = new Class ({
             varBeg.jump = true;
             k = app.insertRowVis();
             aRight.interpretation([symStatment.getPosX(),symStatment.getPosY()]);
-            //var1 = new SymVar(aRight.operation(true),symStatment.getPosX(),symStatment.getPosY()-10,'#999',varBeg.rVar);
-			aRight.operation(true);
+          	aRight.operation(true);
             var1 = app.tree.treeVar[app.tree.treeVar.length-1];
-			k = app.insertRowVis();
+            k = app.insertRowVis();
             varGo = new SymVarMerge(var1,varBeg,1/90);
             app.insertElementVis(k,varGo);
             k = app.insertRowVis();
@@ -547,40 +533,37 @@ StmtAssignment = new Class ({
 
 StmtIf = new Class({
     Extends: Statment,
-    initialize: function (exprIf, sThen, sElse, symStatment) {
+    initialize: function (exprIf, sThen, sElse, symStatment){
         this.parent(symStatment);
         this.exprIf = exprIf;
         this.stmtThen = sThen;
         this.stmtElse = sElse;
-    },
+	},
     exprIf: null,
     stmtThen: null,
     stmtElse: null,
-    getExprIf: function() {
+    getExprIf: function(){
         return this.exprIf;
     },
-    getWidth: function () {
+    getWidth: function (){
         var wElse = 0;
-        if (this.stmtElse!=null)wElse = this.stmtElse.getWidth();
-            return (this.symStatment.width+(wElse+this.stmtThen.getWidth())/3);
-    },
+        if (this.stmtElse != null) wElse = this.stmtElse.getWidth();
+        return (this.symStatment.width+(wElse+this.stmtThen.getWidth())/3);
+	},
     drawLine: function(ctx,tools) {
         with(this.symStatment) {
             DrawForVis(ctx).connect(tools.getAdjustedX(posX),tools.getAdjustedY(posY - height),
                 tools.getAdjustedX(posX),tools.getAdjustedY(posY),tools.getAdjustedR(6),'#555555');
             this.stmtThen.drawLine(ctx,tools);
             DrawForVis(ctx).connect(tools.getAdjustedX(posX+width),tools.getAdjustedY(posY + heightStatment),
-                tools.getAdjustedX(posX+width),tools.getAdjustedY(this.stmtThen.symStatment.posY
-                +this.stmtThen.symStatment.heightStatment),tools.getAdjustedR(6),'#555555');
+                tools.getAdjustedX(posX+width),tools.getAdjustedY(this.getPosLastThen()),tools.getAdjustedR(6),'#555555');
             if (this.stmtElse != null) {
-                this.stmtElse.drawLine(ctx,tools);
-                DrawForVis(ctx).connect(tools.getAdjustedX(posX-width),tools.getAdjustedY(posY + heightStatment),
-                    tools.getAdjustedX(posX-width),tools.getAdjustedY(this.stmtElse.symStatment.posY
-                    +this.stmtElse.symStatment.heightStatment),tools.getAdjustedR(6),'#555555');
-            } else {
+               this.stmtElse.drawLine(ctx,tools);
+               DrawForVis(ctx).connect(tools.getAdjustedX(posX-width),tools.getAdjustedY(posY + heightStatment),
+                    tools.getAdjustedX(posX-width),tools.getAdjustedY(this.getPosLastElse()),tools.getAdjustedR(6),'#555555')  ;
+	        } else
                 DrawForVis(ctx).connect(tools.getAdjustedX(posX-width),tools.getAdjustedY(posY + heightStatment),
                     tools.getAdjustedX(posX-width),tools.getAdjustedY(posY),tools.getAdjustedR(6),'#555555');
-            }
         }
     },
     draw: function(ctx,tools) {
@@ -598,22 +581,84 @@ StmtIf = new Class({
             y = pos[1] + this.stmtElse.getHeight();
             this.stmtElse.putPosition([x,y]);
         }
-        pos[1] += this.symStatment.heightStatment;
+        pos[1] = pos[1]+this.symStatment.heightStatment;
+    },
+    getPosLastThen: function() {
+        if (this.stmtThen instanceof StmtBlock)
+            return this.stmtThen.treeStatment[this.stmtThen.treeStatment.length-1]
+                .symStatment.posY+this.stmtThen.treeStatment[this.stmtThen.treeStatment.length-1].symStatment.heightStatment;
+        return this.stmtThen.symStatment.posY+this.stmtThen.symStatment.heightStatment;
+    },
+    getPosLastElse: function() {
+        if (this.stmtElse instanceof StmtBlock)
+            return this.stmtElse.treeStatment[this.stmtElse.treeStatment.length-1]
+                .symStatment.posY+this.stmtElse.treeStatment[this.stmtElse.treeStatment.length-1].symStatment.heightStatment;
+        return this.stmtElse.symStatment.posY+this.stmtElse.symStatment.heightStatment;;
+    },
+    getHeightStatment: function() {
+        var hElse = 0;
+        if (this.stmtElse != null) hElse = this.stmtElse.getHeightStatment() + this.stmtElse.getHeight();
+		var hThen = this.stmtThen.getHeightStatment() + this.stmtThen.getHeight();
+	    return (this.symStatment.heightStatment + Math.max(hElse,hThen));
+    },
+    setHeightStatment: function(val) {
+        this.symStatment.heightStatment = val;
+        this.stmtThen.setHeightStatment(this.stmtThen.getHeightStatment());
+        if (this.stmtElse != null)this.stmtElse.setHeightStatment(this.stmtElse.getHeightStatment());
+    },
+});
+
+StmtBlock = new Class ({
+    Extends: Statment,
+    initialize: function () {
+        var symStatment = new SymBegin(0,0,'#E8E8E8');
+        this.parent(symStatment);
+        this.treeStatment = [];
+        this.symStatment.height = 20;
+    },
+    treeStatment: null,
+    draw: function (ctx,tools) {
+        with(this.symStatment)
+            DrawForVis(ctx).connect(tools.getAdjustedX(posX),tools.getAdjustedY(posY - height),
+                tools.getAdjustedX(posX),tools.getAdjustedY(posY),tools.getAdjustedR(6),'#555555');
+	    for (var i = 0; i < this.treeStatment.length; i++)
+            this.treeStatment[i].drawLine(ctx,tools);
+        this.symStatment.draw(ctx,tools);
+        for (var i = 0; i < this.treeStatment.length; i++)
+            this.treeStatment[i].draw(ctx,tools);
+    },
+    push: function(statment) {
+        this.treeStatment.push(statment);
+    },
+    putPosition: function(pos) {
+        this.parent(pos);
+        for(var k = 0; k < this.treeStatment.length; k++) {
+            pos[1] += this.treeStatment[k].getHeight();
+            this.treeStatment[k].putPosition(pos);
+        }
+    },
+    getHeightStatment: function() {
+        for(var k = 0; k < this.treeStatment.length; k++) {
+            this.symStatment.heightStatment += (this.treeStatment[k].getHeightStatment()+this.treeStatment[k].getHeight());
+        }
+        return this.symStatment.heightStatment;
+    },
+    setHeightStatment: function(val) {
+        this.symStatment.heightStatment = val;
+    },
+    treeLocation: function() {
+        for (var i = 0; i < this.treeStatment.length; i++) {
+            var w = this.treeStatment[i].symStatment.width;
+            var wNew = this.treeStatment[i].getWidth();
+            if (w < wNew) this.treeStatment[i].symStatment.width = wNew;
+        }
+        for (var i = 0; i < this.treeStatment.length; i++) {
+            this.treeStatment[i].setHeightStatment(this.treeStatment[i].getHeightStatment());
+        }
     },
     changePos: function(pos,tools) {
         this.symStatment.posY = pos[1]/tools.scale - tools.top;
-        var pos1 = [this.symStatment.posX + this.symStatment.width,this.symStatment.posY + this.stmtThen.getHeight()];
-        this.stmtThen.putPosition(pos1);
-        var pos1 = [this.symStatment.posX - this.symStatment.width,this.symStatment.posY + this.stmtThen.getHeightStatment()];
-        if (this.stmtElse != null) this.stmtElse.putPosition(pos1);
-    },
-    findSynExpr: function(pos,tools) {
-        var find = this.symStatment.findVar(pos,tools);
-        if (find != -1) {
-            return this;
-        }
-        find = this.stmtThen.findSynExpr(pos,tools);
-        if ((find == -1) && (this.stmtElse != null)) find = this.stmtElse.findSynExpr(pos,tools);
-        return find;
+        this.symStatment.posX = pos[0]/tools.scale - tools.left;
+        this.putPosition([this.symStatment.posX, this.symStatment.posY]);
     }
 });

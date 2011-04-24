@@ -16,7 +16,7 @@ function runInterface() {
         var lex = new LexicalAnalyzer(textProgram,errorProgram);
         lex.getProgram();
         app.tree.treeLocation(app.width,app.height);
-		app.tree.treeStatment[0].changePos([500,10],app.tools);
+		app.tree.treeStatment[0].putPosition([500,10])
 		app.paint();
     });
 
@@ -61,9 +61,6 @@ function runInterface() {
 			app.paint();
         } else if (app.flagMove) {
 	        app.tree.varMove.changePos([x,y],app.tools);
-	        //if (app.tree.varMove instanceof Statment) {
-	        //app.tree.setPrev(app.tree.varMove.symStatment.posY);
-	        //}
 			app.paint();
 	    }
 	    xOld = x;
@@ -85,8 +82,9 @@ function runInterface() {
     });
 
     $("#move").click(function() {
-        app.numberOfStatement += 2;
-        app.tree.treeStatment[app.numberOfStatement].visualization(app.ctx,app.tools);
+        app.visualStatments = app.tree.treeStatment[0].treeStatment;
+        app.numberOfVisualStatment = 0;
+        app.visualStatments[app.numberOfVisualStatment].visualization(app.ctx,app.tools);
     });
 
     $("#SpeedMin").click(function() {

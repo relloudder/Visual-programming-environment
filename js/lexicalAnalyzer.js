@@ -15,7 +15,7 @@ Exception = new Class({
 LexicalAnalyzer = new Class ({
     initialize: function(textProgram,errorProgram) {
         Scanner.init(textProgram.val());
-        this.exception = new Exception(textProgram,errorProgram) ; 
+        this.exception = new Exception(textProgram,errorProgram);
         this.currentLexeme = Scanner.next(0);
     },
     exception: null,
@@ -25,10 +25,10 @@ LexicalAnalyzer = new Class ({
             this.getVar();
         }
         if (this.currentLexeme.name.toLowerCase() == 'begin') {
-            this.getBlock(app.tree.treeStatment);
+            app.tree.treeStatment.push(this.getBlock(app.tree.treeVar));
         } else {
             this.exception.error('expect BEGIN ',this.currentLexeme);
-        }  
+        }
     },
     getVar: function() {
         this.currentLexeme = Scanner.next(this.currentLexeme.nextLexemePos);
@@ -95,14 +95,14 @@ LexicalAnalyzer = new Class ({
     getDeclarationArray: function() {
         var pos = this.currentLexeme.nextLexemePos;
         this.currentLexeme = Scanner.next(this.currentLexeme.nextLexemePos);
-        if(this.currentLexeme.name != '[')  
+        if(this.currentLexeme.name != '[')
             this.exception.error('expect [ ',this.currentLexeme);
         var bounder = this.getBounders();
-        if(this.currentLexeme.name != ']') 
+        if(this.currentLexeme.name != ']')
             this.exception.error('expect ] ',this.currentLexeme);
-        pos = this.currentLexeme.nextLexemePos;	   
+        pos = this.currentLexeme.nextLexemePos;
         this.currentLexeme = Scanner.next(this.currentLexeme.nextLexemePos);
-        if(this.currentLexeme.name.toLowerCase() != 'of') 
+        if(this.currentLexeme.name.toLowerCase() != 'of')
             this.exception.error('expect of ',this.currentLexeme);
         return new SymArray(0,0,(bounder[1]-bounder[0]),bounder[0]*1,this.getType(),'');
     },
@@ -138,67 +138,64 @@ LexicalAnalyzer = new Class ({
     getBlock: function(tree) {
         Scanner.popCodePart('');
         this.currentLexeme = Scanner.next(this.currentLexeme.nextLexemePos);
-        var symBeg = new SymBegin(400,5,'#E8E8E8');
-        var synBeg = new SynBegin(symBeg);
-        tree.push(synBeg);
+        var synBlock = new StmtBlock();
         while (this.currentLexeme.name != 'end') {
             if (this.currentLexeme.type == 'Identifier')
-                tree.push(this.parseAssignment(app.tree.treeVar));
+                synBlock.push(this.parseAssignment(tree));
             else if (this.currentLexeme.type == 'Keyword') {
-                if (this.currentLexeme.name =='if') {
-                    tree.push(this.parseIfElse(app.tree.treeVar));
-                }
-			} else
-                this.exception.error('error statment ',this.currentLexeme);
+                if (this.currentLexeme.name == 'if')
+                synBlock.push(this.parseIfElse(tree));
+            } else this.exception.error('error statment ',this.currentLexeme);
         }
         var symEnd = new SymEnd(0,0,'#E8E8E8');
         var synEnd = new SynEnd(symEnd);
-        tree.push(synEnd);
+        synBlock.push(synEnd);
+        this.currentLexeme = Scanner.next(this.currentLexeme.nextLexemePos);
+        return synBlock;
     },
     getStatment: function(tree) {
         if (this.currentLexeme.type == 'Identifier') return this.parseAssignment(tree);
-            if (this.currentLexeme.type == 'Keyword') {
-                if (this.currentLexeme.name == 'if') return this.parseIfElse(tree);
-                if (this.currentLexeme.name == 'begin') return this.getBlock(tree);
+        if (this.currentLexeme.type == 'Keyword') {
+            if (this.currentLexeme.name == 'if') return this.parseIfElse(tree);
+            if (this.currentLexeme.name == 'begin' ) {
+                var block = this.getBlock(tree);
+                return block;
             }
+        }
     },
-    parseAssignment: function(tree) {
-        var varLeft = this.parseIdentifier(tree);
+	parseAssignment: function (tree){
+	    var varLeft = this.parseIdentifier(tree);
         this.currentLexeme = Scanner.next(this.currentLexeme.nextLexemePos);
-        if (this.currentLexeme.name != ':=')
+        if (this.currentLexeme.name != ':=') 
         this.exception.error('expect := ',this.currentLexeme);
         this.currentLexeme = Scanner.next(this.currentLexeme.nextLexemePos);
         var expression = this.parseExpr(tree,';');
-        var typeCompare = expression.compareType(varLeft.type,expression.type);
-        if (((typeCompare == 'real') && (varLeft.type == 'int')) || (typeCompare == -1)) {
-            this.exception.error('Incompatible types '+varLeft.type+' and '+expression.type,this.currentLexeme);
-        }
-        if((typeCompare == 'real') && (expression.type == 'int')) expression.setType('real');
+		var typeCompare = expression.compareType(varLeft.type,expression.type);
+		if(((typeCompare == 'real')&&(varLeft.type =='int'))||(typeCompare == -1)){
+		    this.exception.error('Incompatible type in assignment '+varLeft.type+' and '+expression.type,this.currentLexeme);
+		}
+		if((typeCompare == 'real')&&(expression.type =='int'))expression.setType('real');
         var st2 = new SymAssignment(0,0,'#66CC99',Scanner.popCodePart(''));
         var statment = new StmtAssignment(varLeft,expression,st2);
         this.currentLexeme = Scanner.next(this.currentLexeme.nextLexemePos);
-        return statment;
-    },
-    parseIfElse: function(tree) {
+		return statment;
+	},
+	parseIfElse : function (tree){
         Scanner.popCodePart('');
-        this.currentLexeme = Scanner.next(this.currentLexeme.nextLexemePos);
-        var expression = this.parseExpr(tree,'then');
+	    this.currentLexeme = Scanner.next(this.currentLexeme.nextLexemePos);
+	    var expression = this.parseExpr(tree,'then');
         var text = Scanner.popCodePart('');
-        var symIf = new	SymIf(0,0,'#66CC99',text.substring(0,text.length-4));
-        this.currentLexeme = Scanner.next(this.currentLexeme.nextLexemePos);
-        var stThen = this.getStatment(tree);
-        stThen.symStatment.height *= 2/3;
-        symIf.heightStatment = stThen.getHeight()/2+stThen.getHeightStatment();
-        var stElse = null;
-        if (this.currentLexeme.name == 'else') {
-            Scanner.popCodePart('');
-            this.currentLexeme = Scanner.next(this.currentLexeme.nextLexemePos);
-            stElse = this.getStatment(tree);
-            if (symIf.heightStatment<(stElse.getHeight()/2+stElse.getHeightStatment()))
-            symIf.heightStatment = stElse.getHeight()/2+stElse.getHeightStatment();
-        }
-        return new StmtIf(expression,stThen,stElse,symIf);
-    },
+		var symIf = new	SymIf(0,0,'#66CC99',text.substring(0,text.length-4));
+	    this.currentLexeme = Scanner.next(this.currentLexeme.nextLexemePos);
+		var stThen = this.getStatment(tree);
+		var stElse = null;
+		if (this.currentLexeme.name == 'else') {
+		    Scanner.popCodePart('');
+		    this.currentLexeme = Scanner.next(this.currentLexeme.nextLexemePos);
+		    stElse = this.getStatment(tree);
+		}
+		return new StmtIf(expression,stThen,stElse,symIf);
+	},
     parseExpr: function(treeVar,endLexeme) {
         return this.parseCompare(treeVar,endLexeme);
     },

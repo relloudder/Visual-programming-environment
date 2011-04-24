@@ -48,7 +48,7 @@ SymBegin = new Class ({
     draw: function(ctx,tools) {
         with(this) {
             DrawForVis(ctx).roundedRect(tools.getAdjustedX(posX-30),tools.getAdjustedY(posY),
-                tools.getAdjustedR(60),tools.getAdjustedR(20),4,color,"#C8C8C8",3);
+                tools.getAdjustedR(60),tools.getAdjustedR(20),4,color,"#C8C8C8",tools.getAdjustedR(3));
             DrawForVis(ctx).text("begin",tools.getAdjustedX(this.posX),tools.getAdjustedY(this.posY+5),
 			    tools.getAdjustedR(20),0,"");
         }
@@ -110,15 +110,16 @@ SymAssignment = new Class ({
 
 SymIf = new Class ({
     Extends: SymStatment,
-    initialize : function (pX,pY,color,value) {
-        this.parent(pX,pY,color,value);
+    initialize : function (pX, pY, color,value){
+        this.parent(pX, pY, color, value);
         this.width = 100;
         this.heightStatment = 50;
+        this.height = 70;
     },
-    draw: function(ctx,tools) {
-        DrawForVis(ctx).conditionIf(tools.getAdjustedX(this.posX),tools.getAdjustedY(this.posY),tools.getAdjustedR(this.r/4*3),
-            2,tools.getAdjustedR(6),this.color,this.value,this.angleOfRotation,this.transp,tools.getAdjustedR(this.width),
-            tools.getAdjustedR(this.heightStatment));
+    draw : function(ctx, tools){
+        DrawForVis(ctx).conditionIf(tools.getAdjustedX(this.posX),tools.getAdjustedY(this.posY),
+            tools.getAdjustedR(this.r/4*3),2,tools.getAdjustedR(6),this.color,this.value,this.angleOfRotation,
+            this.transp,tools.getAdjustedR(this.width),tools.getAdjustedR(this.heightStatment));
     },
     findVar: function(pos,tools) {
         var x = pos[0]/tools.scale - tools.left;

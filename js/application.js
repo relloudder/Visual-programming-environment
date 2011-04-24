@@ -41,10 +41,14 @@ VariableTree = new Class({
         return -1;
     },
     treeLocation: function(width,height) {
-        for (var i = 1; i < this.treeStatment.length - 1; i++) {
+        for (var i = 0; i < this.treeStatment.length; i++) {
             var w = this.treeStatment[i].symStatment.width;
             var wNew = this.treeStatment[i].getWidth();
             if (w < wNew) this.treeStatment[i].symStatment.width = wNew;
+	    }
+        for (var i = 0; i < this.treeStatment.length; i++) {
+            this.treeStatment[i].treeLocation();
+            this.treeStatment[i].setHeightStatment(this.treeStatment[i].getHeightStatment());
         }
         var length = this.treeVar.length;
         if (length/2 != Math.ceil(length/2)) {
@@ -86,25 +90,7 @@ VariableTree = new Class({
             this.treeStatment[k].putPosition(pos);
         }
     },
-    setPrev: function(pos) {
-        /* var k = 0;
-        while ((pos != this.treeStatment[k].symStatment.posY)) {
-            k++;
-        }
-        if (k == 0) {
-            return;
-        }
-        if ((this.treeStatment[k-1].symStatment.posY+70) > this.treeStatment[k].symStatment.posY) {
-            this.treeStatment[k].putPosition([this.treeStatment[k].symStatment.posX,this.treeStatment[k-1].symStatment.posY+70]);
-        }
-        if (k < (this.treeStatment.length-1)) {
-            if (this.treeStatment[k].symStatment.posY > (this.treeStatment[k+1].symStatment.posY-70))
-                this.treeStatment[k].putPosition([this.treeStatment[k].symStatment.posX,this.treeStatment[k+1].symStatment.posY-70]);
-            this.treeStatment[k+1].symStatment.height = this.treeStatment[k+1].symStatment.posY-this.treeStatment[k].symStatment.posY;
-        }
-        this.treeStatment[k].symStatment.height = this.treeStatment[k].symStatment.posY-this.treeStatment[k-1].symStatment.posY;
-        */
-	}
+    setPrev: function(pos) {}
 });
 
 Tools = new Class({
@@ -147,15 +133,15 @@ Tools = new Class({
 
 Application = new Class({
     initialize: function(ctx,width,height) {
-        this.tree = new VariableTree(); 
+        this.tree = new VariableTree();
         this.tools = new Tools(0,0,1);
         this.width = width;
         this.height = height;
         this.ctx = ctx;
         this.treeVis = [];
         this.dTime = 25;
-		this.speed = 0.3;
-		this.numberOfStatement = -1;
+        this.speed = 0.3;
+        this.visualStatments = -1;
     },
     flagMove: false,
     flagCanvasMove: false,
@@ -169,7 +155,8 @@ Application = new Class({
     speed: null,
 	dTime: null,
     treeVis: null,
-    numberOfStatement: null,
+    visualStatments: null,
+    numberOfVisualStatment: -1,
     insertRowVis: function() {
         this.treeVis.push([]);
         return (this.treeVis.length - 1);
@@ -198,9 +185,9 @@ Application = new Class({
                     treeVis.splice(0,1); //delete 0 row
                     selfNew = this;
                     idTimer = setInterval('selfNew.drawTreeVis()',this.dTime);
-                } else if (numberOfStatement >= 0) {
-                    numberOfStatement++;
-                    tree.treeStatment[numberOfStatement].visualization(ctx,tools);
+                } else if (visualStatments[numberOfVisualStatment+1] != null) {
+                    numberOfVisualStatment++;
+                    visualStatments[numberOfVisualStatment].visualization(ctx,tools);
                 }
             }
         }
