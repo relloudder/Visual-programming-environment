@@ -606,6 +606,10 @@ StmtIf = new Class({
         this.stmtThen.setHeightStatment(this.stmtThen.getHeightStatment());
         if (this.stmtElse != null)this.stmtElse.setHeightStatment(this.stmtElse.getHeightStatment());
     },
+    treeLocation: function() {
+        this.stmtThen.treeLocation();
+        if (this.stmtElse != null) this.stmtElse.treeLocation();
+    }
 });
 
 StmtBlock = new Class ({
@@ -638,8 +642,9 @@ StmtBlock = new Class ({
         }
     },
     getHeightStatment: function() {
-        for(var k = 0; k < this.treeStatment.length; k++) {
-            this.symStatment.heightStatment += (this.treeStatment[k].getHeightStatment()+this.treeStatment[k].getHeight());
+        this.symStatment.heightStatment = 20;
+        for (var k = 0; k < this.treeStatment.length; k++) {
+            this.symStatment.heightStatment += (this.treeStatment[k].symStatment.heightStatment+this.treeStatment[k].getHeight());
         }
         return this.symStatment.heightStatment;
     },
@@ -653,6 +658,7 @@ StmtBlock = new Class ({
             if (w < wNew) this.treeStatment[i].symStatment.width = wNew;
         }
         for (var i = 0; i < this.treeStatment.length; i++) {
+            this.treeStatment[i].treeLocation();
             this.treeStatment[i].setHeightStatment(this.treeStatment[i].getHeightStatment());
         }
     },

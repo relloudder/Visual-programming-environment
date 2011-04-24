@@ -48,7 +48,6 @@ VariableTree = new Class({
 	    }
         for (var i = 0; i < this.treeStatment.length; i++) {
             this.treeStatment[i].treeLocation();
-            this.treeStatment[i].setHeightStatment(this.treeStatment[i].getHeightStatment());
         }
         var length = this.treeVar.length;
         if (length/2 != Math.ceil(length/2)) {
