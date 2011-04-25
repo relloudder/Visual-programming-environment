@@ -42,8 +42,9 @@ SymbolName = new Class({
     },
     text: null,
     draw: function(ctx,tools) {
-        DrawForVis(ctx).flag(tools.getAdjustedX(this.posX+this.text.length*4),tools.getAdjustedY(this.posY+8),
-            tools.getAdjustedR(10),1,'black',this.text,tools.getAdjustedR(20),this.turn);
+        if (this.visible)
+            DrawForVis(ctx).flag(tools.getAdjustedX(this.posX+this.text.length*4),tools.getAdjustedY(this.posY+8),
+                tools.getAdjustedR(10),1,'black',this.text,tools.getAdjustedR(20),this.turn);
     },
     findVar: function(pos, tools) {
         var x = pos[0]/tools.scale - tools.left;

@@ -278,7 +278,9 @@ SynConstInt = new Class({
         return this.constValue;
     },
     draw: function(ctx,tools) {
-        this.symConst.draw(ctx,tools)
+        if (this.symbolName.visible) {
+            this.symConst.draw(ctx,tools);
+        }
     },
     getPosX: function() {
         return this.symConst.posX;
@@ -518,6 +520,7 @@ StmtAssignment = new Class ({
             k = app.insertRowVis();
             aRight.interpretation([symStatment.getPosX(),symStatment.getPosY()]);
           	aRight.operation(true);
+          	aRight.symbolName.visible = false;
             var1 = app.tree.treeVar[app.tree.treeVar.length-1];
             k = app.insertRowVis();
             varGo = new SymVarMerge(var1,varBeg,1/90);
