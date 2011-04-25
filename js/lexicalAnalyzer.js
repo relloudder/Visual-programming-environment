@@ -143,8 +143,8 @@ LexicalAnalyzer = new Class ({
             if (this.currentLexeme.type == 'Identifier')
                 synBlock.push(this.parseAssignment(tree));
             else if (this.currentLexeme.type == 'Keyword') {
-                if (this.currentLexeme.name == 'if')
-                synBlock.push(this.parseIfElse(tree));
+                if (this.currentLexeme.name == 'if') synBlock.push(this.parseIfElse(tree));
+                else if (this.currentLexeme.name == 'begin') synBlock.push(this.getBlock(tree));
             } else this.exception.error('error statment ',this.currentLexeme);
         }
         var symEnd = new SymEnd(0,0,'#E8E8E8');
@@ -171,14 +171,18 @@ LexicalAnalyzer = new Class ({
         this.currentLexeme = Scanner.next(this.currentLexeme.nextLexemePos);
         var expression = this.parseExpr(tree,';');
 		var typeCompare = expression.compareType(varLeft.type,expression.type);
-		if(((typeCompare == 'real')&&(varLeft.type =='int'))||(typeCompare == -1)){
-		    this.exception.error('Incompatible type in assignment '+varLeft.type+' and '+expression.type,this.currentLexeme);
+		if (((typeCompare == 'real') && (varLeft.type == 'int')) || (typeCompare == -1)) {
+		    this.exception.error('Incompatible types in assignment '+varLeft.type+' and '+expression.type,this.currentLexeme);
 		}
 		if((typeCompare == 'real')&&(expression.type =='int'))expression.setType('real');
         var st2 = new SymAssignment(0,0,'#66CC99',Scanner.popCodePart(''));
         var statment = new StmtAssignment(varLeft,expression,st2);
-        this.currentLexeme = Scanner.next(this.currentLexeme.nextLexemePos);
-		return statment;
+        var name = this.currentLexeme.name;
+        if (this.currentLexeme.name != 'else')
+            this.currentLexeme = Scanner.next(this.currentLexeme.nextLexemePos);
+        if ((name == ';') && (this.currentLexeme.name == 'else'))
+            this.exception.error('unexpected ; ',this.currentLexeme);
+        return statment;
 	},
 	parseIfElse : function (tree){
         Scanner.popCodePart('');
@@ -254,8 +258,9 @@ LexicalAnalyzer = new Class ({
         }
 	    this.currentLexeme = Scanner.next(this.currentLexeme.nextLexemePos);
         if ((this.currentLexeme.type != 'MathOperation') && (this.currentLexeme.name !=')')
-	        && (this.currentLexeme.type != 'Comparison') && (this.currentLexeme.name != 'or')) {
-            if (this.currentLexeme.name == endLexeme) {}
+            && (this.currentLexeme.type != 'Comparison') && (this.currentLexeme.name != 'or')
+            && (this.currentLexeme.name != 'and')) {
+            if ((this.currentLexeme.name == endLexeme) || (this.currentLexeme.type =='Keyword')) {}
             else {
                 this.exception.error('error in token ', this.currentLexeme);
             }
