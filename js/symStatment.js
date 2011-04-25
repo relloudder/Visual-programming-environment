@@ -153,7 +153,8 @@ SymChangeStatment = new Class ({
     synChange: null,
     draw: function(ctx,tools) {
         with(this) {
-            synChange.aRight.show = true;
+            if (synChange instanceof StmtAssignment) synChange.aRight.show = true;
+            if (synChange instanceof StmtIf) synChange.exprIf.show = true;
             synChange.symStatment.r = r;
             synChange.symStatment.transp = transp;
             synChange.draw(ctx,tools);
@@ -166,6 +167,47 @@ SymChangeStatment = new Class ({
                 if (dr < 0) transp -= 0.02;
                 return 1;
             } else {
+                return 0;
+            }
+        }
+    }
+});
+
+SymChangeIf = new Class ({
+    Extends: SymStatment,
+    initialize: function(aSymIf,aLeft,aRight,direct) {
+        this.parent(aSymIf.posX,aSymIf.posY,aSymIf.color,aSymIf.getValue());
+        with(this) {
+            numberOfMove = 36
+            symChange = aSymIf;
+            dfi = Math.PI/8/numberOfMove;
+            if (!direct) dfi=-dfi;
+            leftSt = aLeft;
+            rightSt = aRight;
+        }
+    },
+    dfi: null,
+    numberOfMove: null,
+    symChange: null,
+    leftSt: null,
+    rightSt: null,
+    draw: function(ctx,tools) {
+        with(this) {
+            symChange.angleOfRotation= angleOfRotation;
+            symChange.draw(ctx,tools);
+            if (numberOfMove > 0) {
+                var d = Math.abs(Math.cos(dfi));
+                if (dfi > 0) {
+                    leftSt.symStatment.height-=d;
+                    rightSt.symStatment.height+=d;
+                } else {
+                    leftSt.symStatment.height+=d;
+                    rightSt.symStatment.height-=d;
+                }
+                numberOfMove--;
+                angleOfRotation+=dfi;
+                return 1;
+            } else  {
                 return 0;
             }
         }

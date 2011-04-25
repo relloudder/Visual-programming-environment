@@ -571,6 +571,7 @@ StmtIf = new Class({
     },
     draw: function(ctx,tools) {
         this.symStatment.draw(ctx,tools);
+        if (this.exprIf.show) this.exprIf.draw(ctx,tools);
         this.stmtThen.draw(ctx,tools);
         if (this.stmtElse != null) this.stmtElse.draw(ctx,tools);
     },
@@ -578,6 +579,7 @@ StmtIf = new Class({
         this.parent(pos);
         var x = pos[0] + this.symStatment.width;
         var y = pos[1] + this.stmtThen.getHeight();
+        this.exprIf.putPosition([pos[0],pos[1]-70]);
         this.stmtThen.putPosition([x,y]);
         x -= 2*this.symStatment.width;
         if (this.stmtElse != null) {
@@ -612,6 +614,33 @@ StmtIf = new Class({
     treeLocation: function() {
         this.stmtThen.treeLocation();
         if (this.stmtElse != null) this.stmtElse.treeLocation();
+    },
+    visualization: function(ctx,tools) {
+        var k, varBeg, varGo, var1,st, varInput;
+	    with (this) {
+            k = app.insertRowVis();
+            st = new SymChangeStatment(this,0.2,1);
+            app.insertElementVis(k,st);
+            k = app.insertRowVis();
+            exprIf.interpretation([0,0]);
+            exprIf.operation(true);
+            exprIf.symbolName.visible = false;
+            var1 = app.tree.treeVar[app.tree.treeVar.length-1];
+            k = app.insertRowVis();
+            varIf = new SymChangeIf(symStatment,stmtThen,stmtElse,var1.getValue());
+		    var var2 = new Symbol(stmtThen.symStatment.posX-20,stmtThen.symStatment.posY-30);
+		    if (var1.getValue() == false) {
+		        var2 = new Symbol(stmtElse.symStatment.posX+20,stmtElse.symStatment.posY-30);
+		    }
+		    var1.posY-=30;
+		    varGo = new SymVarDown(var1,var2,0);
+    		app.insertElementVis(k,varGo);
+		    app.insertElementVis(k,varIf);
+		    st = new SymChangeStatment(this,-0.4,1);
+            app.insertElementVis(k,st);
+            app.paint();
+        }
+        return -1;
     }
 });
 
