@@ -82,9 +82,8 @@ function runInterface() {
     });
 
     $("#move").click(function() {
-        app.visualStatments = app.tree.treeStatment[0].treeStatment;
-        app.numberOfVisualStatment = 0;
-        app.visualStatments[app.numberOfVisualStatment].visualization(app.ctx,app.tools);
+        app.visualStatments = app.tree.treeStatment[0];
+        app.nextStatmentForVis().visualization(app.ctx,app.tools);
     });
 
     $("#SpeedMin").click(function() {

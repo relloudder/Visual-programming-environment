@@ -184,11 +184,30 @@ Application = new Class({
                     treeVis.splice(0,1); //delete 0 row
                     selfNew = this;
                     idTimer = setInterval('selfNew.drawTreeVis()',this.dTime);
-                } else if (visualStatments[numberOfVisualStatment+1] != null) {
-                    numberOfVisualStatment++;
-                    visualStatments[numberOfVisualStatment].visualization(ctx,tools);
+                } else {
+                     var next = this.nextStatmentForVis();
+                     if (next != null) next.visualization(ctx,tools);
                 }
             }
         }
-    }
+    },
+    nextStatmentForVis: function() {
+        if (this.visualStatments == -1) return null;
+        pred = null;
+        if (this.visualStatments.currentStatment != -1)
+            pred = this.visualStatments.treeStatment[this.visualStatments.currentStatment];
+        this.visualStatments.currentStatment++;
+        if (pred instanceof StmtIf) {
+            var next = new StmtBlock();
+            next.parentStatment = this.visualStatments;
+            if (pred.result) next.push(pred.stmtThen);
+            else next.push(pred.stmtElse);
+            next.currentStatment = 0;
+            this.visualStatments = next;
+            return this.visualStatments.treeStatment[this.visualStatments.currentStatment];
+        }
+        if (this.visualStatments.currentStatment > (this.visualStatments.treeStatment.length-1))
+            this.visualStatments = this.visualStatments.parentStatment;
+        return this.visualStatments.treeStatment[this.visualStatments.currentStatment];
+     }
 });

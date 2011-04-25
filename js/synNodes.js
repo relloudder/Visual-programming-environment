@@ -409,6 +409,7 @@ Statment = new Class ({
 	    this.symbolName = new SymbolName(0,0,'');
         this.symStatment = symStatment;
     },
+    parentStatment: null,
     symStatment: null,
     getValue: function() {
         return this.constValue;
@@ -542,6 +543,7 @@ StmtIf = new Class({
         this.stmtThen = sThen;
         this.stmtElse = sElse;
 	},
+	result: true,
     exprIf: null,
     stmtThen: null,
     stmtElse: null,
@@ -628,9 +630,10 @@ StmtIf = new Class({
             var1 = app.tree.treeVar[app.tree.treeVar.length-1];
             k = app.insertRowVis();
             varIf = new SymChangeIf(symStatment,stmtThen,stmtElse,var1.getValue());
-		    var var2 = new Symbol(stmtThen.symStatment.posX-20,stmtThen.symStatment.posY-30);
-		    if (var1.getValue() == false) {
-		        var2 = new Symbol(stmtElse.symStatment.posX+20,stmtElse.symStatment.posY-30);
+		    var var2 = new Symbol(stmtThen.symStatment.posX-20,stmtThen.symStatment.posY-20);
+		    result = var1.getValue();
+		    if (result == false) {
+		        var2 = new Symbol(stmtElse.symStatment.posX+20,stmtElse.symStatment.posY-20);
 		    }
 		    var1.posY-=30;
 		    varGo = new SymVarDown(var1,var2,0);
@@ -651,8 +654,10 @@ StmtBlock = new Class ({
         this.parent(symStatment);
         this.treeStatment = [];
         this.symStatment.height = 20;
+        this.currentStatment = -1;
     },
     treeStatment: null,
+    currentStatment: null,
     draw: function (ctx,tools) {
         with(this.symStatment)
             DrawForVis(ctx).connect(tools.getAdjustedX(posX),tools.getAdjustedY(posY - height),

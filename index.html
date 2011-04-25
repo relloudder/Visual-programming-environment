@@ -141,8 +141,9 @@ var
   end;
 begin
   min:=5*3;
-  if min<0 then a[2]:=min+max
+  if min>0 then a[2]:=min+max
   else min:=max+2;
+  max:=4;
 end.
         </textarea>
         <input type="text" id="errorPanel" value="">
