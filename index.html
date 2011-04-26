@@ -141,7 +141,11 @@ var
   end;
 begin
   min:=5*3;
-  if min>0 then a[2]:=min+max
+  if min>0 then
+  if a[1]>0 then begin
+      a[2]:=min+max;
+      a[1]:=9+a[2];
+  end
   else min:=max+2;
   max:=4;
 end.

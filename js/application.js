@@ -201,7 +201,8 @@ Application = new Class({
             var next = new StmtBlock();
             next.parentStatment = this.visualStatments;
             if (pred.result) next.push(pred.stmtThen);
-            else next.push(pred.stmtElse);
+            else if (pred.stmtElse != null) next.push(pred.stmtElse);
+            else return this.visualStatments.treeStatment[this.visualStatments.currentStatment];﻿
             next.currentStatment = 0;
             this.visualStatments = next;
             return this.visualStatments.treeStatment[this.visualStatments.currentStatment];

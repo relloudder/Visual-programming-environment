@@ -167,6 +167,7 @@ SymChangeStatment = new Class ({
                 if (dr < 0) transp -= 0.02;
                 return 1;
             } else {
+                synChange.symStatment.color = '#ADFF2F';
                 return 0;
             }
         }
@@ -199,10 +200,10 @@ SymChangeIf = new Class ({
                 var d = Math.abs(Math.cos(dfi));
                 if (dfi > 0) {
                     leftSt.symStatment.height-=d;
-                    rightSt.symStatment.height+=d;
+                    if (rightSt != null) rightSt.symStatment.height+=d;
                 } else {
                     leftSt.symStatment.height+=d;
-                    rightSt.symStatment.height-=d;
+                    if (rightSt != null) rightSt.symStatment.height-=d;
                 }
                 numberOfMove--;
                 angleOfRotation+=dfi;

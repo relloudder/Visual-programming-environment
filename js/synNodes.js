@@ -630,12 +630,11 @@ StmtIf = new Class({
             var1 = app.tree.treeVar[app.tree.treeVar.length-1];
             k = app.insertRowVis();
             varIf = new SymChangeIf(symStatment,stmtThen,stmtElse,var1.getValue());
-		    var var2 = new Symbol(stmtThen.symStatment.posX-20,stmtThen.symStatment.posY-20);
+		    var var2 = new Symbol(stmtThen.symStatment.posX,stmtThen.symStatment.posY-50);
 		    result = var1.getValue();
 		    if (result == false) {
-		        var2 = new Symbol(stmtElse.symStatment.posX+20,stmtElse.symStatment.posY-20);
+		        var2 = new Symbol(stmtThen.symStatment.posX-2*symStatment.width,stmtThen.symStatment.posY-50);
 		    }
-		    var1.posY-=30;
 		    varGo = new SymVarDown(var1,var2,0);
     		app.insertElementVis(k,varGo);
 		    app.insertElementVis(k,varIf);
