@@ -137,18 +137,20 @@
 var
   min,max,sum: integer;
   a:array[1..2] of integer;
-  b:record i,j: integer;
-  end;
-begin
-  min:=5*3;
-  if min>0 then
-  if a[1]>0 then begin
-      a[2]:=min+max;
-      a[1]:=9+a[2];
-  end
-  else min:=max+2;
-  max:=4;
+  b:record
+      i,j: integer;
+    end;
+  begin
+    min:=5*3;
+    if min>0 then begin
+	    a[2]:=min+max;
+		if a[2]>0 then a[1]:=1
+        else min:=max+2;
+		a[1]:=1;
+	end
+    min:=max+2;
 end.
+
         </textarea>
         <input type="text" id="errorPanel" value="">
     </div>

@@ -465,6 +465,9 @@ SynEnd = new Class ({
     },
     changePos: function(pos,tools) {
         this.symStatment.posY = pos[1]/tools.scale - tools.top;
+    },
+    visualization: function(ctx,tools) {
+        app.paint();
     }
 });
 

@@ -191,24 +191,34 @@ Application = new Class({
             }
         }
     },
-    nextStatmentForVis: function() {
+    nextStatmentForVis: function (){
         if (this.visualStatments == -1) return null;
-        pred = null;
+        var pred = null;
         if (this.visualStatments.currentStatment != -1)
             pred = this.visualStatments.treeStatment[this.visualStatments.currentStatment];
-        this.visualStatments.currentStatment++;
         if (pred instanceof StmtIf) {
-            var next = new StmtBlock();
-            next.parentStatment = this.visualStatments;
-            if (pred.result) next.push(pred.stmtThen);
-            else if (pred.stmtElse != null) next.push(pred.stmtElse);
-            else return this.visualStatments.treeStatment[this.visualStatments.currentStatment];﻿
+            var next;
+            if ((pred.result) && (pred.stmtThen instanceof StmtBlock)) next = pred.stmtThen;
+            else if ((pred.result == false) && (pred.stmtElse instanceof StmtBlock)) next = pred.stmtElse;
+            else {
+                next = new StmtBlock();
+                if (pred.result) next.push(pred.stmtThen);
+                else if (pred.stmtElse != null) next.push(pred.stmtElse);
+                else {
+                    while (this.visualStatments.currentStatment == (this.visualStatments.treeStatment.length-1))
+                        this.visualStatments = this.visualStatments.parent;
+                    this.visualStatments.currentStatment++;
+                    return this.visualStatments.treeStatment[this.visualStatments.currentStatment];
+                }
+            }
+            next.parent = this.visualStatments;
             next.currentStatment = 0;
             this.visualStatments = next;
             return this.visualStatments.treeStatment[this.visualStatments.currentStatment];
         }
-        if (this.visualStatments.currentStatment > (this.visualStatments.treeStatment.length-1))
-            this.visualStatments = this.visualStatments.parentStatment;
+        while (this.visualStatments.currentStatment == (this.visualStatments.treeStatment.length-1))
+            this.visualStatments = this.visualStatments.parent;
+        this.visualStatments.currentStatment++;
         return this.visualStatments.treeStatment[this.visualStatments.currentStatment];
-     }
+    }
 });
