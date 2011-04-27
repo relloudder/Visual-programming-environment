@@ -141,6 +141,7 @@ Application = new Class({
         this.dTime = 25;
         this.speed = 0.3;
         this.visualStatments = -1;
+        this.byStep = false;
     },
     flagMove: false,
     flagCanvasMove: false,
@@ -152,10 +153,11 @@ Application = new Class({
     ctx: null,
     idTimer: null,
     speed: null,
-	dTime: null,
+    dTime: null,
     treeVis: null,
     visualStatments: null,
     numberOfVisualStatment: -1,
+    byStep: false,
     insertRowVis: function() {
         this.treeVis.push([]);
         return (this.treeVis.length - 1);
@@ -184,14 +186,14 @@ Application = new Class({
                     treeVis.splice(0,1); //delete 0 row
                     selfNew = this;
                     idTimer = setInterval('selfNew.drawTreeVis()',this.dTime);
-                } else {
+                } else if (byStep == false) {
                      var next = this.nextStatmentForVis();
                      if (next != null) next.visualization(ctx,tools);
                 }
             }
         }
     },
-    nextStatmentForVis: function (){
+    nextStatmentForVis: function () {
         if (this.visualStatments == -1) return null;
         var pred = null;
         if (this.visualStatments.currentStatment != -1)

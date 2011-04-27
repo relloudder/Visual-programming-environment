@@ -7,7 +7,7 @@ $(function() {
 });
 
 function runInterface() {
-    $('#playMenu, #play').click(function() {
+    $('#playMenu, #draw').click(function() {
         var sp = app.speed;
         initApplication();
         app.speed = sp;
@@ -22,10 +22,6 @@ function runInterface() {
 
     $('#new, #reset').click(function() {
         initApplication();
-    });
-
-    $('#stop').click(function() {
-        DrawForVis(app.ctx).conditionIf(200,200,15,2,6,'#66CC99','a[i]>1',0,1,100,120);
     });
 
     $('#zoomIn, #zoomInMenu').click(function() {
@@ -81,7 +77,8 @@ function runInterface() {
         }
     });
 
-    $("#move").click(function() {
+    $("#play").click(function() {
+        app.byStep = false;
         app.visualStatments = app.tree.treeStatment[0];
         app.nextStatmentForVis().visualization(app.ctx,app.tools);
     });
@@ -96,6 +93,16 @@ function runInterface() {
         app.speed += 0.01;
         $("#SpeedMax").html('Speed (' + Math.ceil(app.speed*100)/100+')');
         $("#SpeedMin").html('Speed (' + Math.ceil(app.speed*100)/100+')');
+    });
+
+    $("#step").click(function() {
+        if (app.byStep == false)
+            app.visualStatments = app.tree.treeStatment[0];
+        app.byStep = true;
+        if (app.byStep == true) {
+            var next = app.nextStatmentForVis();
+            if (next != null) next.visualization(app.ctx,app.tools);
+        }
     });
 }
 

@@ -167,7 +167,7 @@ SymChangeStatment = new Class ({
                 if (dr < 0) transp -= 0.02;
                 return 1;
             } else {
-                synChange.symStatment.color = '#ADFF2F';
+                synChange.symStatment.color = 'teal';
                 return 0;
             }
         }
@@ -194,7 +194,7 @@ SymChangeIf = new Class ({
     rightSt: null,
     draw: function(ctx,tools) {
         with(this) {
-            symChange.angleOfRotation= angleOfRotation;
+            symChange.angleOfRotation = angleOfRotation;
             symChange.draw(ctx,tools);
             if (numberOfMove > 0) {
                 var d = Math.abs(Math.cos(dfi));
