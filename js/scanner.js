@@ -127,7 +127,7 @@ var Scanner = (function() {
         });
 
         updateCodeAndPosition(lexemeEndPos);
-		codePart += lexemeName;
+        if ((lexemeName != 'else') && (lexemeName != 'end')) codePart += lexemeName;
         return new Lexeme(lexemeName, lexemeType, position, position - lexemeEndPos);
     };
 

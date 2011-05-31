@@ -3,19 +3,19 @@ SymStatment = new Class ({
     initialize: function(pX,pY,color,value) {
         this.parent(pX,pY);
         this.value = value;
-	    this.color = color;
-	    this.r = 25;
-	    this.angleOfRotation = 0;
-	    this.height = 100;
-		this.width = 0;
+        this.color = color;
+        this.r = 25;
+        this.angleOfRotation = 0;
+        this.height = 100;
+        this.width = 0;
     },
     value: null,
-	color: null,
-	r: null,
-	angleOfRotation: null,
-	height: null,
-	width: null,
-	heightStatment: 0,
+    color: null,
+    r: null,
+    angleOfRotation: null,
+    height: null,
+    width: null,
+    heightStatment: 0,
     getValue: function() {
         return this.val;
     },
@@ -49,8 +49,8 @@ SymBegin = new Class ({
         with(this) {
             DrawForVis(ctx).roundedRect(tools.getAdjustedX(posX-30),tools.getAdjustedY(posY),
                 tools.getAdjustedR(60),tools.getAdjustedR(20),4,color,"#C8C8C8",tools.getAdjustedR(3));
-            DrawForVis(ctx).text("begin",tools.getAdjustedX(this.posX),tools.getAdjustedY(this.posY+5),
-			    tools.getAdjustedR(20),0,"");
+            DrawForVis(ctx).textStatment("begin",tools.getAdjustedX(this.posX-r/2),tools.getAdjustedY(this.posY+r/2),
+                tools.getAdjustedR(12),30);
         }
     },
     findVar: function(pos,tools) {
@@ -72,9 +72,9 @@ SymEnd = new Class ({
     draw: function(ctx,tools) {
         with(this) {
             DrawForVis(ctx).roundedRect(tools.getAdjustedX(posX-r),tools.getAdjustedY(posY),
-		        tools.getAdjustedR(60),tools.getAdjustedR(20),4,color,"#C8C8C8",3);
-            DrawForVis(ctx).text("end",tools.getAdjustedX(this.posX),tools.getAdjustedY(this.posY+5),
-		        tools.getAdjustedR(20),0,"");
+		            tools.getAdjustedR(60),tools.getAdjustedR(20),4,color,"#C8C8C8",3);
+            DrawForVis(ctx).textStatment("end",tools.getAdjustedX(this.posX-r/5),tools.getAdjustedY(this.posY+r/2),
+                tools.getAdjustedR(12),30);
         }
     },
     findVar: function(pos,tools) {
@@ -214,3 +214,4 @@ SymChangeIf = new Class ({
         }
     }
 });
+

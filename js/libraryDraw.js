@@ -334,16 +334,16 @@ var DrawForVis = function(ctx) {
         },
 
         divBall: function(x0,y0,r,col,alpha,angle,rOrLAngle) {
-	        ctx.save();
-	        ctx.beginPath();
-	        ctx.translate(x0, y0);
-	        ctx.rotate(angle);
-	        colorBall(0,0,r,col);
-	        ctx.arc(0,0,r,rOrLAngle-alpha,rOrLAngle+alpha,false);
+            ctx.save();
+            ctx.beginPath();
+            ctx.translate(x0, y0);
+            ctx.rotate(angle);
+            colorBall(0,0,r,col);
+            ctx.arc(0,0,r,rOrLAngle-alpha,rOrLAngle+alpha,false);
             ctx.fill();
-	        ctx.stroke();
+            ctx.stroke();
             ctx.closePath();
-	        ctx.restore();
+            ctx.restore();
         },
 
         rect: function(x0,y0,r,k,h,col,val,alpha,tr){
@@ -368,10 +368,7 @@ var DrawForVis = function(ctx) {
             ctx.fill();
             ctx.closePath();
             this.roundedRect(-k*r+h,-k*r+h*2,2.5*k*r,r*1.5,h/2,'rgba(255,255,255,'+tr+')','rgba(200,200,200,'+tr+')',3);
-            ctx.fillStyle = '#000';
-            //найти длинну val.length и либо уменьшить либо обрезать
-            ctx.font = r*0.8+'px Arial';
-            ctx.fillText(val,-r*k+1.5*h,-r);
+            this.textStatment(val,-r*k+1.5*h,-r,r*0.8,21);
             ctx.restore();
         },
 
@@ -415,9 +412,7 @@ var DrawForVis = function(ctx) {
             ctx.closePath();
             ctx.beginPath();
             this.roundedRect(-k*r,-r*k/2+r/4,2*k*r,r*k-r/2,h/2,'rgba(255,255,255,'+tr+')','rgba(200,200,200,'+tr+')',3);
-            ctx.fillStyle = '#000';
-            ctx.font = r/4*2+'px Arial';
-            ctx.fillText(val,-r*k+r,r/4);
+            this.textStatment(val,-r*k+r/10,r/4,r/2,18);
             ctx.closePath();
             ctx.restore();
             ctx.save();
@@ -476,6 +471,16 @@ var DrawForVis = function(ctx) {
             ctx.fill();
             ctx.closePath();
             ctx.restore();
+        },
+
+        textStatment: function(val,x0,y0,r,maxSize) {
+            ctx.fillStyle = '#000';
+            var newText = val;
+            if (val.length > maxSize)
+                newText = val.substr(0,maxSize-2) + '~';
+            ctx.font = r+'px Arial';
+            ctx.fillText(newText,x0,y0);
         }
     };
 }
+

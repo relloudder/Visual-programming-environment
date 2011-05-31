@@ -26,6 +26,8 @@ LexicalAnalyzer = new Class ({
         }
         if (this.currentLexeme.name.toLowerCase() == 'begin') {
             app.tree.treeStatment.push(this.getBlock(app.tree.treeVar));
+        if (this.currentLexeme.name!='.')
+            this.exception.error('expect . ',this.currentLexeme);
         } else {
             this.exception.error('expect BEGIN ',this.currentLexeme);
         }
@@ -146,6 +148,9 @@ LexicalAnalyzer = new Class ({
                 if (this.currentLexeme.name == 'if') synBlock.push(this.parseIfElse(tree));
                 else if (this.currentLexeme.name == 'begin') synBlock.push(this.getBlock(tree));
             } else this.exception.error('error statment ',this.currentLexeme);
+            if (this.currentLexeme.name != ';')
+                this.exception.error('expected ; ',this.currentLexeme);
+            this.currentLexeme = Scanner.next(this.currentLexeme.nextLexemePos);
         }
         var symEnd = new SymEnd(0,0,'#E8E8E8');
         var synEnd = new SynEnd(symEnd);
@@ -163,43 +168,40 @@ LexicalAnalyzer = new Class ({
             }
         }
     },
-	parseAssignment: function (tree){
-	    var varLeft = this.parseIdentifier(tree);
+    parseAssignment: function (tree){
+        var varLeft = this.parseIdentifier(tree);
         this.currentLexeme = Scanner.next(this.currentLexeme.nextLexemePos);
-        if (this.currentLexeme.name != ':=') 
+        if (this.currentLexeme.name != ':=')
         this.exception.error('expect := ',this.currentLexeme);
         this.currentLexeme = Scanner.next(this.currentLexeme.nextLexemePos);
         var expression = this.parseExpr(tree,';');
-		var typeCompare = expression.compareType(varLeft.type,expression.type);
-		if (((typeCompare == 'real') && (varLeft.type == 'int')) || (typeCompare == -1)) {
-		    this.exception.error('Incompatible types in assignment '+varLeft.type+' and '+expression.type,this.currentLexeme);
-		}
-		if((typeCompare == 'real')&&(expression.type =='int'))expression.setType('real');
+        var typeCompare = expression.compareType(varLeft.type,expression.type);
+        if (((typeCompare == 'real') && (varLeft.type == 'int')) || (typeCompare == -1)) {
+            this.exception.error('Incompatible types in assignment '+varLeft.type+' and '+expression.type,this.currentLexeme);
+        }
+        if ((typeCompare == 'real') && (expression.type =='int')) expression.setType('real');
         var st2 = new SymAssignment(0,0,'#66CC99',Scanner.popCodePart(''));
         var statment = new StmtAssignment(varLeft,expression,st2);
-        var name = this.currentLexeme.name;
-        if (this.currentLexeme.name != 'else')
-            this.currentLexeme = Scanner.next(this.currentLexeme.nextLexemePos);
-        if ((name == ';') && (this.currentLexeme.name == 'else'))
-            this.exception.error('unexpected ; ',this.currentLexeme);
         return statment;
-	},
-	parseIfElse : function (tree){
+    },
+    parseIfElse : function (tree){
         Scanner.popCodePart('');
-	    this.currentLexeme = Scanner.next(this.currentLexeme.nextLexemePos);
-	    var expression = this.parseExpr(tree,'then');
+        this.currentLexeme = Scanner.next(this.currentLexeme.nextLexemePos);
+        var expression = this.parseExpr(tree,'then');
+        if (this.currentLexeme.name!='then')
+            this.exception.error('expected then ',this.currentLexeme);
         var text = Scanner.popCodePart('');
-		var symIf = new	SymIf(0,0,'#66CC99',text.substring(0,text.length-4));
-	    this.currentLexeme = Scanner.next(this.currentLexeme.nextLexemePos);
-		var stThen = this.getStatment(tree);
-		var stElse = null;
-		if (this.currentLexeme.name == 'else') {
-		    Scanner.popCodePart('');
-		    this.currentLexeme = Scanner.next(this.currentLexeme.nextLexemePos);
-		    stElse = this.getStatment(tree);
-		}
-		return new StmtIf(expression,stThen,stElse,symIf);
-	},
+        var symIf = new	SymIf(0,0,'#66CC99',text.substring(0,text.length-4));
+        this.currentLexeme = Scanner.next(this.currentLexeme.nextLexemePos);
+        var stThen = this.getStatment(tree);
+        var stElse = null;
+        if (this.currentLexeme.name == 'else') {
+            Scanner.popCodePart('');
+            this.currentLexeme = Scanner.next(this.currentLexeme.nextLexemePos);
+            stElse = this.getStatment(tree);
+        }
+        return new StmtIf(expression,stThen,stElse,symIf);
+    },
     parseExpr: function(treeVar,endLexeme) {
         return this.parseCompare(treeVar,endLexeme);
     },
