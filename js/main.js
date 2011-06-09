@@ -104,6 +104,11 @@ function runInterface() {
             if (next != null) next.visualization(app.ctx,app.tools);
         }
     });
+
+    $("#editInput").click(function() {
+        $("#input").css('display','none');
+        app.showInput = false;
+    });
 }
 
 function initApplication() {

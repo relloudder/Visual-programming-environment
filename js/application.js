@@ -1,10 +1,10 @@
 VariableTree = new Class({
     initialize: function() {
         this.treeVar = [];
-		this.treeStatment = [];
+        this.treeStatment = [];
     },
     treeVar: null,
-	treeStatment: null,
+    treeStatment: null,
     varMove: null,
     draw: function(ctx,tools,width,height) {
         DrawForVis(ctx).back("#7cb7e3","#cccccc",width,height);
@@ -32,7 +32,7 @@ VariableTree = new Class({
                 return findSymbol;
             }
         }
-		for (var k = this.treeStatment.length - 1; k >= 0 ; k--) {
+        for (var k = this.treeStatment.length - 1; k >= 0 ; k--) {
             var findSyn = this.treeStatment[k].findSynExpr(pos,tools);
             if (findSyn != -1) {
                 return findSyn;
@@ -143,6 +143,7 @@ Application = new Class({
         this.visualStatments = -1;
         this.byStep = false;
     },
+    showInput: false,
     flagMove: false,
     flagCanvasMove: false,
     move: false,
@@ -172,6 +173,7 @@ Application = new Class({
     },
     drawTreeVis: function() {
         with(this) {
+            if (showInput) return;
             DrawForVis(ctx).back('#202020','#aaa',width,height);
             tree.draw(ctx,tools,width,height);
             var stopPaint = 0;

@@ -32,7 +32,8 @@ var Scanner = (function() {
         /^div/gi,
         /^and/gi,
         /^or/gi,
-        /^not/gi
+        /^not/gi,
+        /^read/gi
     ],
 
     separators = [

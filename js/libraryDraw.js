@@ -480,6 +480,30 @@ var DrawForVis = function(ctx) {
                 newText = val.substr(0,maxSize-2) + '~';
             ctx.font = r+'px Arial';
             ctx.fillText(newText,x0,y0);
+        },
+
+        oval: function(x0,y0,r,k,h,col,val,alpha,tr) {
+            ctx.save();
+            ctx.translate(x0,y0);
+            ctx.rotate(alpha);
+            ctx.beginPath();
+            ctx.moveTo(-r,0);
+            ctx.lineTo(-r,h);
+            ctx.bezierCurveTo(-r/7*6,r/2+h,r/7*6,r/4+h,+r,h);
+            ctx.lineTo(r,0);
+            ctx.fillStyle = 'rgba(250,200,200,'+tr+')';
+            ctx.fill();
+            ctx.closePath();
+            ctx.beginPath();
+            colorFigure(col,getGradient(col),r/3,r/2);
+            ctx.moveTo(-r,0);
+            ctx.bezierCurveTo(-r/7*6,r/2,r/7*6,r/4,+r,0);
+            ctx.bezierCurveTo(r/7*6,-r/2,-r/7*6,-r/4,-r,0);
+            ctx.fill();
+            ctx.closePath();
+            this.roundedRect(-r+h*3,-r/2.5,1.5*r,r/3,4,'rgba(255,255,255,'+tr+')','rgba(200,200,200,'+tr+')',3);
+            this.textStatment(val,-r+h*3.5,-r/5.5,r/6,19);
+            ctx.restore();
         }
     };
 }

@@ -146,6 +146,7 @@ LexicalAnalyzer = new Class ({
                 synBlock.push(this.parseAssignment(tree));
             else if (this.currentLexeme.type == 'Keyword') {
                 if (this.currentLexeme.name == 'if') synBlock.push(this.parseIfElse(tree));
+                else if (this.currentLexeme.name == 'read') synBlock.push(this.parseRead(tree));
                 else if (this.currentLexeme.name == 'begin') synBlock.push(this.getBlock(tree));
             } else this.exception.error('error statment ',this.currentLexeme);
             if (this.currentLexeme.name != ';')
@@ -162,11 +163,30 @@ LexicalAnalyzer = new Class ({
         if (this.currentLexeme.type == 'Identifier') return this.parseAssignment(tree);
         if (this.currentLexeme.type == 'Keyword') {
             if (this.currentLexeme.name == 'if') return this.parseIfElse(tree);
+            if (this.currentLexeme.name == 'read') return this.parseRead(tree);
             if (this.currentLexeme.name == 'begin' ) {
                 var block = this.getBlock(tree);
                 return block;
             }
         }
+    },
+    parseRead: function(tree) {
+        this.currentLexeme = Scanner.next(this.currentLexeme.nextLexemePos);
+        if (this.currentLexeme.name != '(')
+            this.exception.error('expected (',this.currentLexeme);
+        var listRead = [];
+        while (this.currentLexeme.name != ')') {
+            this.currentLexeme = Scanner.next(this.currentLexeme.nextLexemePos);
+            if (this.currentLexeme.type != 'Identifier')
+                this.exception.error('expected identifier',this.currentLexeme);
+            listRead.push(this.parseIdentifier(tree));
+            this.currentLexeme = Scanner.next(this.currentLexeme.nextLexemePos);
+            if ((this.currentLexeme.name != ',') && ((this.currentLexeme.name != ')')))
+                this.exception.error('expected , or ) ',this.currentLexeme);
+        }
+        this.currentLexeme = Scanner.next(this.currentLexeme.nextLexemePos);
+        var symRead = new SymRead(0,0,'#66CC99',Scanner.popCodePart(''));
+        return new StmtRead(listRead,symRead);
     },
     parseAssignment: function (tree){
         var varLeft = this.parseIdentifier(tree);

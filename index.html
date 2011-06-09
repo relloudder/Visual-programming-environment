@@ -132,6 +132,7 @@
 
     <div style="float:none; clear:both;"></div>
     <div id="wCanvas"><canvas id="canvas"></canvas></div>
+    <div id='input'><input type="text" id="editInput" value=""></div>
     <div id="code">
         <textarea cols=30 rows=40 id="programPanel">
 var
@@ -140,14 +141,15 @@ var
   b:record
       i,j: integer;
     end;
-  begin
+    begin
+    read(min);
     min:=5*3;
     if min>0 then begin
 	    a[2]:=min+max;
 		if a[2]>0 then a[1]:=1
         else min:=max+2;
 		a[1]:=1;
-	end
+	end;
     min:=max+2;
 end.
 

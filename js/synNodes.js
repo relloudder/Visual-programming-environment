@@ -623,7 +623,7 @@ StmtIf = new Class({
     },
     visualization: function(ctx,tools) {
         var k, varBeg, varGo, var1,st, varInput;
-	      with (this) {
+        with (this) {
             k = app.insertRowVis();
             st = new SymChangeStatment(this,0.2,1);
             app.insertElementVis(k,st);
@@ -634,19 +634,18 @@ StmtIf = new Class({
             var1 = app.tree.treeVar[app.tree.treeVar.length-1];
             k = app.insertRowVis();
             varIf = new SymChangeIf(symStatment,stmtThen,stmtElse,var1.getValue());
-		    var var2 = new Symbol(stmtThen.symStatment.posX,stmtThen.symStatment.posY-50);
-		    result = var1.getValue();
-		    if (result == false) {
-		        var2 = new Symbol(stmtThen.symStatment.posX-2*symStatment.width,stmtThen.symStatment.posY-50);
-		    }
-		    varGo = new SymVarDown(var1,var2,0);
-    		app.insertElementVis(k,varGo);
-		    app.insertElementVis(k,varIf);
-		    st = new SymChangeStatment(this,-0.4,1);
+            var var2 = new Symbol(symStatment.posX+80,this.symStatment.posY);
+            result = var1.getValue();
+            if (result == false) {
+                var2 = new Symbol(symStatment.posX-80,this.symStatment.posY);
+            }
+            varGo = new SymVarDown(var1,var2,0);
+            app.insertElementVis(k,varGo);
+            app.insertElementVis(k,varIf);
+            st = new SymChangeStatment(this,-0.2,1);
             app.insertElementVis(k,st);
             app.paint();
         }
-        return -1;
     }
 });
 
@@ -708,3 +707,44 @@ StmtBlock = new Class ({
         this.putPosition([this.symStatment.posX, this.symStatment.posY]);
     }
 });
+
+StmtRead = new Class ({
+    Extends: Statment,
+    initialize: function(arrayRead,symStatment) {
+        this.parent(symStatment);
+        this.arrayRead = arrayRead;
+    },
+    arrayRead: null,
+    draw: function(ctx,tools) {
+        this.symStatment.draw(ctx,tools);
+    },
+    drawLine: function(ctx,tools) {
+        with(this.symStatment) {
+            DrawForVis(ctx).connect(tools.getAdjustedX(posX),tools.getAdjustedY(posY-height),
+            tools.getAdjustedX(posX),tools.getAdjustedY(posY),tools.getAdjustedR(6),'#555555');
+        }
+    },
+    visualization: function(ctx,tools) {
+        var k, varBeg, varGo, st;
+        with (this) {
+            k = app.insertRowVis();
+            st = new SymChangeStatment(this,0.4,1);
+            app.insertElementVis(k,st);
+            for (var i = 0; i < arrayRead.length; i++) {
+                k = app.insertRowVis();
+                varBeg = arrayRead[i].getSymbol();
+                varBeg.posStatment=[symStatment.posX,symStatment.posY];
+                varGo = new SymVarOpenClose(varBeg,true,true);
+                app.insertElementVis(k,varGo);
+                k = app.insertRowVis();
+                varGo = new SymVarOpenClose(varBeg,false,true);
+                app.insertElementVis(k,varGo);
+            }
+            k = app.insertRowVis();
+            st = new SymChangeStatment(this,-0.4,1);
+            app.insertElementVis(k,st);
+            app.paint();
+        }
+    }
+});
+

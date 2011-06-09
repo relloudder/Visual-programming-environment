@@ -142,6 +142,8 @@ SymVarName = new Class({
     },
     name: '',
     type: 'int',
+    input: false,
+    posStatment: [0,0],
     getName: function() {
         return this.name;
     },
@@ -153,10 +155,10 @@ SymVarName = new Class({
         	this.val = "'" + String.fromCharCode(48 + Math.floor(Math.random() * 80)) + "'";
         } else if (this.type == 'boolean') {
 	    	this.val = Math.round(Math.random()) == 0 ? 'F' : 'T';
-	    } else {
-	    	this.val = Math.floor(Math.random() * maxValue);
-	    }
-	},
+        } else {
+            this.val = Math.floor(Math.random() * maxValue);
+        }
+    },
     clone: function() {
         var element = new SymVarName(this.val, this.posX, this.posY, this.type, this.name);
         element.owner = this.owner;
@@ -166,6 +168,20 @@ SymVarName = new Class({
         var dY = 0;
         if (this.jump) dY = 3;
         var y = -dY + Math.ceil(Math.random()*2*dY);
+        if (this.input) {
+            app.showInput = true;
+            DrawForVis(ctx).halfBall(tools.getAdjustedX(this.posX),
+                tools.getAdjustedY(this.posY),tools.getAdjustedR(this.rVar),this.colVar);
+            // вычисляем, где вывести поле для ввода
+            var x = tools.getAdjustedX(this.posX)-tools.getAdjustedR(this.rVar)*1.2+$("#wCanvas").offset().left;
+            var y = tools.getAdjustedY(this.posY)-tools.getAdjustedR(this.rVar)*1.2+$("#wCanvas").offset().top;
+            $('#input').css('top',y+'px').css('left',x+'px').css('display','inline');
+            $("#editInput").val('');
+            $('#editInput').focus();
+            DrawForVis(ctx).lineVar(tools.getAdjustedX(this.posX),tools.getAdjustedY(this.posY),
+            tools.getAdjustedX(this.posStatment[0]),tools.getAdjustedY(this.posStatment[1]),tools.getAdjustedR(4),'rgba(255,106,106,0.7)');
+            return 0;
+        }
         DrawForVis(ctx).ball(tools.getAdjustedX(this.posX),tools.getAdjustedY(this.posY+y/2),tools.getAdjustedR(this.rVar+y/4),this.colVar);
         DrawForVis(ctx).text(this.val,tools.getAdjustedX(this.posX),tools.getAdjustedY(this.posY+y/2),
             tools.getAdjustedR(this.rVar+y/4),0,this.type);
