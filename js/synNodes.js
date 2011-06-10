@@ -79,63 +79,49 @@ SynExpr = new Class({
         var result,varNew,cVarL,cVarR,varGo,varGoL,varGoR,k,r;
         with(this) {
             if (this instanceof SynBinOp) {
-            if (getBinOpType() == '+') {
-                result = 1*getRight().operation(visible) + 1*getLeft().operation(visible);
+                part2 = getRight().operation(visible);
+                part1 = getLeft().operation(visible);
+                if (Number(part1) != null) {
+                    part1 = part1*1;
+                    part2 = part2*1;
+                }
+                if (getBinOpType() == '+') result = part1 + part2;
+                if (getBinOpType() == '-') result = part1 - part2;
+                if (getBinOpType() == '*') result = part1 * part2;
+                if (getBinOpType() == '/') result = part1 / part2;
+                if (getBinOpType() == '<') result = part1 < part2;
+                if (getBinOpType() == '>') result = part1 > part2;
+                if (getBinOpType() == 'or') result = part1 || part2;
+                if (getBinOpType() == 'and') result = part1 && part2;
+                if (getBinOpType() == '<=') result = part1 <= part2;
+                if (getBinOpType() == '>=') result = part1 >= part2;
+                if (getBinOpType() == '<>') result = part1 != part2;
+                if (getBinOpType() == '=') result = part1 == part2;
+                if (visible) {
+                    varGo = new SymVarOpenClose(symBinOp,false,false);
+                    cVarL = app.tree.findSymbolByPos([this.left.getPosX(),this.left.getPosY()]);
+                    cVarR = app.tree.findSymbolByPos([this.right.getPosX(),this.right.getPosY()]);
+                    varGoL = new SymVarDown(cVarL,symBinOp,0.001);
+                    varGoR = new SymVarDown(cVarR,symBinOp,0.001);
+                    varNew = new SymVar(result,symBinOp.getPosX(),symBinOp.getPosY(),'#999',Math.max(cVarR.rVar,cVarL.rVar));
+                    r = varNew.rVar;
+                    varNew.rVar = symBinOp.rVar;
+                    varNew.setVisible(false);
+                    app.tree.push(varNew);
+                    k = app.insertRowVis();
+                    app.insertElementVis(k,varGoR);
+                    app.insertElementVis(k,varGoL);
+                    app.insertElementVis(k,varGo);
+                    k = app.insertRowVis();
+                    varGo = new SymVarBiggerSmaller(varNew,r);
+                    varNew.rVar = r;
+                    app.insertElementVis(k,varGo);
+                }
+                return result;
             }
-            if (getBinOpType() == '-') {
-                result = getLeft().operation(visible) - getRight().operation(visible);
-            }
-            if (getBinOpType() == '*') {
-                result = getLeft().operation(visible) * getRight().operation(visible);
-            }
-            if (getBinOpType() == '/') {
-                result = getLeft().operation(visible) / getRight().operation(visible);
-            }
-            if (getBinOpType() == '<') {
-                result = getLeft().operation(visible) < getRight().operation(visible);
-            }
-            if (getBinOpType() == '>') {
-                result = getLeft().operation(visible) > getRight().operation(visible);
-            }
-            if (getBinOpType() == 'or') {
-                result = getLeft().operation(visible) || getRight().operation(visible);
-            }
-            if (getBinOpType() == 'and') {
-                result = getLeft().operation(visible) && getRight().operation(visible);
-            }
-            if (getBinOpType() == '<=') {
-                result = getLeft().operation(visible) <= getRight().operation(visible);
-            }
-            if (getBinOpType() == '>=') {
-                result = getLeft().operation(visible) >= getRight().operation(visible);
-            }
-            if (getBinOpType() == '<>') {
-                result = getLeft().operation(visible) != getRight().operation(visible);
-            }
-            if (visible) {
-                varGo = new SymVarOpenClose(symBinOp,false,false);
-                cVarL = app.tree.findSymbolByPos([this.left.getPosX(),this.left.getPosY()]);
-                cVarR = app.tree.findSymbolByPos([this.right.getPosX(),this.right.getPosY()]);
-                varGoL = new SymVarDown(cVarL,symBinOp,0.001);
-                varGoR = new SymVarDown(cVarR,symBinOp,0.001);
-                varNew = new SymVar(result,symBinOp.getPosX(),symBinOp.getPosY(),'#999',Math.max(cVarR.rVar,cVarL.rVar));
-                r = varNew.rVar;
-                varNew.rVar = symBinOp.rVar;
-                varNew.setVisible(false);
-                app.tree.push(varNew);
-                k = app.insertRowVis();
-                app.insertElementVis(k,varGoR);
-                app.insertElementVis(k,varGoL);
-                app.insertElementVis(k,varGo);
-                k = app.insertRowVis();
-                varGo = new SymVarBiggerSmaller(varNew,r);
-                varNew.rVar = r;
-                app.insertElementVis(k,varGo);
-            }
-            return result;
+            return getValue();
         }
-        return getValue();
-    }}
+    }
 });
 
 SynVar = new Class({

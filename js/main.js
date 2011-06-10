@@ -105,9 +105,11 @@ function runInterface() {
         }
     });
 
-    $("#editInput").click(function() {
-        $("#input").css('display','none');
-        app.showInput = false;
+    $("#editInput").keydown(function(event) {
+        if (event.which == 13) {
+            $("#input").css('display','none');
+            app.showInput = false;
+        };
     });
 }
 
