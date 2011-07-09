@@ -406,22 +406,26 @@ Statment = new Class ({
     getPosY: function() {
         this.symStatment.getPosX();
     },
-    drawLine: function(ctx,tools) {},
+    drawLine: function(ctx,tools) {
+        with (this.symStatment)
+        DrawForVis(ctx).connect(tools.getAdjustedX(posX),tools.getAdjustedY(posY-height),
+            tools.getAdjustedX(posX),tools.getAdjustedY(posY), tools.getAdjustedR(6),'#555555');
+    },
     draw: function(ctx,tools) {
         this.symStatment.draw(ctx,tools);
     },
     getHeight: function() {
         return this.symStatment.getHeight();
     },
-	getHeightStatment: function() {
+    getHeightStatment: function() {
         return this.symStatment.heightStatment;
     },
     setHeightStatment: function(val) {
         this.symStatment.heightStatment = val;
     },
-	getWidth: function(){
+    getWidth: function(){
 	    return this.symStatment.width;
-	},
+    },
     putPosition: function(pos) {
         this.symStatment.posX = pos[0];
         this.symStatment.posY = pos[1];
@@ -433,7 +437,11 @@ Statment = new Class ({
         }
         return -1;
     },
-    treeLocation: function() {}
+    treeLocation: function() {},
+    changePosStatment: function(pos) {
+        this.symStatment.posX -= pos[0];
+        this.symStatment.posY -= pos[1];
+    },
 });
 
 SynEnd = new Class ({
@@ -444,11 +452,6 @@ SynEnd = new Class ({
     },
     draw: function(ctx,tools) {
         this.symStatment.draw(ctx,tools);
-    },
-    drawLine: function(ctx,tools) {
-        with(this.symStatment)
-            DrawForVis(ctx).connect(tools.getAdjustedX(posX),tools.getAdjustedY(posY-height),
-                tools.getAdjustedX(posX),tools.getAdjustedY(posY),tools.getAdjustedR(6),'#555555');
     },
     changePos: function(pos,tools) {
         this.symStatment.posY = pos[1]/tools.scale - tools.top;
@@ -476,12 +479,6 @@ StmtAssignment = new Class ({
     draw: function(ctx,tools) {
         this.symStatment.draw(ctx,tools);
         if (this.aRight.show) this.aRight.draw(ctx,tools);
-    },
-    drawLine: function(ctx,tools) {
-        with(this.symStatment) {
-            DrawForVis(ctx).connect(tools.getAdjustedX(posX),tools.getAdjustedY(posY - height),
-                tools.getAdjustedX(posX),tools.getAdjustedY(posY),tools.getAdjustedR(6),'#555555');
-        }
     },
     putPosition: function(pos) {
        this.parent(pos);
@@ -522,6 +519,10 @@ StmtAssignment = new Class ({
             app.paint();
         }
         return -1;
+    },
+    changePosStatment: function(pos,tools) {
+        this.parent(pos);
+        this.aRight.putPosition([this.symStatment.posX,this.symStatment.posY-20])
     }
 });
 
@@ -550,15 +551,11 @@ StmtIf = new Class({
             DrawForVis(ctx).connect(tools.getAdjustedX(posX),tools.getAdjustedY(posY - height),
                 tools.getAdjustedX(posX),tools.getAdjustedY(posY),tools.getAdjustedR(6),'#555555');
             this.stmtThen.drawLine(ctx,tools);
-            DrawForVis(ctx).connect(tools.getAdjustedX(posX+width+6),tools.getAdjustedY(posY + heightStatment),
-                tools.getAdjustedX(posX+width+6),tools.getAdjustedY(this.getPosLastThen()),tools.getAdjustedR(6),'#555555');
-            if (this.stmtElse != null) {
-               this.stmtElse.drawLine(ctx,tools);
-               DrawForVis(ctx).connect(tools.getAdjustedX(posX-width+6),tools.getAdjustedY(posY + heightStatment),
-                    tools.getAdjustedX(posX-width+6),tools.getAdjustedY(this.getPosLastElse()),tools.getAdjustedR(6),'#555555')  ;
-	        } else
-                DrawForVis(ctx).connect(tools.getAdjustedX(posX-width+6),tools.getAdjustedY(posY + heightStatment),
-                    tools.getAdjustedX(posX-width+6),tools.getAdjustedY(posY),tools.getAdjustedR(6),'#555555');
+            DrawForVis(ctx).connect(tools.getAdjustedX(posX+width),tools.getAdjustedY(this.getPosLastThen()),
+                tools.getAdjustedX(posX+width),tools.getAdjustedY(posY + heightStatment),tools.getAdjustedR(6),'#555555');
+            this.stmtElse.drawLine(ctx,tools);
+            DrawForVis(ctx).connect(tools.getAdjustedX(posX-width),tools.getAdjustedY(this.getPosLastElse()-5),
+                tools.getAdjustedX(posX-width),tools.getAdjustedY(posY + heightStatment),tools.getAdjustedR(6),'#555555')  ;
         }
     },
     draw: function(ctx,tools) {
@@ -632,6 +629,12 @@ StmtIf = new Class({
             app.insertElementVis(k,st);
             app.paint();
         }
+    },
+    changePosStatment: function(pos) {
+       this.parent(pos);
+       this.exprIf.putPosition([this.symStatment.posX,this.symStatment.posY-70]);
+       this.stmtThen.changePosStatment(pos);
+       this.stmtElse.changePosStatment(pos);
     }
 });
 
@@ -648,13 +651,11 @@ StmtBlock = new Class ({
     currentStatment: null,
     draw: function (ctx,tools) {
         with(this.symStatment)
-            DrawForVis(ctx).connect(tools.getAdjustedX(posX),tools.getAdjustedY(posY - height),
-                tools.getAdjustedX(posX),tools.getAdjustedY(posY),tools.getAdjustedR(6),'#555555');
-	    for (var i = 0; i < this.treeStatment.length; i++)
+            for (var i = 0; i < this.treeStatment.length; i++)
             this.treeStatment[i].drawLine(ctx,tools);
-        this.symStatment.draw(ctx,tools);
-        for (var i = 0; i < this.treeStatment.length; i++)
-            this.treeStatment[i].draw(ctx,tools);
+            this.symStatment.draw(ctx,tools);
+            for (var i = 0; i < this.treeStatment.length; i++)
+                this.treeStatment[i].draw(ctx,tools);
     },
     push: function(statment) {
         this.treeStatment.push(statment);
@@ -688,9 +689,20 @@ StmtBlock = new Class ({
         }
     },
     changePos: function(pos,tools) {
-        this.symStatment.posY = pos[1]/tools.scale - tools.top;
-        this.symStatment.posX = pos[0]/tools.scale - tools.left;
-        this.putPosition([this.symStatment.posX, this.symStatment.posY]);
+        var y = pos[1]/tools.scale - tools.top;
+        var x = pos[0]/tools.scale - tools.left;
+        var dx = this.symStatment.posX - x;
+        var dy = this.symStatment.posY - y;
+        this.symStatment.posY = y;
+        this.symStatment.posX = x;
+        for (var i = 0; i < this.treeStatment.length; i++)
+            this.treeStatment[i].changePosStatment([dx, dy]);
+    },
+    changePosStatment: function(pos) {
+	      this.symStatment.posY -= pos[1];
+        this.symStatment.posX -= pos[0];
+        for (var i = 0; i < this.treeStatment.length; i++)
+            this.treeStatment[i].changePosStatment(pos);
     }
 });
 
@@ -703,12 +715,6 @@ StmtRead = new Class ({
     arrayRead: null,
     draw: function(ctx,tools) {
         this.symStatment.draw(ctx,tools);
-    },
-    drawLine: function(ctx,tools) {
-        with(this.symStatment) {
-            DrawForVis(ctx).connect(tools.getAdjustedX(posX),tools.getAdjustedY(posY-height),
-            tools.getAdjustedX(posX),tools.getAdjustedY(posY),tools.getAdjustedR(6),'#555555');
-        }
     },
     visualization: function(ctx,tools) {
         var k, varBeg, varGo, st;

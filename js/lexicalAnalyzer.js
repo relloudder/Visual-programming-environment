@@ -220,6 +220,7 @@ LexicalAnalyzer = new Class ({
             this.currentLexeme = Scanner.next(this.currentLexeme.nextLexemePos);
             stElse = this.getStatment(tree);
         }
+        else stElse = new Statment(new SymStatment(0,0,'red',''));
         return new StmtIf(expression,stThen,stElse,symIf);
     },
     parseExpr: function(treeVar,endLexeme) {

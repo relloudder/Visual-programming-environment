@@ -195,6 +195,18 @@ SymVarName = new Class({
             DrawForVis(ctx).flag(tools.getAdjustedX(this.posX-this.rVar),tools.getAdjustedY(this.posY-4+y/2),tools.getAdjustedR(this.rVar/5),tools.getAdjustedR(6),this.colVar,
                 this.name,tools.getAdjustedR(this.rVar),(155+y)*Math.PI/180);
         }
+    },
+    setValueWithIf: function(value) {
+        var reInt = /^\-?\d+/g;
+        var reReal = /^\-?\d+[.]\d+/g;
+        var reChar = /^\'.\'/;
+        if ((this.type=='int') && (reInt.exec(value) != value))
+            alert('invalid input, must be integer number');
+        else if ((this.type == 'real') && (reReal.exec(value) != value) && (reInt.exec(value) != value))
+            alert('invalid input, must be real number');
+        else if ((this.type == 'char') && (reChar.exec(value) != value))
+            alert('invalid input, must be char number');
+        else this.setValue(value);
     }
 })
 

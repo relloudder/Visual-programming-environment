@@ -241,9 +241,10 @@ SymVarOpenClose = new Class ({
             DrawForVis(ctx).alphaBall(tools.getAdjustedX(posX),tools.getAdjustedY(posY),tools.getAdjustedR(rVar),colVar,angle);
             if (numberOfMove == 0) {
                 changeableObject.input = true;
-                if (angleOfRotation < 0) {
+                if (angleOfRotation < 0)
+                if (changeableObject.input) {
                     changeableObject.input = false;
-                    changeableObject.setValue($('#editInput').val());
+                    changeableObject.setValueWithIf($('#editInput').val())
                 }
                 changeableObject.setVisible(visible);
                 return 0;
