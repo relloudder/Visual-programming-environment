@@ -30,6 +30,7 @@ var Scanner = (function() {
         /^until/gi,
         /^record/gi,
         /^div/gi,
+        /^mod/gi,
         /^and/gi,
         /^or/gi,
         /^not/gi,

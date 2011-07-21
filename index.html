@@ -145,12 +145,13 @@ var
     read(min);
     min:=5*3;
     if min>0 then begin
-	    a[2]:=min+max;
+	    a[2]:=min div max;
 		if a[2]>0 then a[1]:=1
-        else min:=max+2;
+        else min:=max mod 2;
 		a[1]:=1;
 	end;
-    min:=max+2;
+  min:=max div 2;
+  max:=5 mod 4;
 end.
 
         </textarea>

@@ -76,7 +76,7 @@ SynExpr = new Class({
         this.symbolName.posY = pos[1]/tools.scale-tools.top;
     },
     operation: function(visible) {
-        var result,varNew,cVarL,cVarR,varGo,varGoL,varGoR,k,r;
+        var result,varNew,cVarL,cVarR,varGo,varGoL,varGoR,k,r,part1,part2;
         with(this) {
             if (this instanceof SynBinOp) {
                 part2 = getRight().operation(visible);
@@ -97,6 +97,8 @@ SynExpr = new Class({
                 if (getBinOpType() == '>=') result = part1 >= part2;
                 if (getBinOpType() == '<>') result = part1 != part2;
                 if (getBinOpType() == '=') result = part1 == part2;
+                if (getBinOpType() == 'mod') result = part1 - Math.floor(part1/part2)*part2;
+                if (getBinOpType() == 'div') result = Math.floor(part1/part2);
                 if (visible) {
                     varGo = new SymVarOpenClose(symBinOp,false,false);
                     cVarL = app.tree.findSymbolByPos([this.left.getPosX(),this.left.getPosY()]);

@@ -255,7 +255,8 @@ LexicalAnalyzer = new Class ({
     parseTerm: function(treeVar,endLexeme) {
         var left = this.parseFactor(treeVar,endLexeme);
         while ((this.currentLexeme.name == '*') || (this.currentLexeme.name == '/')||
-            (this.currentLexeme.name.toLowerCase() == 'and') || (this.currentLexeme.name.toLowerCase() == 'div')) {
+            (this.currentLexeme.name.toLowerCase() == 'and') || (this.currentLexeme.name.toLowerCase() == 'div')
+            || (this.currentLexeme.name.toLowerCase() == 'mod')) {
             var binOp = new SymBinOp(this.currentLexeme.name,0,0,'#5500ff',Math.random()-0.5);
             this.currentLexeme = Scanner.next(this.currentLexeme.nextLexemePos);
             left = new SynBinOp(binOp,left,this.parseFactor(treeVar,endLexeme));
