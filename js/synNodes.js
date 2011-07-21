@@ -426,6 +426,9 @@ Statment = new Class ({
     getWidth: function(){
 	    return this.symStatment.width;
     },
+    setWidth: function(width) {
+        this.symStatment.width = width;
+    },
     putPosition: function(pos) {
         this.symStatment.posX = pos[0];
         this.symStatment.posY = pos[1];
@@ -441,7 +444,7 @@ Statment = new Class ({
     changePosStatment: function(pos) {
         this.symStatment.posX -= pos[0];
         this.symStatment.posY -= pos[1];
-    },
+    }
 });
 
 SynEnd = new Class ({
@@ -566,16 +569,15 @@ StmtIf = new Class({
     },
     putPosition: function(pos) {
         this.parent(pos);
-        var x = pos[0] + this.symStatment.width;
+        var x = pos[0] + this.getWidth();
         var y = pos[1] + this.stmtThen.getHeight();
+        this.setWidth(this.getWidth());
         this.exprIf.putPosition([pos[0],pos[1]-70]);
         this.stmtThen.putPosition([x,y]);
-        x -= 2*this.symStatment.width;
-        if (this.stmtElse != null) {
-            y = pos[1] + this.stmtElse.getHeight();
-            this.stmtElse.putPosition([x,y]);
-        }
-        pos[1] = pos[1]+this.symStatment.heightStatment;
+        x -= 2*this.getWidth();
+        y = pos[1] + this.stmtElse.getHeight();
+        this.stmtElse.putPosition([x,y]);
+        pos[1] = pos[1] + this.symStatment.heightStatment;
     },
     getPosLastThen: function() {
         if (this.stmtThen instanceof StmtBlock)
@@ -590,10 +592,9 @@ StmtIf = new Class({
         return this.stmtElse.symStatment.posY+this.stmtElse.symStatment.heightStatment;;
     },
     getHeightStatment: function() {
-        var hElse = 0;
-        if (this.stmtElse != null) hElse = this.stmtElse.getHeightStatment() + this.stmtElse.getHeight();
+        var hElse = this.stmtElse.getHeightStatment() + this.stmtElse.getHeight();
 		    var hThen = this.stmtThen.getHeightStatment() + this.stmtThen.getHeight();
-	      return (this.symStatment.heightStatment + Math.max(hElse,hThen));
+        return (this.symStatment.heightStatment + Math.max(hElse,hThen));
     },
     setHeightStatment: function(val) {
         this.symStatment.heightStatment = val - 20;
@@ -635,6 +636,14 @@ StmtIf = new Class({
        this.exprIf.putPosition([this.symStatment.posX,this.symStatment.posY-70]);
        this.stmtThen.changePosStatment(pos);
        this.stmtElse.changePosStatment(pos);
+    },
+    getWidth: function() {
+        return Math.max(this.symStatment.width,this.stmtElse.getWidth()+this.stmtThen.getWidth()+10);
+    },
+    setWidth: function(width) {
+        this.parent(width);
+        this.stmtThen.setWidth(this.stmtThen.getWidth());
+        this.stmtElse.setWidth(this.stmtElse.getWidth());
     }
 });
 
@@ -703,6 +712,12 @@ StmtBlock = new Class ({
         this.symStatment.posX -= pos[0];
         for (var i = 0; i < this.treeStatment.length; i++)
             this.treeStatment[i].changePosStatment(pos);
+    },
+    getWidth: function() {
+        var width = 0;
+        for (var i = 0; i < this.treeStatment.length; i++)
+            width = Math.max(width,this.treeStatment[i].getWidth());
+        return width;
     }
 });
 
