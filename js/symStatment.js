@@ -179,9 +179,9 @@ SymChangeIf = new Class ({
     initialize: function(aSymIf,aLeft,aRight,direct) {
         this.parent(aSymIf.posX,aSymIf.posY,aSymIf.color,aSymIf.getValue());
         with(this) {
-            numberOfMove = 36
+            numberOfMove = 25;
             symChange = aSymIf;
-            dfi = Math.PI/8/numberOfMove;
+            dfi = Math.PI/12/numberOfMove;
             if (!direct) dfi=-dfi;
             leftSt = aLeft;
             rightSt = aRight;
@@ -197,13 +197,13 @@ SymChangeIf = new Class ({
             symChange.angleOfRotation = angleOfRotation;
             symChange.draw(ctx,tools);
             if (numberOfMove > 0) {
-                var d = Math.abs(Math.cos(dfi));
+                var d = Math.abs(Math.cos(dfi))*symChange.width/80;;
                 if (dfi > 0) {
                     leftSt.symStatment.height-=d;
-                    if (rightSt != null) rightSt.symStatment.height+=d;
+                    rightSt.symStatment.height+=d;
                 } else {
                     leftSt.symStatment.height+=d;
-                    if (rightSt != null) rightSt.symStatment.height-=d;
+                    rightSt.symStatment.height-=d;
                 }
                 numberOfMove--;
                 angleOfRotation+=dfi;
