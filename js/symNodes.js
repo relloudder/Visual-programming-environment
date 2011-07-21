@@ -271,7 +271,7 @@ SymArray = new Class({
 			        tools.getAdjustedX(itemsElement[i].posX),tools.getAdjustedY(itemsElement[i].posY),tools.getAdjustedR(rVar/5),'yellow');
 			}
 		    for (var i = sizeElement; i >= 0; i--) {
-		       itemsElement[i].draw(ctx,tools);
+		       if (itemsElement[i].visible) itemsElement[i].draw(ctx,tools);
 		    }
 		    if (typeof(this.name) != 'number') {
                  DrawForVis(ctx).flag(tools.getAdjustedX(posX-rVar),tools.getAdjustedY(posY),tools.getAdjustedR(rVar/5),6,colVar,name,
@@ -386,7 +386,7 @@ SymRecord = new Class({
                 DrawForVis(ctx).connect(tools.getAdjustedX(itemsElement[i].posX),tools.getAdjustedY(itemsElement[i].posY),
                     tools.getAdjustedX(x),tools.getAdjustedY(posY-rVar/2),4,colVar);
                 x-=dx;
-                itemsElement[i].draw(ctx,tools);
+                if (itemsElement[i].visible) itemsElement[i].draw(ctx,tools);
             }
         }
     },
