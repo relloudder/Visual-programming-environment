@@ -293,6 +293,27 @@ SymBinOp = new Class ({
     }
 });
 
+SymChangeCallFunction = new Class({
+    Extends: SymVarChange,
+    initialize: function(change,changeEnd, endTransp) {
+        this.parent(change);
+        this.numberOfMove = 30;
+        this.deltaRadius = (changeEnd - change.rVar)/this.numberOfMove;
+        this.deltaTransp = (change.transp - endTransp)/this.numberOfMove;
+    },
+    deltaTransp: null,
+    draw: function(ctx,tools) {
+        with(this) {
+	          if (numberOfMove == 0) return 0;
+	          changeableObject.draw(ctx,tools);
+	          numberOfMove--;
+	          changeableObject.transp -= deltaTransp;
+            changeableObject.rVar += deltaRadius;
+	          return 1;
+        }
+    }
+});
+
 SymVarDown = new Class ({
     Extends: SymVarInteraction,
     initialize: function(from,to,g) {

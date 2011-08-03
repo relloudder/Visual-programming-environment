@@ -121,21 +121,21 @@ SymVar = new Class({
 SymVarName = new Class({
     Extends: SymVar,
     initialize: function (v,pX,pY,type,nameV) {
-    	var colorAndRadius = function(color, radius) {
+        var colorAndRadius = function(color, radius) {
     		this.color = color;
     		this.radius = radius;
     	}
-    	var typeAndValue = {
-    	    'int': new colorAndRadius('green', 20),
-    	    'real': new colorAndRadius('red', 25),
-    	    'record': new colorAndRadius('grey', 20),
-    	    'boolean': new colorAndRadius('blue', 15),
-    	    'char': new colorAndRadius('pink', 15),
-    	    'array': new colorAndRadius('black', 20),
-    	    'binOp': new colorAndRadius('IndianRed', 30),
-    	    'const': new colorAndRadius('gray', 25)
-    	}
-    	var t = typeAndValue[type];
+    var typeAndValue = {
+          'int': new colorAndRadius('rgba(255,0,0,1)', 20),
+          'real': new colorAndRadius('rgba(0,128,0,1)', 25),
+          'record': new colorAndRadius('grey', 20),
+          'boolean': new colorAndRadius('rgba(0,0,255,1)', 15),
+          'char': new colorAndRadius('rgba(255,153,255,1)', 15),
+          'array': new colorAndRadius('black', 20),
+          'binOp': new colorAndRadius('IndianRed', 30),
+          'const': new colorAndRadius('gray', 25)
+    }
+    var t = typeAndValue[type];
         this.parent(v,pX,pY,t.color,t.radius);
         this.name = nameV;
         this.type = type;
@@ -439,3 +439,30 @@ SymConst = new Class({
         DrawForVis(ctx).text(val,tools.getAdjustedX(posX),tools.getAdjustedY(posY),tools.getAdjustedR(rVar),0,type);
     }}
 });
+
+SymFunction = new Class({
+    Extends: SymVarName,
+    initialize: function (pX,pY,type,name,listParam) {
+        this.parent('',pX,pY,type,name);
+        this.listParam = listParam;
+        this.visible = false;
+        this.transp = 0.6;
+    },
+    listParam: null,
+    draw: function(ctx, tools) {
+        with(this) {
+            DrawForVis(ctx).functionBall(tools.getAdjustedX(posX),tools.getAdjustedY(posY),tools.getAdjustedR(rVar),colVar, transp);
+            DrawForVis(ctx).text(name,tools.getAdjustedX(posX),tools.getAdjustedY(posY),tools.getAdjustedR(rVar),0,type);
+        }
+    },
+    getPosSuch: function(n) {
+        var dx, dy
+        dx = this.rVar*2*Math.cos(Math.PI/(this.listParam.length+1)*n);
+        dy = this.rVar*2*Math.sin(Math.PI/(this.listParam.length+1)*n);
+        return new Array(this.posX - dx,this.posY - dy);
+    },
+    clone: function() {
+        return new SymFunction(this.posX,this.posY,this.type,this.name,this.listParam);
+    }
+});
+

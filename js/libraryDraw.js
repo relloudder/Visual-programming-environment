@@ -112,6 +112,11 @@ var DrawForVis = function(ctx) {
             ctx.restore();
         },
 
+        functionBall: function(x0,y0,r,col,tr) {
+            col = col.substr(0,col.length-3)+','+tr+')';
+            this.ball(x0,y0,r,col);
+        },
+
         halfBall: function(x0,y0,r,col) {
             ctx.save();
             colorBall(x0,y0,r,col);
@@ -182,23 +187,26 @@ var DrawForVis = function(ctx) {
             ctx.rotate(alpha);
             colorText(0,0,r,'#000');
 	        //размещение числового значения в шарике
-	        var stringVal = val.toString(10);
-	        if (stringVal.indexOf('.') >= 0) {
-	            val = Math.ceil(val*10)/10;
-		        stringVal = val.toString(10);
-	        }
-	        if (type == 'real' && stringVal.indexOf('.') < 0) {
-	            stringVal += '.0';
-	        }
-	        var lengthVal = stringVal.length;
-	        if (lengthVal > 5) {
-	            stringVal = stringVal.substring(0,5);
-	            lengthVal = 5;
-	        }
-	        var arrFont = new Array(0,1,1,4/5,2.5/4,1.5/3);
-	        var arrR = new Array(0,0.35,0.5,0.65,0.6,0.65);
-	        var arrPos = new Array(0,1/2,1/2,1/2,1/4,1/4);
-	        ctx.font = 'bold ' + arrFont[lengthVal]*r + 'px Courier New';
+            var stringVal = val.toString(10);
+            if (stringVal.indexOf('.') >= 0) {
+                val = Math.ceil(val*10)/10;
+                stringVal = val.toString(10);
+            }
+            if (type == 'real' && stringVal.indexOf('.') < 0 && Number(val) == val) {
+                stringVal += '.0';
+            }
+            if (type == 'real' && stringVal.indexOf('.') < 0) {
+                stringVal += '.0';
+            }
+            var lengthVal = stringVal.length;
+            if (lengthVal > 5) {
+                stringVal = stringVal.substring(0,5);
+                lengthVal = 5;
+            }
+            var arrFont = new Array(0,1,1,4/5,2.5/4,1.5/3);
+            var arrR = new Array(0,0.35,0.5,0.65,0.6,0.65);
+            var arrPos = new Array(0,1/2,1/2,1/2,1/4,1/4);
+            ctx.font = 'bold ' + arrFont[lengthVal]*r + 'px Courier New';
             ctx.fillText(stringVal,-arrR[lengthVal]*r,arrPos[lengthVal]*r);
             ctx.restore();
         },

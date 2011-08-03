@@ -4,6 +4,7 @@ SynExpr = new Class({
        this.show = false;
     },
     type: '',
+    errorType: '',
     symbolName: null,
     show: null,
     getValue: function() {
@@ -42,9 +43,27 @@ SynExpr = new Class({
     interpretation: function(pos) {
         var varBeg, varEnd, varGo, k;
         if (this instanceof SynBinOp) {
-            var expression = this;
             this.getLeft().interpretation(this.symBinOp.getPosSuch(true));
             this.getRight().interpretation(this.symBinOp.getPosSuch(false));
+        } else if (this instanceof SynCallFunction) {
+            k = app.treeVis.length - 1;
+            for (var i = 0; i < this.listFactParam.length; i++)
+                if (this.listFactParam[i] instanceof SynBinOp) this.listFactParam[i].interpretation();
+            else  if (this.listFactParam[i] instanceof SynCallFunction) this.listFactParam[i].interpretation();
+            else {
+                varBeg = this.listFactParam[i].getSymbol();
+                varBeg.jump = true;
+                var pos = this.symCallFunction.getPosSuch(i+1);
+                varEnd = new SymVar(varBeg.getValue(),pos[0],pos[1],'#999',varBeg.rVar);
+                varEnd.setVisible(false);
+                app.tree.push(varEnd);
+                if ((this.listFactParam[i] instanceof SynConstInt) || (this.listFactParam[i] instanceof SynConstReal)) {}
+                else {
+                    varGo = new SymVarSeparation(varBeg,varEnd,1/90);
+                    varGo.visualConnect = true;
+                    app.insertElementVis(k,varGo);
+                }
+            }
         } else {
             k = app.treeVis.length - 1;
             varBeg = this.getSymbol();
@@ -52,13 +71,12 @@ SynExpr = new Class({
             varEnd = new SymVar(varBeg.getValue(),this.getPosX(),this.getPosY(),'#999',varBeg.rVar);
             varEnd.setVisible(false);
             if ((this instanceof SynConstInt) || (this instanceof SynConstReal)) {
-                varGo = new SymVarDown(varBeg,varEnd,0);
             } else {
                 varGo = new SymVarSeparation(varBeg,varEnd,1/90);
                 varGo.visualConnect = true;
+                app.insertElementVis(k,varGo);
             }
             app.tree.push(varEnd);
-            app.insertElementVis(k,varGo);
         }
     },
     draw: function(ctx,tools) {
@@ -117,6 +135,30 @@ SynExpr = new Class({
                     k = app.insertRowVis();
                     varGo = new SymVarBiggerSmaller(varNew,r);
                     varNew.rVar = r;
+                    app.insertElementVis(k,varGo);
+                }
+                return result;
+            } else if (this instanceof SynCallFunction) {
+                var part = [];
+                for (var i = 0; i < listFactParam.length; i++)
+                    part.push(listFactParam[i].operation(visible));
+                var name = (symCallFunction.name == 'trunc')?'floor':symCallFunction.name;
+                result = eval('Math.'+name+'('+part[0]+')');
+                if (visible) {
+                    varGo = new SymChangeCallFunction(symCallFunction,symCallFunction.rVar*2,0);
+                    r = symCallFunction.rVar;
+                    k = app.insertRowVis();
+                    for (var i = 0; i < listFactParam.length; i++) {
+                        cVarL = app.tree.findSymbolByPos([this.listFactParam[i].getPosX(),this.listFactParam[i].getPosY()]);
+                        varGoL = new SymVarDown(cVarL,symCallFunction,0.001);
+                        app.insertElementVis(k,varGoL);
+                    }
+                    app.insertElementVis(k,varGo);
+                    varNew = new SymVar(result,symCallFunction.getPosX(),symCallFunction.getPosY(),'#999',varGoL.rVar);
+                    varNew.setVisible(false);
+                    app.tree.push(varNew);
+                    k = app.insertRowVis();
+                    varGo = new SymVarBiggerSmaller(varNew,r);
                     app.insertElementVis(k,varGo);
                 }
                 return result;
@@ -388,6 +430,60 @@ SynBinOp = new Class({
         var pos1 = this.getSymBinOp().getPosSuch(false);
         this.getLeft().putPosition(pos0);
         this.getRight().putPosition(pos1);
+    }
+});
+
+SynCallFunction = new Class({
+    Extends: SynExpr,
+    initialize: function(symbol,listFactParam) {
+        this.symbolName = new SymbolName(0,0,'');
+        this.symCallFunction = symbol.clone();
+        this.symCallFunction.visible = true;
+        this.listFactParam = listFactParam;
+        this.type = this.symCallFunction.type;
+        for (var i = 0; i < this.listFactParam.length; i++)
+            if (this.compareType(this.listFactParam[i].type,this.symCallFunction.listParam[i]) == -1)
+                this.errorType = 'Incompatible type ' + this.listFactParam[i].type + ' ' + this.symCallFunction.listParam[i];
+    },
+    symCallFunction: null,
+    listFactParam: null,
+    draw: function(ctx,tools) {},
+    getPosX: function() {
+        return this.symCallFunction.posX;
+    },
+    getPosY: function() {
+        return this.symCallFunction.posY;
+    },
+    setPosX: function(pX) {
+        var x = this.symCallFunction.posX;
+        this.symCallFunction.posX = pX;
+        for (var i = 0; i < this.listFactParam.length; i++)
+            this.listFactParam[i].setPosX(this.listFactParam[i].getPosX() - x + this.symCallFunction.posX);
+    },
+    setPosY: function(pY) {
+        var y = this.symCallFunction.posY;
+        this.symCallFunction.posY = pY;
+        for (var i = 0; i < this.listFactParam.length; i++)
+            this.listFactParam[i].setPosY(this.listFactParam[i].getPosY() - y + this.symCallFunction.posY);
+    },
+    putPosition: function(pos) {
+        this.parent(pos);
+        for (var i = 0; i < this.listFactParam.length; i++)
+            this.listFactParam[i].putPosition(this.symCallFunction.getPosSuch(i+1));
+    },
+    getSymbol: function() {
+        return this.listFactParam[0].getSymbol();
+    },
+    draw: function(ctx,tools) {
+        if (this.symCallFunction.visible) {
+            for (var i = 0; i < this.listFactParam.length; i++) {
+                DrawForVis(ctx).connect(tools.getAdjustedX(this.getPosX()),tools.getAdjustedY(this.getPosY()),
+                    tools.getAdjustedX(this.listFactParam[i].getPosX()),tools.getAdjustedY(this.listFactParam[i].getPosY()),
+                    tools.getAdjustedR(20/4),'black');
+                this.listFactParam[i].draw(ctx,tools);
+            }
+            this.symCallFunction.draw(ctx,tools);
+        }
     }
 });
 

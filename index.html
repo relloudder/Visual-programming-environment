@@ -136,24 +136,15 @@
     <div id="code">
         <textarea cols=30 rows=40 id="programPanel">
 var
-  min,max,sum: integer;
-  a:array[1..2] of integer;
-  b:record
-      i,j: integer;
-    end;
-    begin
-    read(min);
-    min:=5*3;
-    if min>0 then begin
-	    a[2]:=min div max;
-		if a[2]>0 then a[1]:=1
-        else min:=max mod 2;
-		a[1]:=1;
-	end;
-  min:=max div 2;
-  max:=5 mod 4;
+  a,b: real;
+  c: integer;
+begin
+  c := trunc(a);
+  c := round(a);
+  a := sin(a);
+  b := cos(b);
+  a := tan(a);
 end.
-
         </textarea>
         <input type="text" id="errorPanel" value="">
     </div>

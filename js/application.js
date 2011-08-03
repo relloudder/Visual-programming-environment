@@ -1,6 +1,12 @@
 VariableTree = new Class({
     initialize: function() {
         this.treeVar = [];
+        this.treeVar.push(new SymFunction(0,0,'real','sqrt',['real']));
+        this.treeVar.push(new SymFunction(0,0,'int','trunc',['real']));
+        this.treeVar.push(new SymFunction(0,0,'int','round',['real']));
+        this.treeVar.push(new SymFunction(0,0,'real','sin',['real']));
+        this.treeVar.push(new SymFunction(0,0,'real','cos',['real']));
+        this.treeVar.push(new SymFunction(0,0,'real','tan',['real']));
         this.treeStatment = [];
     },
     treeVar: null,

@@ -280,7 +280,7 @@ LexicalAnalyzer = new Class ({
         } else {
             this.exception.error('error in token ', this.currentLexeme);
         }
-	    this.currentLexeme = Scanner.next(this.currentLexeme.nextLexemePos);
+        this.currentLexeme = Scanner.next(this.currentLexeme.nextLexemePos);
         if ((this.currentLexeme.type != 'MathOperation') && (this.currentLexeme.name !=')')
             && (this.currentLexeme.type != 'Comparison') && (this.currentLexeme.name != 'or')
             && (this.currentLexeme.name != 'and')) {
@@ -291,6 +291,36 @@ LexicalAnalyzer = new Class ({
         }
         return result;
     },
+    parseCallFunction: function(item,treeVar) {
+        this.currentLexeme = Scanner.next(this.currentLexeme.nextLexemePos);
+        if (this.currentLexeme.name != '(') {
+            this.exception.error('expect ( ',this.currentLexeme);
+        }
+        text1 = Scanner.popCodePart('');
+        this.currentLexeme = Scanner.next(this.currentLexeme.nextLexemePos);
+        return this.parseCallParam(item,treeVar);
+    },
+    parseCallParam: function(item,treeVar) {
+        var newSynExpr = [];
+        for (var i = 0; i < item.listParam.length; i++) {
+            var endLexeme = ',';
+            if (i == (item.listParam.length-1)) endLexeme = ')';
+            var param = this.parseExpr(treeVar,endLexeme);
+            newSynExpr.push(param);
+            param.symbolName.text = Scanner.popCodePart('');
+            text1+=param.symbolName.text;
+            param.symbolName.text = param.symbolName.text.substr(0,param.symbolName.text.length-1);
+            if (this.currentLexeme.name != endLexeme)
+                this.exception.error('error parametr',this.currentLexeme);
+            if (i < (item.listParam.length-1))
+                this.currentLexeme = Scanner.next(this.currentLexeme.nextLexemePos);
+            }
+            Scanner.popCodePart(text1);
+            var synF = new SynCallFunction(item,newSynExpr);
+            if (synF.errorType != '')
+                this.exception.error(synF.errorType,this.currentLexeme);
+            return synF;
+    },
     parseIdentifier: function(treeVar) {
         var item = app.tree.getVarByName(treeVar,this.currentLexeme.name);
         if (item == -1) {
@@ -300,6 +330,8 @@ LexicalAnalyzer = new Class ({
             return this.parseSymArr(item,treeVar);
         } else if (item instanceof SymRecord) {
             return this.parseSymRecord(item,treeVar);
+        } else if (item instanceof SymFunction) {
+            return this.parseCallFunction(item,treeVar);
         } else if (item instanceof SymVarName) {
             return new SynVar(item);
         } else {
