@@ -39,7 +39,10 @@ function runInterface() {
         var y = event.pageY - $("#wCanvas").offset().top;
         app.tree.varMove = app.tree.findByPos([x,y],app.tools);
         if (app.tree.varMove != -1) {
-            app.flagMove = true;
+            if (app.tree.varMove instanceof Statment) app.paint();
+            else app.flagMove = true;
+            if (app.tree.varMove instanceof StmtBlock)
+                if (app.tree.varMove.mainBlock) app.flagMove = true;
         }
         if (app.move) {
             app.flagCanvasMove = true;

@@ -16,6 +16,7 @@ SymStatment = new Class ({
     height: null,
     width: null,
     heightStatment: 0,
+    showVisual: true,
     getValue: function() {
         return this.val;
     },
@@ -95,7 +96,7 @@ SymAssignment = new Class ({
     },
     draw: function(ctx,tools) {
         with(this) {
-            DrawForVis(ctx).rect(tools.getAdjustedX(posX),tools.getAdjustedY(posY),tools.getAdjustedR(r)/2,3,tools.getAdjustedR(6),color,value,0,transp);
+            DrawForVis(ctx).rect(tools.getAdjustedX(posX),tools.getAdjustedY(posY),tools.getAdjustedR(r)/2,3,tools.getAdjustedR(6),color,value,0,transp,this.showVisual);
         }
     },
     findVar: function(pos,tools) {
@@ -119,14 +120,13 @@ SymIf = new Class ({
     draw : function(ctx, tools){
         DrawForVis(ctx).conditionIf(tools.getAdjustedX(this.posX),tools.getAdjustedY(this.posY),
             tools.getAdjustedR(this.r/4*3),2,tools.getAdjustedR(6),this.color,this.value,this.angleOfRotation,
-            this.transp,tools.getAdjustedR(this.width),tools.getAdjustedR(this.heightStatment));
+            this.transp,tools.getAdjustedR(this.width),tools.getAdjustedR(this.heightStatment),this.showVisual);
     },
     findVar: function(pos,tools) {
         var x = pos[0]/tools.scale - tools.left;
         var y = pos[1]/tools.scale - tools.top;
-        if (((this.posX-3*this.r) < x) && ((this.posX-this.r+90) > x) && ((this.posY-20) < y) && ((this.posY+20) > y)) {
+        if (((this.posX-this.r) < x) && ((this.posX+this.r) > x) && ((this.posY+this.r*0.5) < y) && ((this.posY+this.r*2) > y))
             return this;
-        }
         return -1;
     }
 });

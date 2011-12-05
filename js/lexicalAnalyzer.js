@@ -25,9 +25,11 @@ LexicalAnalyzer = new Class ({
             this.getVar();
         }
         if (this.currentLexeme.name.toLowerCase() == 'begin') {
-            app.tree.treeStatment.push(this.getBlock(app.tree.treeVar));
-        if (this.currentLexeme.name!='.')
-            this.exception.error('expect . ',this.currentLexeme);
+            var main = this.getBlock(app.tree.treeVar);
+            main.mainBlock = true;
+            app.tree.treeStatment.push(main);
+            if (this.currentLexeme.name!='.')
+                this.exception.error('expect . ',this.currentLexeme);
         } else {
             this.exception.error('expect BEGIN ',this.currentLexeme);
         }

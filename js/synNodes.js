@@ -497,6 +497,7 @@ Statment = new Class ({
     },
     parentStatment: null,
     symStatment: null,
+    showVisual: true,
     getValue: function() {
         return this.constValue;
     },
@@ -536,6 +537,8 @@ Statment = new Class ({
     findSynExpr: function(pos,tools) {
         var find = this.symStatment.findVar(pos,tools);
         if (find != -1) {
+            this.showVisual =!this.showVisual;
+            this.symStatment.showVisual = this.showVisual;
             return this;
         }
         return -1;
@@ -598,36 +601,33 @@ StmtAssignment = new Class ({
         var pos1 = [this.symStatment.posX,this.symStatment.posY - 15];
         this.aRight.putPosition(pos1);
     },
-    findSynExpr: function(pos,tools) {
-        var find = this.symStatment.findVar(pos,tools);
-        if (find != -1) {
-            return this;
-        }
-        find = this.aRight.findSynExpr(pos,tools);
-        return find;
-    },
     visualization: function(ctx,tools) {
         this.parent(ctx,tools);
         var k, varBeg, varGo, var1, st;
         with(this) {
-            k = app.insertRowVis();
-            st = new SymChangeStatment(this,0.4,1);
-            app.insertElementVis(k,st);
-            varBeg = aLeft.getSymbol();
-            varBeg.jump = true;
-            k = app.insertRowVis();
-            aRight.interpretation([symStatment.getPosX(),symStatment.getPosY()]);
-          	aRight.operation(true);
-          	aRight.symbolName.visible = false;
-            var1 = app.tree.treeVar[app.tree.treeVar.length-1];
-            k = app.insertRowVis();
-            varGo = new SymVarMerge(var1,varBeg,1/90);
-            app.insertElementVis(k,varGo);
-            k = app.insertRowVis();
-            st = new SymChangeStatment(this,-0.4,1);
-            app.insertElementVis(k,st);
-            app.paint();
+            if (showVisual) {
+                k = app.insertRowVis();
+                st = new SymChangeStatment(this,0.4,1);
+                app.insertElementVis(k,st);
+                varBeg = aLeft.getSymbol();
+                varBeg.jump = true;
+                k = app.insertRowVis();
+                aRight.interpretation([symStatment.getPosX(),symStatment.getPosY()]);
+          	    aRight.operation(true);
+          	    aRight.symbolName.visible = false;
+                var1 = app.tree.treeVar[app.tree.treeVar.length-1];
+                k = app.insertRowVis();
+                varGo = new SymVarMerge(var1,varBeg,1/90);
+                app.insertElementVis(k,varGo);
+                k = app.insertRowVis();
+                st = new SymChangeStatment(this,-0.4,1);
+                app.insertElementVis(k,st);
+            } else {
+                aLeft.setValue(aRight.operation(false));
+                symStatment.color = 'teal';
+            }
         }
+        app.paint();
         return -1;
     },
     changePosStatment: function(pos,tools) {
@@ -643,8 +643,8 @@ StmtIf = new Class({
         this.exprIf = exprIf;
         this.stmtThen = sThen;
         this.stmtElse = sElse;
-	  },
-	  result: true,
+	},
+	result: true,
     exprIf: null,
     stmtThen: null,
     stmtElse: null,
@@ -716,26 +716,38 @@ StmtIf = new Class({
         this.parent(ctx,tools);
         var k, varBeg, varGo, var1,st, varInput;
         with (this) {
-            k = app.insertRowVis();
-            st = new SymChangeStatment(this,0.2,1);
-            app.insertElementVis(k,st);
-            k = app.insertRowVis();
-            exprIf.interpretation([0,0]);
-            exprIf.operation(true);
-            exprIf.symbolName.visible = false;
-            var1 = app.tree.treeVar[app.tree.treeVar.length-1];
-            k = app.insertRowVis();
-            varIf = new SymChangeIf(symStatment,stmtThen,stmtElse,var1.getValue());
-            var var2 = new Symbol(symStatment.posX+80,this.symStatment.posY);
-            result = var1.getValue();
-            if (result == false) {
-                var2 = new Symbol(symStatment.posX-80,this.symStatment.posY);
+            if (showVisual) {
+                k = app.insertRowVis();
+                st = new SymChangeStatment(this,0.2,1);
+                app.insertElementVis(k,st);
+                k = app.insertRowVis();
+                exprIf.interpretation([0,0]);
+                exprIf.operation(true);
+                exprIf.symbolName.visible = false;
+                var1 = app.tree.treeVar[app.tree.treeVar.length-1];
+                k = app.insertRowVis();
+                varIf = new SymChangeIf(symStatment,stmtThen,stmtElse,var1.getValue());
+                var var2 = new Symbol(symStatment.posX+80,this.symStatment.posY);
+                result = var1.getValue();
+                if (result == false)
+                    var2 = new Symbol(symStatment.posX-80,this.symStatment.posY);
+                varGo = new SymVarDown(var1,var2,0);
+                app.insertElementVis(k,varGo);
+                app.insertElementVis(k,varIf);
+                st = new SymChangeStatment(this,-0.2,1);
+                app.insertElementVis(k,st);
+            } else {
+                result = exprIf.operation(false);
+                symStatment.color = 'teal';
+                symStatment.angleOfRotation = Math.PI/9;
+                var d = Math.abs(Math.cos(Math.PI/9))*symStatment.width/2.5;
+                if (!result) {
+                    d = -d;
+                    symStatment.angleOfRotation = -symStatment.angleOfRotation
+                }
+                stmtThen.symStatment.height -= d;
+                stmtElse.symStatment.height += d;
             }
-            varGo = new SymVarDown(var1,var2,0);
-            app.insertElementVis(k,varGo);
-            app.insertElementVis(k,varIf);
-            st = new SymChangeStatment(this,-0.2,1);
-            app.insertElementVis(k,st);
             app.paint();
         }
     },
@@ -752,6 +764,13 @@ StmtIf = new Class({
         this.parent(width);
         this.stmtThen.setWidth(this.stmtThen.getWidth());
         this.stmtElse.setWidth(this.stmtElse.getWidth());
+    },
+    findSynExpr: function(pos,tools) {
+        var find = this.parent(pos,tools);
+        if (find != -1) return find;
+        find = this.stmtThen.findSynExpr(pos,tools);
+        if (find != -1) return find;
+        return this.stmtElse.findSynExpr(pos,tools);
     }
 });
 
@@ -766,6 +785,7 @@ StmtBlock = new Class ({
     },
     treeStatment: null,
     currentStatment: null,
+    mainBlock: false,
     draw: function (ctx,tools) {
         with(this.symStatment)
             for (var i = 0; i < this.treeStatment.length; i++)
@@ -826,6 +846,15 @@ StmtBlock = new Class ({
         for (var i = 0; i < this.treeStatment.length; i++)
             width = Math.max(width,this.treeStatment[i].getWidth());
         return width;
+    },
+    findSynExpr: function(pos,tools) {
+        var find = this.symStatment.findVar(pos,tools);
+        if (find != -1) return this;
+        for (var k = this.treeStatment.length - 1; k >= 0 ; k--) {
+            var findSyn = this.treeStatment[k].findSynExpr(pos,tools);
+            if (findSyn != -1) return findSyn;
+        }
+        return -1;
     }
 });
 

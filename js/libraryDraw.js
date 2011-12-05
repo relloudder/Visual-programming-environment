@@ -354,7 +354,7 @@ var DrawForVis = function(ctx) {
             ctx.restore();
         },
 
-        rect: function(x0,y0,r,k,h,col,val,alpha,tr){
+        rect: function(x0,y0,r,k,h,col,val,alpha,tr,vis){
             ctx.save();
             ctx.translate(x0,y0);
             ctx.rotate(alpha);
@@ -377,10 +377,16 @@ var DrawForVis = function(ctx) {
             ctx.closePath();
             this.roundedRect(-k*r+h,-k*r+h*2,2.5*k*r,r*1.5,h/2,'rgba(255,255,255,'+tr+')','rgba(200,200,200,'+tr+')',3);
             this.textStatment(val,-r*k+1.5*h,-r,r*0.8,21);
+            ctx.beginPath();
+            ctx.arc(0,0,r/1.5,Math.PI,0);
+            ctx.closePath();
+            if (vis) colorBall(r/3,0,r/2,'rgba(0,0,255,'+tr+')');
+            else colorBall(r/3,0,r/2,'rgba(255,102,00,'+tr+')')
+            ctx.fill();
             ctx.restore();
         },
 
-        conditionIf: function(x,y,r,k,h,col,val,alpha,tr,width,height) {
+        conditionIf: function(x,y,r,k,h,col,val,alpha,tr,width,height,vis) {
             ctx.save();
             ctx.translate(x, y);
             ctx.rotate(alpha);
@@ -434,6 +440,12 @@ var DrawForVis = function(ctx) {
             ctx.closePath();
             ctx.fillStyle = col;
             ctx.fillRect(x-width,y+height,width*2,h/3);
+            ctx.beginPath();
+            ctx.arc(x,y+r*1.5,r/2.5,Math.PI*2,0);
+            ctx.closePath();
+            if (vis) colorBall(x,y+r*1.5,r/4,'rgba(0,0,255,'+tr+')');
+            else colorBall(x,y+r*1.5,r/4,'rgba(255,102,00,'+tr+')');
+            ctx.fill();
             ctx.restore();
         },
 
