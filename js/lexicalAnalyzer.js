@@ -171,6 +171,7 @@ LexicalAnalyzer = new Class ({
         }
     },
     parseRead: function(tree) {
+        var pos = [this.currentLexeme.currentLexemePos];
         this.currentLexeme = Scanner.next(this.currentLexeme.nextLexemePos);
         if (this.currentLexeme.name != '(')
             this.exception.error('expected (',this.currentLexeme);
@@ -186,9 +187,11 @@ LexicalAnalyzer = new Class ({
         }
         this.currentLexeme = Scanner.next(this.currentLexeme.nextLexemePos);
         var symRead = new SymRead(0,0,'#66CC99',Scanner.popCodePart(''));
-        return new StmtRead(listRead,symRead);
+        pos.push(this.currentLexeme.currentLexemePos);
+        return new StmtRead(listRead,symRead,pos);
     },
-    parseAssignment: function (tree){
+    parseAssignment: function (tree) {
+        var pos = [this.currentLexeme.currentLexemePos];
         var varLeft = this.parseIdentifier(tree);
         this.currentLexeme = Scanner.next(this.currentLexeme.nextLexemePos);
         if (this.currentLexeme.name != ':=')
@@ -201,11 +204,13 @@ LexicalAnalyzer = new Class ({
         }
         if ((typeCompare == 'real') && (expression.type =='int')) expression.setType('real');
         var st2 = new SymAssignment(0,0,'#66CC99',Scanner.popCodePart(''));
-        var statment = new StmtAssignment(varLeft,expression,st2);
+        pos.push(this.currentLexeme.currentLexemePos);
+        var statment = new StmtAssignment(varLeft,expression,st2,pos);
         return statment;
     },
     parseIfElse : function (tree){
         Scanner.popCodePart('');
+        var pos = [this.currentLexeme.currentLexemePos];
         this.currentLexeme = Scanner.next(this.currentLexeme.nextLexemePos);
         var expression = this.parseExpr(tree,'then');
         if (this.currentLexeme.name!='then')
@@ -221,7 +226,7 @@ LexicalAnalyzer = new Class ({
             stElse = this.getStatment(tree);
         }
         else stElse = new Statment(new SymStatment(0,0,'red',''));
-        return new StmtIf(expression,stThen,stElse,symIf);
+        return new StmtIf(expression,stThen,stElse,symIf,pos);
     },
     parseExpr: function(treeVar,endLexeme) {
         return this.parseCompare(treeVar,endLexeme);

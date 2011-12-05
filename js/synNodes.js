@@ -6,6 +6,7 @@ SynExpr = new Class({
     type: '',
     errorType: '',
     symbolName: null,
+    selectPos: null,
     show: null,
     getValue: function() {
         return 0;
@@ -489,8 +490,9 @@ SynCallFunction = new Class({
 
 Statment = new Class ({
     Extends: SynExpr,
-    initialize: function(symStatment) {
-	    this.symbolName = new SymbolName(0,0,'');
+    initialize: function(symStatment,pos) {
+        this.selectPos = pos;
+        this.symbolName = new SymbolName(0,0,'');
         this.symStatment = symStatment;
     },
     parentStatment: null,
@@ -542,6 +544,12 @@ Statment = new Class ({
     changePosStatment: function(pos) {
         this.symStatment.posX -= pos[0];
         this.symStatment.posY -= pos[1];
+    },
+    visualization: function(ctx,tools) {
+        var y = this.selectPos[1];
+        var program = $('#programPanel');
+        while (program.val()[y-1] == ' ') y--;
+        program.get(0).setSelectionRange(this.selectPos[0],y);
     }
 });
 
@@ -564,8 +572,8 @@ SynEnd = new Class ({
 
 StmtAssignment = new Class ({
     Extends: Statment,
-    initialize: function(aLeft,aRight,symStatment) {
-        this.parent(symStatment);
+    initialize: function(aLeft,aRight,symStatment,pos) {
+        this.parent(symStatment,pos);
         this.aLeft = aLeft;
         this.aRight = aRight;
     },
@@ -599,6 +607,7 @@ StmtAssignment = new Class ({
         return find;
     },
     visualization: function(ctx,tools) {
+        this.parent(ctx,tools);
         var k, varBeg, varGo, var1, st;
         with(this) {
             k = app.insertRowVis();
@@ -629,8 +638,8 @@ StmtAssignment = new Class ({
 
 StmtIf = new Class({
     Extends: Statment,
-    initialize: function (exprIf, sThen, sElse, symStatment){
-        this.parent(symStatment);
+    initialize: function(exprIf,sThen,sElse,symStatment,pos) {
+        this.parent(symStatment,pos);
         this.exprIf = exprIf;
         this.stmtThen = sThen;
         this.stmtElse = sElse;
@@ -704,6 +713,7 @@ StmtIf = new Class({
         if (this.stmtElse != null) this.stmtElse.treeLocation();
     },
     visualization: function(ctx,tools) {
+        this.parent(ctx,tools);
         var k, varBeg, varGo, var1,st, varInput;
         with (this) {
             k = app.insertRowVis();
