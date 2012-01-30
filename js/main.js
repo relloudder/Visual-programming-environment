@@ -13,6 +13,7 @@ function runInterface() {
         app.speed = sp;
         var textProgram = $('#programPanel');
         var errorProgram = $('#errorPanel');
+        var outputProgram = $('#outputPanel');
         var lex = new LexicalAnalyzer(textProgram,errorProgram);
         lex.getProgram();
         app.tree.treeLocation(app.width,app.height);
@@ -119,6 +120,7 @@ function runInterface() {
 function initApplication() {
     var canvas, ctx;
     $('#errorPanel').attr('value','');
+    $('#outputPanel').attr('value','');
     canvas = document.getElementById("canvas");
     if (canvas.getContext) {
         ctx = canvas.getContext("2d");

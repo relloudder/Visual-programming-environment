@@ -133,7 +133,7 @@
     <div style="float:none; clear:both;"></div>
     <div id="wCanvas">
         <canvas id="canvas"></canvas>
-        <input type="text" id="outputPanel" value="">
+        <input type="text" id="outputPanel" value=""/>
     </div>
     <div id='input'><input type="text" id="editInput" value=""></div>
     <div id="code">
@@ -142,11 +142,7 @@ var
   a,b: real;
   c: integer;
 begin
-  c := trunc(a);
-  c := round(a);
-  a := sin(a);
-  b := cos(b);
-  a := tan(a);
+  write(c);
 end.
         </textarea>
         <input type="text" id="errorPanel" value="">

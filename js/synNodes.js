@@ -537,7 +537,7 @@ Statment = new Class ({
     findSynExpr: function(pos,tools) {
         var find = this.symStatment.findVar(pos,tools);
         if (find != -1) {
-            this.showVisual =!this.showVisual;
+            this.showVisual =! this.showVisual;
             this.symStatment.showVisual = this.showVisual;
             return this;
         }
@@ -883,6 +883,47 @@ StmtRead = new Class ({
                 k = app.insertRowVis();
                 varGo = new SymVarOpenClose(varBeg,false,true);
                 app.insertElementVis(k,varGo);
+            }
+            k = app.insertRowVis();
+            st = new SymChangeStatment(this,-0.4,1);
+            app.insertElementVis(k,st);
+            app.paint();
+        }
+    }
+});
+
+StmtWrite = new Class ({
+    Extends: Statment,
+    initialize: function(arrayWrite,symStatment) {
+        this.parent(symStatment);
+        this.arrayWrite = arrayWrite;
+    },
+    arrayWrite: null,
+    draw: function(ctx,tools) {
+        this.symStatment.draw(ctx,tools);
+    },
+    visualization: function(ctx,tools) {
+        var k, varBeg, varGo, st, text;
+        with (this) {
+            k = app.insertRowVis();
+            st = new SymChangeStatment(this,0.4,1);
+            app.insertElementVis(k,st);
+            for (var i = 0; i < arrayWrite.length; i++) {
+                k = app.insertRowVis();
+                varBeg = arrayWrite[i].getSymbol();
+                varBeg.jump = true;
+                var pos = [symStatment.posX,symStatment.posY];
+                varEnd = new SymVar(varBeg.getValue(),pos[0],pos[1],'#999',varBeg.rVar);
+                varEnd.setVisible(false);
+                varGo = new SymVarSeparation(varBeg,varEnd,1/90);
+                varGo.visualConnect = true;
+                app.insertElementVis(k,varGo);
+                k = app.insertRowVis();
+                varGo = new SymVarMove(varEnd.val,varEnd.posX,varEnd.posY,varEnd.colVar,varEnd.rVar,30*(i+1),app.height,1/120);
+                app.insertElementVis(k,varGo);
+                k = app.insertRowVis();
+                text = new SymVarWrite(varBeg.val);
+                app.insertElementVis(k,text);
             }
             k = app.insertRowVis();
             st = new SymChangeStatment(this,-0.4,1);

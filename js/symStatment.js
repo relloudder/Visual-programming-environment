@@ -230,3 +230,17 @@ SymRead = new Class ({
     }
 });
 
+SymWrite = new Class ({
+    Extends: SymStatment,
+    initialize: function(pX,pY,color,value) {
+        this.parent(pX,pY,color,value);
+        this.heightStatment = 50;
+        this.height = 70;
+    },
+    draw : function(ctx,tools) {
+        with (this) {
+            DrawForVis(ctx).oval(tools.getAdjustedX(posX),tools.getAdjustedY(posY),tools.getAdjustedR(r)*2.5,3,
+            tools.getAdjustedR(6),color,value,0,transp);
+        }
+    }
+});

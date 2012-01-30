@@ -40,12 +40,8 @@ SymVarMove = new Class ({
     draw: function(ctx,tools) {
         with(this) {
             var t = timeOneMove; //time of one move
-            if(createSymVar(ctx,tools) == 1) {
-                return 1;
-            }
-            if(numberOfMove <= 0) {
-	            return deleteSymVar(ctx,tools);
-            }
+            if(createSymVar(ctx,tools) == 1) return 1;
+            if(numberOfMove <= 0) return deleteSymVar(ctx,tools);
             DrawForVis(ctx).ball(tools.getAdjustedX(posX),tools.getAdjustedY(posY),tools.getAdjustedR(rVar),colVar);
             DrawForVis(ctx).text(val,tools.getAdjustedX(posX),tools.getAdjustedY(posY),tools.getAdjustedR(rVar),angle,'int');
             numberOfMove--;
@@ -55,11 +51,8 @@ SymVarMove = new Class ({
             posX += hx;
             posY += hy;
             var angleOfRotation = Math.sqrt(Math.pow(hx,2) + Math.pow(hy,2))/rVar;
-            if (hx > 0) {
-                angle += angleOfRotation;
-            } else {
-                angle -= angleOfRotation;
-            }
+            if (hx > 0) angle += angleOfRotation;
+            else angle -= angleOfRotation;
             return 1;
         }
     }
@@ -304,12 +297,12 @@ SymChangeCallFunction = new Class({
     deltaTransp: null,
     draw: function(ctx,tools) {
         with(this) {
-	          if (numberOfMove == 0) return 0;
-	          changeableObject.draw(ctx,tools);
-	          numberOfMove--;
-	          changeableObject.transp -= deltaTransp;
+            if (numberOfMove == 0) return 0;
+            changeableObject.draw(ctx,tools);
+            numberOfMove--;
+            changeableObject.transp -= deltaTransp;
             changeableObject.rVar += deltaRadius;
-	          return 1;
+            return 1;
         }
     }
 });
@@ -326,3 +319,14 @@ SymVarDown = new Class ({
     }
 });
 
+SymVarWrite = new Class ({
+    initialize: function(text) {
+        this.text = text;
+    },
+    text: null,
+    draw: function(ctx,tools) {
+        var output = $('#outputPanel');
+        output.val(output.val()+' '+this.text);
+        return 0;
+    }
+});
