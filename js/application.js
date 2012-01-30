@@ -65,7 +65,7 @@ VariableTree = new Class({
             for(var j = 0; j < length/2; j++) {
                 this.treeVar[k].setPosX(i*sizeX + sizeX/2);
                 this.treeVar[k].setPosY(j*sizeY + sizeY/2);
-                this.treeVar[k].inputRandom(10);
+                this.treeVar[k].inputRandom(0);
                 k++;
                 if (k == this.treeVar.length) {
                     return;

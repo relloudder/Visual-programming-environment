@@ -152,9 +152,9 @@ SymVarName = new Class({
     },
     inputRandom: function (maxValue) {
         if (this.type == 'char') {
-        	this.val = "'" + String.fromCharCode(48 + Math.floor(Math.random() * 80)) + "'";
+            this.val =  maxValue ==0 ? this.val = "' '" : "'" + String.fromCharCode(48 + Math.floor(Math.random() * 80)) + "'";
         } else if (this.type == 'boolean') {
-	    	this.val = Math.round(Math.random()) == 0 ? 'F' : 'T';
+            this.val =  maxValue ==0 ? 'F': Math.round(Math.random()) == 0 ? 'F' : 'T';
         } else {
             this.val = Math.floor(Math.random() * maxValue);
         }
