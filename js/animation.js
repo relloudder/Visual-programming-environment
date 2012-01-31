@@ -320,12 +320,18 @@ SymVarDown = new Class ({
 });
 
 SymVarWrite = new Class ({
-    initialize: function(text) {
+    initialize: function(text,aType) {
         this.text = text;
+        this.type = aType;
     },
     text: null,
+    type: null,
     draw: function(ctx,tools) {
         var output = $('#outputPanel');
+        if (this.type == 'char') this.text = this.text.substr(1,this.text.length-2);
+        if (this.type == 'boolean')
+            if (this.text == 'F') this.text = 'False';
+            else this.text = 'True';
         output.val(output.val()+' '+this.text);
         return 0;
     }

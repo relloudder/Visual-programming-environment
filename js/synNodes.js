@@ -922,7 +922,7 @@ StmtWrite = new Class ({
                 varGo = new SymVarMove(varEnd.val,varEnd.posX,varEnd.posY,varEnd.colVar,varEnd.rVar,30*(i+1),app.height,1/120);
                 app.insertElementVis(k,varGo);
                 k = app.insertRowVis();
-                text = new SymVarWrite(varBeg.val);
+                text = new SymVarWrite(varBeg.val,varBeg.type);
                 app.insertElementVis(k,text);
             }
             k = app.insertRowVis();
