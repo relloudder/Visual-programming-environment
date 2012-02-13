@@ -149,7 +149,8 @@ LexicalAnalyzer = new Class ({
             else if (this.currentLexeme.type == 'Keyword') {
                 if (this.currentLexeme.name == 'if') synBlock.push(this.parseIfElse(tree));
                 else if (this.currentLexeme.name == 'read') synBlock.push(this.parseRead(tree));
-                else if (this.currentLexeme.name == 'write') synBlock.push(this.parseWrite(tree));
+                else if (this.currentLexeme.name == 'writeln') synBlock.push(this.parseWrite(tree,true));
+                else if (this.currentLexeme.name == 'write') synBlock.push(this.parseWrite(tree,false));
                 else if (this.currentLexeme.name == 'begin') synBlock.push(this.getBlock(tree));
             } else this.exception.error('error statment ',this.currentLexeme);
             if (this.currentLexeme.name != ';')
@@ -167,7 +168,8 @@ LexicalAnalyzer = new Class ({
         if (this.currentLexeme.type == 'Keyword') {
             if (this.currentLexeme.name == 'if') return this.parseIfElse(tree);
             if (this.currentLexeme.name == 'read') return this.parseRead(tree);
-            if (this.currentLexeme.name == 'write') return this.parseWrite(tree);
+            if (this.currentLexeme.name == 'writeln') return this.parseWrite(tree,true);
+            if (this.currentLexeme.name == 'write') return this.parseWrite(tree,false);
             if (this.currentLexeme.name == 'begin' ) {
                 var block = this.getBlock(tree);
                 return block;
@@ -194,7 +196,7 @@ LexicalAnalyzer = new Class ({
         pos.push(this.currentLexeme.currentLexemePos);
         return new StmtRead(listRead,symRead,pos);
     },
-    parseWrite: function(tree) {
+    parseWrite: function(tree,ln) {
         var pos = [this.currentLexeme.currentLexemePos];
         this.currentLexeme = Scanner.next(this.currentLexeme.nextLexemePos);
         if (this.currentLexeme.name != '(')
@@ -212,7 +214,8 @@ LexicalAnalyzer = new Class ({
         this.currentLexeme = Scanner.next(this.currentLexeme.nextLexemePos);
         var symWrite = new SymWrite(0,0,'#66CC99',Scanner.popCodePart(''));
         pos.push(this.currentLexeme.currentLexemePos);
-        return new StmtWrite(listWrite,symWrite,pos);
+        if (ln == false) return new StmtWrite(listWrite,symWrite,false);
+        else return new StmtWrite(listWrite,symWrite,true);
     },
     parseAssignment: function (tree) {
         var pos = [this.currentLexeme.currentLexemePos];

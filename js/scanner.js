@@ -35,6 +35,7 @@ var Scanner = (function() {
         /^or/gi,
         /^not/gi,
         /^read/gi,
+        /^writeln/gi,
         /^write/gi
     ],
 

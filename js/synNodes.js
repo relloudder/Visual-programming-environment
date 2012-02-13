@@ -894,11 +894,13 @@ StmtRead = new Class ({
 
 StmtWrite = new Class ({
     Extends: Statment,
-    initialize: function(arrayWrite,symStatment) {
+    initialize: function(arrayWrite,symStatment,ln) {
         this.parent(symStatment);
         this.arrayWrite = arrayWrite;
+        this.ln = ln;
     },
     arrayWrite: null,
+    ln: null,
     draw: function(ctx,tools) {
         this.symStatment.draw(ctx,tools);
     },
@@ -922,7 +924,8 @@ StmtWrite = new Class ({
                 varGo = new SymVarMove(varEnd.val,varEnd.posX,varEnd.posY,varEnd.colVar,varEnd.rVar,30*(i+1),app.height,1/120);
                 app.insertElementVis(k,varGo);
                 k = app.insertRowVis();
-                text = new SymVarWrite(varBeg.val,varBeg.type);
+                if (ln == false) text = new SymVarWrite(varBeg.val,varBeg.type,false);
+                else text = new SymVarWrite(varBeg.val,varBeg.type,true);
                 app.insertElementVis(k,text);
             }
             k = app.insertRowVis();

@@ -12,6 +12,17 @@
    margin-top: 10px;
 }
 
+#outputPanel {
+    width: 100%;
+    height: 10%;
+    margin-top: 5px;
+    color: black;
+    border: 1px solid gray;
+    -moz-box-shadow: 1px 1px 8px gray;
+    -webkit-box-shadow: 1px 1px 8px gray;
+    box-shadow: 1px 1px 8px gray;
+}
+
 canvas {
     width: 100%;
     height: 90%;
@@ -42,20 +53,6 @@ textarea {
     background-color: #7cb7e3;
     margin-top: 5px;
     color: red;
-    border: 1px solid gray;
-    -moz-box-shadow: 1px 1px 8px gray;
-    -webkit-box-shadow: 1px 1px 8px gray;
-    box-shadow: 1px 1px 8px gray;
-}
-
-#outputPanel {
-    width: 100%;
-    height: 10%;
-    font-size: 12px;
-    font-family: monaco, sans-serif;
-    background-color: #7cb7e3;
-    margin-top: 5px;
-    color: black;
     border: 1px solid gray;
     -moz-box-shadow: 1px 1px 8px gray;
     -webkit-box-shadow: 1px 1px 8px gray;
