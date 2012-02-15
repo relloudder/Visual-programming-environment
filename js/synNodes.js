@@ -905,7 +905,7 @@ StmtWrite = new Class ({
         this.symStatment.draw(ctx,tools);
     },
     visualization: function(ctx,tools) {
-        var k, varBeg, varGo, st, text;
+        var k, varBeg, varGo, st, text, n = 0;
         with (this) {
             k = app.insertRowVis();
             st = new SymChangeStatment(this,0.4,1);
@@ -924,9 +924,10 @@ StmtWrite = new Class ({
                 varGo = new SymVarMove(varEnd.val,varEnd.posX,varEnd.posY,varEnd.colVar,varEnd.rVar,30*(i+1),app.height,1/120);
                 app.insertElementVis(k,varGo);
                 k = app.insertRowVis();
-                if (ln == false) text = new SymVarWrite(varBeg.val,varBeg.type,false);
-                else text = new SymVarWrite(varBeg.val,varBeg.type,true);
+                if (ln == false) text = new SymVarWrite(varBeg.val,varBeg.type,false,n);
+                else text = new SymVarWrite(varBeg.val,varBeg.type,true,n);
                 app.insertElementVis(k,text);
+                n++;
             }
             k = app.insertRowVis();
             st = new SymChangeStatment(this,-0.4,1);
