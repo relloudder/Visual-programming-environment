@@ -124,8 +124,8 @@ function initApplication() {
     canvas = document.getElementById("canvas");
     if (canvas.getContext) {
         ctx = canvas.getContext("2d");
-        canvas.width = $(window).width()*0.65;
-        canvas.height = $(window).height()*0.895;
+        canvas.width = $('#wCanvas').width();
+        canvas.height = $('#wCanvas').height();
         app = new Application(ctx,canvas.width,canvas.height);
         DrawForVis(app.ctx).back("#7cb7e3","#cccccc",canvas.width,canvas.height);
     }

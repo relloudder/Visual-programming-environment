@@ -198,6 +198,9 @@ var DrawForVis = function(ctx) {
             if (type == 'real' && stringVal.indexOf('.') < 0) {
                 stringVal += '.0';
             }
+			if((type == 'char') || (type == 'string')) {
+			   stringVal="'"+stringVal+"'";
+			}
             var lengthVal = stringVal.length;
             if (lengthVal > 5) {
                 stringVal = stringVal.substring(0,5);
@@ -250,10 +253,17 @@ var DrawForVis = function(ctx) {
             n = Math.ceil(rr/(1*r));
             this.union(xBeg,yBeg,r,n,col,-alpha);
         },
-
+        nullString: function(x0,y0,r,col){
+		    ctx.save();
+			ctx.beginPath();
+			ctx.fillStyle = col;
+		    ctx.fillRect(x0,y0,r/4,r*3/4);
+            ctx.fillRect(x0,y0+r*3/4,r*3/4,r/4);
+			ctx.closePath();
+			ctx.restore();
+		},
         hat: function(x0,y0,r,col,val) {
             ctx.save();
-            //исправить на градиент
             colorText(x0-r/2,y0-r/4,r*2,col);
             ctx.beginPath();
             ctx.translate(x0,y0+1.3*r+r);

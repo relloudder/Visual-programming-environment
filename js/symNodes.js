@@ -132,6 +132,7 @@ SymVarName = new Class({
           'boolean': new colorAndRadius('rgba(0,0,255,1)', 15),
           'char': new colorAndRadius('rgba(255,153,255,1)', 15),
           'array': new colorAndRadius('black', 20),
+		  'string': new colorAndRadius('black', 20),
           'binOp': new colorAndRadius('IndianRed', 30),
           'const': new colorAndRadius('gray', 25)
     }
@@ -152,7 +153,7 @@ SymVarName = new Class({
     },
     inputRandom: function (maxValue) {
         if (this.type == 'char') {
-            this.val =  maxValue ==0 ? this.val = "' '" : "'" + String.fromCharCode(48 + Math.floor(Math.random() * 80)) + "'";
+            this.val =  maxValue ==0 ? this.val = ' ': String.fromCharCode(48 + Math.floor(Math.random() * 80));
         } else if (this.type == 'boolean') {
             this.val =  maxValue ==0 ? 'F': Math.round(Math.random()) == 0 ? 'F' : 'T';
         } else {
@@ -270,9 +271,12 @@ SymArray = new Class({
 			    DrawForVis(ctx).connect(tools.getAdjustedX(itemsElement[i+1].posX),tools.getAdjustedY(itemsElement[i+1].posY),
 			        tools.getAdjustedX(itemsElement[i].posX),tools.getAdjustedY(itemsElement[i].posY),tools.getAdjustedR(rVar/5),'yellow');
 			}
-		    for (var i = sizeElement; i >= 0; i--) {
-		       if (itemsElement[i].visible) itemsElement[i].draw(ctx,tools);
-		    }
+		    if (sizeElement != -1) {
+			    for (var i = sizeElement; i >= 0; i--) {
+		            if (itemsElement[i].visible) itemsElement[i].draw(ctx,tools);
+		        }
+			}
+			else DrawForVis(ctx).nullString(tools.getAdjustedX(posX-rVar),tools.getAdjustedY(posY),tools.getAdjustedR(rVar),colVar);
 		    if (typeof(this.name) != 'number') {
                  DrawForVis(ctx).flag(tools.getAdjustedX(posX-rVar),tools.getAdjustedY(posY),tools.getAdjustedR(rVar/5),6,colVar,name,
                      tools.getAdjustedR(rVar),155*Math.PI/180);
@@ -315,6 +319,71 @@ SymArray = new Class({
         return this.itemsElement[num - this.firstIndex];
     }
 })
+
+SymString = new Class({
+    Extends: SymArray,
+    initialize: function (pX,pY,sArray,maxS,nameV) {
+	    var cloneItem = new SymVarName(0,0,0,'char','');
+	    cloneItem.owner = 'string';
+	    this.parent(pX,pY,sArray,1,cloneItem,nameV);
+	    this.maxSize = maxS;
+	    this.type='string';
+	},
+	maxSize:0,
+	clone: function() {
+        var element = new SymString(this.posX,this.posY,this.sizeElement,this.maxSize,this.name);
+        element.turn = this.turn;
+        element.owner = this.owner;
+        return element;
+    },
+	getValue: function() {
+	    var s = '';
+	    for(var i = 0; i <= this.sizeElement; i++) {
+		    s = s+this.itemsElement[i].getValue();
+        }
+		return s;
+	},
+	setValue: function (str){
+	    for (var i = 0; i <= this.sizeElement; i++) {
+		    this.itemsElement[i].setValue(str.charAt(i));
+		}
+	},
+	setNewString: function(str){
+	    this.turn = Math.PI/4;
+        this.itemsElement = new Array();
+		var cloneItem = new SymVarName(0,0,0,'char','');
+        cloneItem.owner = 'array';
+		this.sizeElement = str.length-1;
+		var k = 0;
+		for (var i = 0; i <= this.sizeElement; i++) {
+		    var x = this.posX + this.rVar*k;
+		    var y = this.posY - this.rVar*Math.sin(this.turn)*k/1.1;
+            var item  =  cloneItem.clone();
+            item.setPosX(x);
+            item.setPosY(y);
+            item.setName(i + 1);
+			item.setValue(str.charAt(i));
+		    this.itemsElement.push(item);
+			k = k+1.1*1/(i/4+1);
+		}
+	},
+	setPosX: function(pX) {
+        with(this) {
+            posX = pX;
+            for (var i = 0; i <= sizeElement; i++) {
+                itemsElement[i].setPosX(posX + itemsElement[i].rVar*i*1.1);
+            }
+        }
+    },
+    setPosY: function(pY) {
+        with(this) {
+            posY = pY;
+            for (var i = 0; i <= sizeElement; i++) {
+                itemsElement[i].setPosY(posY - i*itemsElement[i].rVar*Math.sin(this.turn));
+            }
+        }
+    }
+});
 
 SymRecord = new Class({
     Extends: SymVarName,

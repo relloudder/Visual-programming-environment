@@ -19,11 +19,12 @@ SynExpr = new Class({
         this.type = type;
     },
     compareType: function(expr1,expr2) {
-        if (expr1 == expr2) return expr1;
+	    if (expr1 == expr2) return expr1;
         if ((expr2 == 'real') && (expr1 == 'int')) return 'real';
         if ((expr2 == 'int') && (expr1 == 'real')) return 'real';
-        if ((expr1 == 'char') || (expr2 == 'char')) return -1;
-        if ((expr1 == 'booblean') || (expr2 == 'boolean')) return -1;
+		if ((expr2 == 'char') && (expr1 == 'string')) return 'string';
+        if ((expr2 == 'string') && (expr1 == 'char')) return 'string';
+        return -1;
     },
     getPosX: function() {
         return this.symbolName.posX;
@@ -68,11 +69,16 @@ SynExpr = new Class({
         } else {
             k = app.treeVis.length - 1;
             varBeg = this.getSymbol();
-            varBeg.jump = true;
-            varEnd = new SymVar(varBeg.getValue(),this.getPosX(),this.getPosY(),'#999',varBeg.rVar);
+			varBeg.jump = true;
+			if (( varBeg instanceof SymString) || (varBeg instanceof SynConstString)) {
+			    var size = varBeg.getValue().length;
+			    varEnd = new SymString(this.getPosX(),this.getPosY(),size-1,size-1,1);
+				varEnd.setValue(varBeg.getValue());
+			}
+			else varEnd = new SymVar(varBeg.getValue(),this.getPosX(),this.getPosY(),'#999',varBeg.rVar);
             varEnd.setVisible(false);
-            if ((this instanceof SynConstInt) || (this instanceof SynConstReal)) {
-            } else {
+            if ((this instanceof SynConstInt) || (this instanceof SynConstReal) || (this instanceof SynConstString)) {}
+            else {
                 varGo = new SymVarSeparation(varBeg,varEnd,1/90);
                 varGo.visualConnect = true;
                 app.insertElementVis(k,varGo);
@@ -81,7 +87,7 @@ SynExpr = new Class({
         }
     },
     draw: function(ctx,tools) {
-        this.symbolName.draw(ctx,tools);
+	    this.symbolName.draw(ctx,tools);
     },
     findSynExpr: function(pos,tools) {
         var find = this.symbolName.findVar(pos,tools);
@@ -94,16 +100,16 @@ SynExpr = new Class({
         this.symbolName.posX = pos[0]/tools.scale-tools.left;
         this.symbolName.posY = pos[1]/tools.scale-tools.top;
     },
-    operation: function(visible) {
+    operation: function(visible,type) {
         var result,varNew,cVarL,cVarR,varGo,varGoL,varGoR,k,r,part1,part2;
         with(this) {
             if (this instanceof SynBinOp) {
-                part2 = getRight().operation(visible);
-                part1 = getLeft().operation(visible);
-                if (Number(part1) != null) {
-                    part1 = part1*1;
+                part2 = getRight().operation(visible,type);
+                part1 = getLeft().operation(visible,type);
+				if ((type != 'char') && (type != 'string')){
+				    part1 = part1*1;
                     part2 = part2*1;
-                }
+				}
                 if (getBinOpType() == '+') result = part1 + part2;
                 if (getBinOpType() == '-') result = part1 - part2;
                 if (getBinOpType() == '*') result = part1 * part2;
@@ -124,7 +130,12 @@ SynExpr = new Class({
                     cVarR = app.tree.findSymbolByPos([this.right.getPosX(),this.right.getPosY()]);
                     varGoL = new SymVarDown(cVarL,symBinOp,0.001);
                     varGoR = new SymVarDown(cVarR,symBinOp,0.001);
-                    varNew = new SymVar(result,symBinOp.getPosX(),symBinOp.getPosY(),'#999',Math.max(cVarR.rVar,cVarL.rVar));
+					if ((type != 'char') && (type!='string')) {
+                        varNew = new SymVar(result,symBinOp.getPosX(),symBinOp.getPosY(),'#999',Math.max(cVarR.rVar,cVarL.rVar));
+                    } else {
+					    varNew = new SymString(symBinOp.getPosX(),symBinOp.getPosY(),result.length-1,result.length-1,1);
+						varNew.setValue(result);
+					}
                     r = varNew.rVar;
                     varNew.rVar = symBinOp.rVar;
                     varNew.setVisible(false);
@@ -142,7 +153,7 @@ SynExpr = new Class({
             } else if (this instanceof SynCallFunction) {
                 var part = [];
                 for (var i = 0; i < listFactParam.length; i++)
-                    part.push(listFactParam[i].operation(visible));
+                    part.push(listFactParam[i].operation(visible,'int'));
                 var name = (symCallFunction.name == 'trunc')?'floor':symCallFunction.name;
                 result = eval('Math.'+name+'('+part[0]+')');
                 if (visible) {
@@ -213,7 +224,7 @@ SynArray = new Class({
         return this.symbolArray.getType();
     },
     getSymbol: function() { //returns sym from treeVar
-        var result = this.right.operation(false); //create calculating index expression
+        var result = this.right.operation(false,'int'); //create calculating index expression
         if (Math.ceil(result) != result) {
             alert('Error type of index of array '+this.left.name); error;
         }
@@ -243,7 +254,6 @@ SynArray = new Class({
         return name;
     }
 });
-
 SynRecord = new Class({
     Extends: SynExpr,
     initialize: function(left,right) {
@@ -306,7 +316,7 @@ SynConstInt = new Class({
     constValue: null,
     symConst: null,
     getValue: function() {
-        return this.constValue;
+	    return this.constValue;
     },
     draw: function(ctx,tools) {
         if (this.symbolName.visible) {
@@ -320,14 +330,29 @@ SynConstInt = new Class({
         return this.symConst.posY;
     },
     setPosX: function(pX) {
-        this.symConst.posX = pX;
+        this.symConst.setPosX(pX);
     },
     setPosY : function(pY) {
-        this.symConst.posY = pY;
+        this.symConst.setPosY(pY);
     },
     getSymbol : function(){
          return this.symConst;
     }
+});
+
+SynConstString = new Class({
+    Extends: SynConstInt,
+    initialize: function(constValue) {
+	    this.constValue = constValue.substr(1,constValue.length-2);
+		if (this.constValue.length == 1) this.type = 'char';
+       	else this.type = 'string';
+        this.symbolName = new SymbolName(0,0,constValue);
+		this.symConst = new SymString(0,0,constValue.length-1,constValue.length-1,1);
+		this.symConst.setValue(constValue);
+    },
+	getValue: function() {
+	    return this.symConst.getValue();
+	}
 });
 
 SynConstReal = new Class({
@@ -350,9 +375,8 @@ SynBinOp = new Class({
         var typeLeft = left.getType();
         var typeRight = right.getType();
         this.setType(this.compareType(typeLeft,typeRight));
-        if (this.type == -1) {
-            this.errorType  = 'Incompatible type ' + typeLeft + ' ' + typeRight;
-        }
+		if (this.type == 'char') this.type = 'string';
+        if (this.type == -1) this.errorType  = 'Incompatible type ' + typeLeft + ' ' + typeRight;
     },
     constValue: null,
     errorType: '',
@@ -610,20 +634,20 @@ StmtAssignment = new Class ({
                 st = new SymChangeStatment(this,0.4,1);
                 app.insertElementVis(k,st);
                 varBeg = aLeft.getSymbol();
-                varBeg.jump = true;
+				varBeg.jump = true;
                 k = app.insertRowVis();
                 aRight.interpretation([symStatment.getPosX(),symStatment.getPosY()]);
-          	    aRight.operation(true);
-          	    aRight.symbolName.visible = false;
+                aRight.operation(true,varBeg.type);
+                aRight.symbolName.visible = false;
                 var1 = app.tree.treeVar[app.tree.treeVar.length-1];
-                k = app.insertRowVis();
+				k = app.insertRowVis();
                 varGo = new SymVarMerge(var1,varBeg,1/90);
                 app.insertElementVis(k,varGo);
                 k = app.insertRowVis();
                 st = new SymChangeStatment(this,-0.4,1);
                 app.insertElementVis(k,st);
             } else {
-                aLeft.setValue(aRight.operation(false));
+                aLeft.setValue(aRight.operation(false,aLeft.getSymbol.type));
                 symStatment.color = 'teal';
             }
         }
@@ -722,7 +746,7 @@ StmtIf = new Class({
                 app.insertElementVis(k,st);
                 k = app.insertRowVis();
                 exprIf.interpretation([0,0]);
-                exprIf.operation(true);
+                exprIf.operation(true,'int');
                 exprIf.symbolName.visible = false;
                 var1 = app.tree.treeVar[app.tree.treeVar.length-1];
                 k = app.insertRowVis();
@@ -737,7 +761,7 @@ StmtIf = new Class({
                 st = new SymChangeStatment(this,-0.2,1);
                 app.insertElementVis(k,st);
             } else {
-                result = exprIf.operation(false);
+                result = exprIf.operation(false,'int');
                 symStatment.color = 'teal';
                 symStatment.angleOfRotation = Math.PI/9;
                 var d = Math.abs(Math.cos(Math.PI/9))*symStatment.width/2.5;
