@@ -19,10 +19,10 @@ SynExpr = new Class({
         this.type = type;
     },
     compareType: function(expr1,expr2) {
-	    if (expr1 == expr2) return expr1;
+        if (expr1 == expr2) return expr1;
         if ((expr2 == 'real') && (expr1 == 'int')) return 'real';
         if ((expr2 == 'int') && (expr1 == 'real')) return 'real';
-		if ((expr2 == 'char') && (expr1 == 'string')) return 'string';
+        if ((expr2 == 'char') && (expr1 == 'string')) return 'string';
         if ((expr2 == 'string') && (expr1 == 'char')) return 'string';
         return -1;
     },
@@ -69,13 +69,13 @@ SynExpr = new Class({
         } else {
             k = app.treeVis.length - 1;
             varBeg = this.getSymbol();
-			varBeg.jump = true;
-			if (( varBeg instanceof SymString) || (varBeg instanceof SynConstString)) {
-			    var size = varBeg.getValue().length;
-			    varEnd = new SymString(this.getPosX(),this.getPosY(),size-1,size-1,1);
-				varEnd.setValue(varBeg.getValue());
-			}
-			else varEnd = new SymVar(varBeg.getValue(),this.getPosX(),this.getPosY(),'#999',varBeg.rVar);
+            varBeg.jump = true;
+            if (( varBeg instanceof SymString) || (varBeg instanceof SynConstString)) {
+                var size = varBeg.getValue().length;
+                varEnd = new SymString(this.getPosX(),this.getPosY(),size-1,size-1,1);
+                varEnd.setValue(varBeg.getValue());
+            }
+            else varEnd = new SymVar(varBeg.getValue(),this.getPosX(),this.getPosY(),'#999',varBeg.rVar);
             varEnd.setVisible(false);
             if ((this instanceof SynConstInt) || (this instanceof SynConstReal) || (this instanceof SynConstString)) {}
             else {
@@ -87,7 +87,7 @@ SynExpr = new Class({
         }
     },
     draw: function(ctx,tools) {
-	    this.symbolName.draw(ctx,tools);
+        this.symbolName.draw(ctx,tools);
     },
     findSynExpr: function(pos,tools) {
         var find = this.symbolName.findVar(pos,tools);
@@ -106,10 +106,10 @@ SynExpr = new Class({
             if (this instanceof SynBinOp) {
                 part2 = getRight().operation(visible,type);
                 part1 = getLeft().operation(visible,type);
-				if ((type != 'char') && (type != 'string')){
-				    part1 = part1*1;
+                if ((type != 'char') && (type != 'string')) {
+                    part1 = part1*1;
                     part2 = part2*1;
-				}
+                }
                 if (getBinOpType() == '+') result = part1 + part2;
                 if (getBinOpType() == '-') result = part1 - part2;
                 if (getBinOpType() == '*') result = part1 * part2;
@@ -130,12 +130,12 @@ SynExpr = new Class({
                     cVarR = app.tree.findSymbolByPos([this.right.getPosX(),this.right.getPosY()]);
                     varGoL = new SymVarDown(cVarL,symBinOp,0.001);
                     varGoR = new SymVarDown(cVarR,symBinOp,0.001);
-					if ((type != 'char') && (type!='string')) {
+                    if ((type != 'char') && (type!='string')) {
                         varNew = new SymVar(result,symBinOp.getPosX(),symBinOp.getPosY(),'#999',Math.max(cVarR.rVar,cVarL.rVar));
                     } else {
-					    varNew = new SymString(symBinOp.getPosX(),symBinOp.getPosY(),result.length-1,result.length-1,1);
-						varNew.setValue(result);
-					}
+                        varNew = new SymString(symBinOp.getPosX(),symBinOp.getPosY(),result.length-1,result.length-1,1);
+                        varNew.setValue(result);
+                    }
                     r = varNew.rVar;
                     varNew.rVar = symBinOp.rVar;
                     varNew.setVisible(false);
@@ -316,7 +316,7 @@ SynConstInt = new Class({
     constValue: null,
     symConst: null,
     getValue: function() {
-	    return this.constValue;
+        return this.constValue;
     },
     draw: function(ctx,tools) {
         if (this.symbolName.visible) {
@@ -343,16 +343,16 @@ SynConstInt = new Class({
 SynConstString = new Class({
     Extends: SynConstInt,
     initialize: function(constValue) {
-	    this.constValue = constValue.substr(1,constValue.length-2);
-		if (this.constValue.length == 1) this.type = 'char';
-       	else this.type = 'string';
+        this.constValue = constValue.substr(1,constValue.length-2);
+        if (this.constValue.length == 1) this.type = 'char';
+        else this.type = 'string';
         this.symbolName = new SymbolName(0,0,constValue);
-		this.symConst = new SymString(0,0,constValue.length-1,constValue.length-1,1);
-		this.symConst.setValue(constValue);
+        this.symConst = new SymString(0,0,constValue.length-1,constValue.length-1,1);
+        this.symConst.setValue(constValue);
     },
-	getValue: function() {
-	    return this.symConst.getValue();
-	}
+    getValue: function() {
+        return this.symConst.getValue();
+    }
 });
 
 SynConstReal = new Class({

@@ -37,7 +37,7 @@ var Scanner = (function() {
         /^read/gi,
         /^writeln/gi,
         /^write/gi,
-		/^string/gi,
+        /^string/gi,
     ],
 
     separators = [
@@ -69,9 +69,9 @@ var Scanner = (function() {
     identifiers = [
         /^[a-z]+[a-z0-9_]*/gi
     ],
-	stringConst = [
-		/^\'[^\'\n]*\'/g
-	],
+    stringConst = [
+        /^\'[^\'\n]*\'/g
+    ],
 
     position = 0,
     code = null,
@@ -115,7 +115,7 @@ var Scanner = (function() {
             new LexemeType('NumberReal', numbersReal),
             new LexemeType('NumberInt', numbersInt),
             new LexemeType('Identifier', identifiers),
-			new LexemeType('StringConst', stringConst)
+            new LexemeType('StringConst', stringConst)
         ];
 
         var lexemeType = null,

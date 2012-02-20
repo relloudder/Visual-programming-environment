@@ -198,9 +198,9 @@ var DrawForVis = function(ctx) {
             if (type == 'real' && stringVal.indexOf('.') < 0) {
                 stringVal += '.0';
             }
-			if((type == 'char') || (type == 'string')) {
-			   stringVal="'"+stringVal+"'";
-			}
+            if((type == 'char') || (type == 'string')) {
+                stringVal="'"+stringVal+"'";
+            }
             var lengthVal = stringVal.length;
             if (lengthVal > 5) {
                 stringVal = stringVal.substring(0,5);
@@ -254,14 +254,14 @@ var DrawForVis = function(ctx) {
             this.union(xBeg,yBeg,r,n,col,-alpha);
         },
         nullString: function(x0,y0,r,col){
-		    ctx.save();
-			ctx.beginPath();
-			ctx.fillStyle = col;
-		    ctx.fillRect(x0,y0,r/4,r*3/4);
+            ctx.save();
+            ctx.beginPath();
+            ctx.fillStyle = col;
+            ctx.fillRect(x0,y0,r/4,r*3/4);
             ctx.fillRect(x0,y0+r*3/4,r*3/4,r/4);
-			ctx.closePath();
-			ctx.restore();
-		},
+            ctx.closePath();
+            ctx.restore();
+        },
         hat: function(x0,y0,r,col,val) {
             ctx.save();
             colorText(x0-r/2,y0-r/4,r*2,col);

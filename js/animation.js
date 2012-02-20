@@ -7,7 +7,7 @@ SymVarModifiable = new Class ({
     },
     numberOfMove: null,
     angle: 0,
-	type: 'int'
+    type: 'int'
 });
 
 SymVarMove = new Class ({
@@ -75,28 +75,28 @@ SymVarInteraction = new Class ({
     numberOfMerSep: 0,
     directInteractive: 0, // derection for separation or marge
     visualConnect: false,
-	draw: function(ctx,tools) {
+    draw: function(ctx,tools) {
         with(this) {
-		    if (this.visualConnect)  {
+            if (this.visualConnect)  {
                 DrawForVis(ctx).lineVar(tools.getAdjustedX(this.from.posX),tools.getAdjustedY(this.from.posY),
                 tools.getAdjustedX(this.to.posX),tools.getAdjustedY(this.to.posY),tools.getAdjustedR(4),'rgba(255,106,106,0.7)');
             }
             var t = timeOneMove; //time of one move
             if (createSymVar(ctx,tools) == 1) return 1;
             if (numberOfMove <= 0) return deleteSymVar(ctx,tools);
-			var k;
-			if (!(this.from instanceof SymString)) {
-			    DrawForVis(ctx).ball(tools.getAdjustedX(posX),tools.getAdjustedY(posY),tools.getAdjustedR(rVar),colVar);
+            var k;
+            if (!(this.from instanceof SymString)) {
+                DrawForVis(ctx).ball(tools.getAdjustedX(posX),tools.getAdjustedY(posY),tools.getAdjustedR(rVar),colVar);
                 DrawForVis(ctx).text(val,tools.getAdjustedX(posX),tools.getAdjustedY(posY),tools.getAdjustedR(rVar),angle,type);
-			} else {
-				for (var i = this.from.sizeElement; i >= 0 ; i--) {
-					if (k < 0.5) k = Math.random()*5;
-					else k =- Math.random()*5;
-					DrawForVis(ctx).ball(tools.getAdjustedX(posX+k),tools.getAdjustedY(posY+k),tools.getAdjustedR(rVar),colVar);
-					DrawForVis(ctx).text(val.charAt(i),tools.getAdjustedX(posX),tools.getAdjustedY(posY),tools.getAdjustedR(rVar),angle,'char');
-				}
-			}
-			numberOfMove--;
+            } else {
+                for (var i = this.from.sizeElement; i >= 0 ; i--) {
+                    if (k < 0.5) k = Math.random()*5;
+                    else k =- Math.random()*5;
+                    DrawForVis(ctx).ball(tools.getAdjustedX(posX+k),tools.getAdjustedY(posY+k),tools.getAdjustedR(rVar),colVar);
+                    DrawForVis(ctx).text(val.charAt(i),tools.getAdjustedX(posX),tools.getAdjustedY(posY),tools.getAdjustedR(rVar),angle,'char');
+                }
+            }
+            numberOfMove--;
             vY = vY - aY*t;
             var hx = vX*t;
             var hy = -(vY*t + aY*Math.pow(t,2)/2);
@@ -105,7 +105,7 @@ SymVarInteraction = new Class ({
             var angleOfRotation = Math.sqrt(Math.pow(hx,2) + Math.pow(hy,2))/rVar;
             if (hx > 0) angle += angleOfRotation;
             else angle -= angleOfRotation;
-			return 1;
+            return 1;
         }
     }
 });
@@ -180,29 +180,29 @@ SymVarMerge = new Class ({
             this.directInteractive += Math.PI;
         }
 		this.type = to.type;
-	},
+    },
     createSymVar: function (ctx,tools) {
         this.from.setVisible(false);
-		this.val = this.from.getValue();
-		this.rVar = this.to.rVar;
-		return 0;
+        this.val = this.from.getValue();
+        this.rVar = this.to.rVar;
+        return 0;
     },
     deleteSymVar: function (ctx,tools) {
         with(this) {
             if (numberOfMerSep == maxNumberOfMerSep) {
-			    if (this.to instanceof SymString)
-				   if (this.to.sizeElement == 0) numberOfMerSep = 0;
-			    angle = 0;
+                if (this.to instanceof SymString)
+                    if (this.to.sizeElement == 0) numberOfMerSep = 0;
+                angle = 0;
             }
             if (numberOfMerSep == 0) {
                 to.setValue(from.getValue());
-				if (this.to instanceof SymString) this.to.setNewString(this.val);
+                if (this.to instanceof SymString) this.to.setNewString(this.val);
                 to.jump = false;
                 return 0;
             }
             posX += (to.posX - posX)/numberOfMerSep;
             posY += (to.posY - posY)/numberOfMerSep;
-			DrawForVis(ctx).divBall(tools.getAdjustedX(to.posX),tools.getAdjustedY(to.posY), tools.getAdjustedR(rVar),to.colVar,angle,directInteractive,0);
+            DrawForVis(ctx).divBall(tools.getAdjustedX(to.posX),tools.getAdjustedY(to.posY), tools.getAdjustedR(rVar),to.colVar,angle,directInteractive,0);
             DrawForVis(ctx).divBall(tools.getAdjustedX(posX),tools.getAdjustedY(posY), tools.getAdjustedR(rVar),to.colVar,angle,directInteractive,Math.PI);
             numberOfMerSep--;
             angle -= Math.PI/(2*maxNumberOfMerSep);
@@ -226,7 +226,7 @@ SymVarBiggerSmaller = new Class ({
     initialize: function(change,changeEnd) { // changeEnd - finite size
         this.parent(change);
         this.deltaRadius = (changeEnd - change.rVar)/this.numberOfMove;
-		this.val = change.getValue();
+        this.val = change.getValue();
     },
     deltaRadius: null,
     draw: function(ctx,tools) {
@@ -342,7 +342,7 @@ SymVarDown = new Class ({
     Extends: SymVarInteraction,
     initialize: function(from,to,g) {
         this.parent(from,to,g);
-		this.val = from.getValue();
+        this.val = from.getValue();
     },
     createSymVar: function(ctx,tools) {
         this.to.setVisible(false);
