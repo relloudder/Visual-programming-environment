@@ -205,21 +205,17 @@ Application = new Class({
         if (this.visualStatments == -1) return null;
         var pred = null;
         if (this.visualStatments.currentStatment != -1)
-            pred = this.visualStatments.treeStatment[this.visualStatments.currentStatment];
-        if (pred instanceof StmtIf) {
+        pred = this.visualStatments.treeStatment[this.visualStatments.currentStatment];
+        if (pred instanceof StmtIf)
+            if ((pred.result == false) && (pred.stmtElse.symStatment.value == '1null')) {}
+        else {
             var next;
             if ((pred.result) && (pred.stmtThen instanceof StmtBlock)) next = pred.stmtThen;
             else if ((pred.result == false) && (pred.stmtElse instanceof StmtBlock)) next = pred.stmtElse;
             else {
                 next = new StmtBlock();
                 if (pred.result) next.push(pred.stmtThen);
-                else if (pred.stmtElse != null) next.push(pred.stmtElse);
-                else {
-                    while (this.visualStatments.currentStatment == (this.visualStatments.treeStatment.length-1))
-                        this.visualStatments = this.visualStatments.parent;
-                    this.visualStatments.currentStatment++;
-                    return this.visualStatments.treeStatment[this.visualStatments.currentStatment];
-                }
+                else next.push(pred.stmtElse);
             }
             next.parent = this.visualStatments;
             next.currentStatment = 0;

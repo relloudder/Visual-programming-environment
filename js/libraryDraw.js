@@ -396,7 +396,7 @@ var DrawForVis = function(ctx) {
             ctx.restore();
         },
 
-        conditionIf: function(x,y,r,k,h,col,val,alpha,tr,width,height,vis) {
+        conditionIf: function(x,y,r,k,h,col,val,alpha,tr,width,height,vis,picWhile) {
             ctx.save();
             ctx.translate(x, y);
             ctx.rotate(alpha);
@@ -442,20 +442,47 @@ var DrawForVis = function(ctx) {
             ctx.save();
             ctx.beginPath();
             ctx.fillStyle = 'rgba(250,200,200,'+tr+')';
+            var k = width;
+            if (picWhile) k = 0;
             ctx.moveTo(x-width,y+height);
             ctx.lineTo(x-width+h,y+height-h);
-            ctx.lineTo(x+width+h,y+height-h);
-            ctx.lineTo(x+width,y+height);
+            ctx.lineTo(x+k+h,y+height-h);
+            ctx.lineTo(x+k,y+height);
             ctx.fill();
             ctx.closePath();
             ctx.fillStyle = col;
-            ctx.fillRect(x-width,y+height,width*2,h/3);
+            if (picWhile) ctx.fillRect(x-width,y+height,width,h/3);
+            else ctx.fillRect(x-width,y+height,width*2,h/3);
             ctx.beginPath();
             ctx.arc(x,y+r*1.5,r/2.5,Math.PI*2,0);
             ctx.closePath();
             if (vis) colorBall(x,y+r*1.5,r/4,'rgba(0,0,255,'+tr+')');
             else colorBall(x,y+r*1.5,r/4,'rgba(255,102,00,'+tr+')');
             ctx.fill();
+            ctx.restore();
+        },
+
+        conditionWhile: function(x,y,r,k,h,col,val,alpha,tr,width,height,vis) {
+            this.connect(x,y,x,y+height-3*h,h,'#555555');
+            this.conditionIf(x,y,r,k,h,col,val,alpha,tr,width,height,vis,true);
+            this.connect(x+width+h,y+height-1.5*h,x,y+height-3*h,h,'#555555');
+            ctx.save();
+            ctx.translate(x+6,y+height-3*h);
+            ctx.rotate(-Math.PI/4*3);
+            ctx.beginPath();
+            ctx.arc(0,0,h*4/3,Math.PI,0);
+            colorBall(0,0,h,'#555555');
+            ctx.fill();
+            ctx.closePath();
+            ctx.restore();
+            ctx.save();
+            ctx.translate(x+width,y+height-1.5*h);
+            ctx.rotate(Math.PI/4*3);
+            ctx.beginPath();
+            ctx.arc(0,0,h*4/3,Math.PI,0);
+            colorBall(0,0,h,'#555555');
+            ctx.fill();
+            ctx.closePath();
             ctx.restore();
         },
 
@@ -506,13 +533,19 @@ var DrawForVis = function(ctx) {
         textStatment: function(val,x0,y0,r,maxSize) {
             ctx.fillStyle = '#000';
             var newText = val;
-            if (val.length > maxSize)
-                newText = val.substr(0,maxSize-2) + '~';
-            ctx.font = r+'px Arial';
-            ctx.fillText(newText,x0,y0);
+            var doubleS=[':=:=','<=<=','>=>=','<><>','++','[[','==','<<','>>'];
+            for (i = 0; i < doubleS.length; i++) {
+                var k = doubleS[i].length/2;
+                if (newText.indexOf(doubleS[i]) >= 0)
+                    newText = newText.substr(0,newText.indexOf(doubleS[i]))+newText.substr(newText.indexOf(doubleS[i])+k,newText.length-k);
+            }
+            if (newText.length > maxSize)
+                newText = newText.substr(0,maxSize-2) + '~';
+                ctx.font = r+'px Arial';
+                ctx.fillText(newText,x0,y0);
         },
 
-        oval: function(x0,y0,r,k,h,col,val,alpha,tr) {
+        oval: function(x0,y0,r,k,h,col,val,alpha,tr,vis) {
             ctx.save();
             ctx.translate(x0,y0);
             ctx.rotate(alpha);
@@ -533,6 +566,12 @@ var DrawForVis = function(ctx) {
             ctx.closePath();
             this.roundedRect(-r+h*3,-r/2.5,1.5*r,r/3,4,'rgba(255,255,255,'+tr+')','rgba(200,200,200,'+tr+')',3);
             this.textStatment(val,-r+h*3.5,-r/5.5,r/6,19);
+            ctx.beginPath();
+            ctx.arc(0,0,r/7.5,Math.PI,0);
+            ctx.closePath();
+            if (vis) colorBall(r/15,0,r/10,'rgba(0,0,255,'+tr+')');
+            else colorBall(r/15,0,r/10,'rgba(255,102,00,'+tr+')')
+            ctx.fill();
             ctx.restore();
         }
     };

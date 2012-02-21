@@ -38,7 +38,13 @@ SymStatment = new Class ({
     getWidth: function(){
         return this.width;
     },
-    draw: function(ctx,tools) {}
+    draw: function(ctx,tools) {},
+    findVar: function(pos,tools) {
+        var x = pos[0]/tools.scale - tools.left;
+        var y = pos[1]/tools.scale - tools.top;
+        if (((this.posX-3*this.r) < x) && ((this.posX-this.r+90) > x) && ((this.posY-20) < y) && ((this.posY+20) > y)) return this;
+        return -1;
+    }
 });
 
 SymBegin = new Class ({
@@ -118,9 +124,9 @@ SymIf = new Class ({
         this.height = 70;
     },
     draw : function(ctx, tools){
-        DrawForVis(ctx).conditionIf(tools.getAdjustedX(this.posX),tools.getAdjustedY(this.posY),
+        DrawForVis(ctx).conditionWhile(tools.getAdjustedX(this.posX),tools.getAdjustedY(this.posY),
             tools.getAdjustedR(this.r/4*3),2,tools.getAdjustedR(6),this.color,this.value,this.angleOfRotation,
-            this.transp,tools.getAdjustedR(this.width),tools.getAdjustedR(this.heightStatment),this.showVisual);
+            this.transp,tools.getAdjustedR(this.width),tools.getAdjustedR(this.heightStatment),this.showVisual, false);
     },
     findVar: function(pos,tools) {
         var x = pos[0]/tools.scale - tools.left;
@@ -225,7 +231,7 @@ SymRead = new Class ({
     draw : function(ctx,tools) {
         with (this) {
             DrawForVis(ctx).oval(tools.getAdjustedX(posX),tools.getAdjustedY(posY),tools.getAdjustedR(r)*2.5,3,
-            tools.getAdjustedR(6),color,value,0,transp);
+                tools.getAdjustedR(6),color,value,0,transp,true);
         }
     }
 });
@@ -240,7 +246,7 @@ SymWrite = new Class ({
     draw : function(ctx,tools) {
         with (this) {
             DrawForVis(ctx).oval(tools.getAdjustedX(posX),tools.getAdjustedY(posY),tools.getAdjustedR(r)*2.5,3,
-            tools.getAdjustedR(6),color,value,0,transp);
+                tools.getAdjustedR(6),color,value,0,transp,this.showVisual);
         }
     }
 });

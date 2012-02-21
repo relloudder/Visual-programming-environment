@@ -201,13 +201,14 @@ SymVarName = new Class({
         var reInt = /^\-?\d+/g;
         var reReal = /^\-?\d+[.]\d+/g;
         var reChar = /^\'.\'/;
-        if ((this.type=='int') && (reInt.exec(value) != value))
+        var reString = /^[^\'\n]*/g;
+        if ((this.type == 'int') && (reInt.exec(value) != value))
             alert('invalid input, must be integer number');
         else if ((this.type == 'real') && (reReal.exec(value) != value) && (reInt.exec(value) != value))
             alert('invalid input, must be real number');
-        else if ((this.type == 'char') && (reChar.exec(value) != value))
+        else if ((this.type == 'char') && (reString.exec(value) != value))
             alert('invalid input, must be char number');
-        else this.setValue(value);
+        else return value;
     }
 })
 

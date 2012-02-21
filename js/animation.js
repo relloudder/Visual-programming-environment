@@ -1,3 +1,17 @@
+SymDinamicVisible = new Class({
+    Extends: SymVar,
+    initialize: function(symV, val) {
+        this.symVisible = symV;
+        this.showVisible = val;
+    },
+    symVisible : null,
+    showVisible : null,
+    draw: function(ctx,tools) {
+        this.symVisible.show = this.showVisible;
+        return 0;
+    }
+});
+
 SymVarModifiable = new Class ({
     Extends: SymVar,
     initialize: function(val,pX,pY,cVar,rVar,numberOfMove) {
@@ -264,12 +278,17 @@ SymVarOpenClose = new Class ({
             changeableObject.setVisible(false);
             DrawForVis(ctx).alphaBall(tools.getAdjustedX(posX),tools.getAdjustedY(posY),tools.getAdjustedR(rVar),colVar,angle);
             if (numberOfMove == 0) {
-                changeableObject.input = true;
+                var newSym = changeableObject;
+                if (changeableObject instanceof SymString) newSym = changeableObject.itemsElement[0];
+                newSym.input = true;
                 if (angleOfRotation < 0)
-                if (changeableObject.input) {
-                    changeableObject.input = false;
-                    changeableObject.setValueWithIf($('#editInput').val())
-                }
+                    if (newSym.input) {
+                        newSym.input = false;
+                        var vv = newSym.setValueWithIf($('#editInput').val());
+                        if (changeableObject instanceof  SymString) changeableObject.setNewString(vv);
+                        else if(changeableObject.type =='char') changeableObject.setValue(vv.charAt(0));
+                        else changeableObject.setValue(vv);
+                    }
                 changeableObject.setVisible(visible);
                 return 0;
             }
@@ -364,7 +383,6 @@ SymVarWrite = new Class ({
     n: null,
     draw: function(ctx,tools) {
         var output = $('#outputPanel');
-        if (this.type == 'char') this.text = this.text.substr(1,this.text.length-2);
         if (this.type == 'boolean')
             if (this.text == 'F') this.text = 'False';
             else this.text = 'True';

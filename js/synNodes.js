@@ -106,7 +106,7 @@ SynExpr = new Class({
             if (this instanceof SynBinOp) {
                 part2 = getRight().operation(visible,type);
                 part1 = getLeft().operation(visible,type);
-                if ((type != 'char') && (type != 'string')) {
+                if ((type != 'char') && (type != 'string') && (type != 'boolean')) {
                     part1 = part1*1;
                     part2 = part2*1;
                 }
@@ -375,7 +375,7 @@ SynBinOp = new Class({
         var typeLeft = left.getType();
         var typeRight = right.getType();
         this.setType(this.compareType(typeLeft,typeRight));
-		if (this.type == 'char') this.type = 'string';
+        if (this.type == 'char') this.type = 'string';
         if (this.type == -1) this.errorType  = 'Incompatible type ' + typeLeft + ' ' + typeRight;
     },
     constValue: null,
@@ -634,20 +634,22 @@ StmtAssignment = new Class ({
                 st = new SymChangeStatment(this,0.4,1);
                 app.insertElementVis(k,st);
                 varBeg = aLeft.getSymbol();
-				varBeg.jump = true;
+                varBeg.jump = true;
                 k = app.insertRowVis();
                 aRight.interpretation([symStatment.getPosX(),symStatment.getPosY()]);
                 aRight.operation(true,varBeg.type);
                 aRight.symbolName.visible = false;
                 var1 = app.tree.treeVar[app.tree.treeVar.length-1];
-				k = app.insertRowVis();
+                k = app.insertRowVis();
                 varGo = new SymVarMerge(var1,varBeg,1/90);
                 app.insertElementVis(k,varGo);
                 k = app.insertRowVis();
                 st = new SymChangeStatment(this,-0.4,1);
                 app.insertElementVis(k,st);
             } else {
-                aLeft.setValue(aRight.operation(false,aLeft.getSymbol.type));
+                var setVal = aRight.operation(false,aLeft.type);
+                if (aLeft.type == 'string') aLeft.getSymbol().setNewString(setVal);
+                else aLeft.setValue(setVal);
                 symStatment.color = 'teal';
             }
         }
@@ -901,7 +903,14 @@ StmtRead = new Class ({
             for (var i = 0; i < arrayRead.length; i++) {
                 k = app.insertRowVis();
                 varBeg = arrayRead[i].getSymbol();
-                varBeg.posStatment=[symStatment.posX,symStatment.posY];
+                var pos = [symStatment.posX,symStatment.posY];
+                if (varBeg instanceof SymString) {
+                    arrayRead[i].symStatment = arrayRead[i].getSymbol().setNewString(' ');
+                    arrayRead[i].getSymbol().itemsElement[0].posStatment = pos;
+                    varBeg = arrayRead[i].getSymbol();
+                    varBeg.setVisible(false);
+                }
+                varBeg.posStatment = pos;
                 varGo = new SymVarOpenClose(varBeg,true,true);
                 app.insertElementVis(k,varGo);
                 k = app.insertRowVis();
@@ -918,44 +927,73 @@ StmtRead = new Class ({
 
 StmtWrite = new Class ({
     Extends: Statment,
-    initialize: function(arrayWrite,symStatment,ln) {
-        this.parent(symStatment);
+    initialize: function(arrayWrite,symStatment,ln,pos) {
+        this.parent(symStatment,pos);
         this.arrayWrite = arrayWrite;
         this.ln = ln;
     },
     arrayWrite: null,
     ln: null,
+    putPosition: function(pos) {
+        this.parent(pos);
+        for (var i = 0; i < this.arrayWrite.length; i++) {
+            this.arrayWrite[i].putPosition([pos[0],pos[1]-20]);
+        }
+    },
     draw: function(ctx,tools) {
         this.symStatment.draw(ctx,tools);
+        for (var i = 0; i < this.arrayWrite.length; i++) {
+            if (this.arrayWrite[i].show) this.arrayWrite[i].draw(ctx,tools);
+        }
+    },
+    changePosStatment: function(pos,tools) {
+        this.parent(pos);
+        for (var i = 0; i < this.arrayWrite.length; i++) {
+            this.arrayWrite[i].putPosition([this.symStatment.posX,this.symStatment.posY-20]);
+        }
     },
     visualization: function(ctx,tools) {
-        var k, varBeg, varGo, st, text, n = 0;
+        var k, varEnd, var1, varGo, st, text, n = 0;
+        this.parent(ctx,tools);
         with (this) {
-            k = app.insertRowVis();
-            st = new SymChangeStatment(this,0.4,1);
-            app.insertElementVis(k,st);
-            for (var i = 0; i < arrayWrite.length; i++) {
-                k = app.insertRowVis();
-                varBeg = arrayWrite[i].getSymbol();
-                varBeg.jump = true;
-                var pos = [symStatment.posX,symStatment.posY];
-                varEnd = new SymVar(varBeg.getValue(),pos[0],pos[1],'#999',varBeg.rVar);
+            if (showVisual) {
+                varEnd = new SymVarName (0,30,app.height+30,'int','');
                 varEnd.setVisible(false);
-                varGo = new SymVarSeparation(varBeg,varEnd,1/90);
-                varGo.visualConnect = true;
-                app.insertElementVis(k,varGo);
                 k = app.insertRowVis();
-                varGo = new SymVarMove(varEnd.val,varEnd.posX,varEnd.posY,varEnd.colVar,varEnd.rVar,30*(i+1),app.height,1/120);
-                app.insertElementVis(k,varGo);
+                st = new SymChangeStatment(this,0.4,1);
+                app.insertElementVis(k,st);
+                for (var i = 0; i < arrayWrite.length; i++) {
+                    k = app.insertRowVis();
+                    varEnd.setPosX(30*(i+1));
+                    app.insertElementVis(k, new SymDinamicVisible(this.arrayWrite[i], true));
+                    arrayWrite[i].interpretation([symStatment.getPosX(),symStatment.getPosY()]);
+                    arrayWrite[i].operation(true,arrayWrite[i].getType());
+                    arrayWrite[i].symbolName.visible = false;
+                    var var1 = app.tree.treeVar[app.tree.treeVar.length-1];
+                    k = app.insertRowVis();
+                    varGo = new SymVarMerge(var1,varEnd,1/120);
+                    varGo.numberOfMerSep = 0;
+                    app.insertElementVis(k,varGo);
+                    k = app.insertRowVis();
+                    if (ln == false) text = new SymVarWrite(var1.getValue(),var1.type,false,n);
+                    else text = new SymVarWrite(var1.getValue(),var1.type,true,n);
+                    app.insertElementVis(k,text);
+                    n++;
+                }
                 k = app.insertRowVis();
-                if (ln == false) text = new SymVarWrite(varBeg.val,varBeg.type,false,n);
-                else text = new SymVarWrite(varBeg.val,varBeg.type,true,n);
+                st = new SymChangeStatment(this,-0.4,1);
+                app.insertElementVis(k,st);
+            } else {
+                var str = '';
+                for (var i = 0; i < arrayWrite.length; i++) {
+                    str = str + arrayWrite[i].operation(false,arrayWrite[i].getType())
+                }
+                if (ln == false) text = new SymVarWrite(str,'string',false,n);
+                else text = new SymVarWrite(str,'string',true,n);
+                symStatment.color = 'teal';
+                k = app.insertRowVis();
                 app.insertElementVis(k,text);
-                n++;
             }
-            k = app.insertRowVis();
-            st = new SymChangeStatment(this,-0.4,1);
-            app.insertElementVis(k,st);
             app.paint();
         }
     }

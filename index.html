@@ -140,18 +140,18 @@
     <div id="code">
         <textarea cols=30 rows=40 id="programPanel">
 var
-  s,s1:string;
-  a,b: real;
-  c: integer;
-  ch: array[1..2] of char;
+    s,s1,s2:string;
+    a,b: real;
+    c: integer;
+    ch: array[1..2] of char;
 begin
-  read(b);
-  s:='JavaScript';
-  s1:=s[4];
-  ch[2]:='f';
-  b:=b+1;
-  writeln(b);
+    read(s1);
+    read(s2);
+    s:='Java';
+    b:=b+1;
+    writeln(b+1+1,ch[1],s,'script',s1,s2);
 end.
+
         </textarea>
         <input type="text" id="errorPanel" value="">
     </div>

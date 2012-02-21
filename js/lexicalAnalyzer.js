@@ -222,18 +222,15 @@ LexicalAnalyzer = new Class ({
         var listWrite = [];
         while (this.currentLexeme.name != ')') {
             this.currentLexeme = Scanner.next(this.currentLexeme.nextLexemePos);
-            if (this.currentLexeme.type != 'Identifier')
-                this.exception.error('expected identifier ',this.currentLexeme);
-            listWrite.push(this.parseIdentifier(tree));
-            this.currentLexeme = Scanner.next(this.currentLexeme.nextLexemePos);
+            listWrite.push(this.parseExpr(tree,',)'));
             if ((this.currentLexeme.name != ',') && ((this.currentLexeme.name != ')')))
-                this.exception.error('expected , or ) ',this.currentLexeme);
+            this.exception.error('expected , or ) ',this.currentLexeme);
         }
         this.currentLexeme = Scanner.next(this.currentLexeme.nextLexemePos);
         var symWrite = new SymWrite(0,0,'#66CC99',Scanner.popCodePart(''));
         pos.push(this.currentLexeme.currentLexemePos);
-        if (ln == false) return new StmtWrite(listWrite,symWrite,false);
-        else return new StmtWrite(listWrite,symWrite,true);
+        if (ln == false) return new StmtWrite(listWrite,symWrite,false,pos);
+        else return new StmtWrite(listWrite,symWrite,true,pos);
     },
     parseAssignment: function (tree) {
         var pos = [this.currentLexeme.currentLexemePos];
@@ -271,7 +268,7 @@ LexicalAnalyzer = new Class ({
             this.currentLexeme = Scanner.next(this.currentLexeme.nextLexemePos);
             stElse = this.getStatment(tree);
         }
-        else stElse = new Statment(new SymStatment(0,0,'red',''));
+        else stElse = new Statment(new SymStatment(0,0,'red','1null'),pos);
         return new StmtIf(expression,stThen,stElse,symIf,pos);
     },
     parseExpr: function(treeVar,endLexeme) {
@@ -281,8 +278,6 @@ LexicalAnalyzer = new Class ({
         var left = this.parseAdd(treeVar,endLexeme);
         while (this.currentLexeme.type == 'Comparison') {
             var binOp = new SymBinOp(this.currentLexeme.name,0,0,'#5500ff',Math.random()-0.5);
-            if ((left.type == 'string') || (left.type == 'char'))
-                this.exception.error('invalid operation '+this.currentLexeme.name,this.currentLexeme);
             this.currentLexeme = Scanner.next(this.currentLexeme.nextLexemePos);
             left = new SynBinOp(binOp,left,this.parseAdd(treeVar,endLexeme));
             if (left.errorType != '') {
@@ -346,9 +341,8 @@ LexicalAnalyzer = new Class ({
             && (this.currentLexeme.type != 'Comparison') && (this.currentLexeme.name != 'or')
             && (this.currentLexeme.name != 'and')) {
             if ((this.currentLexeme.name == endLexeme) || (this.currentLexeme.type =='Keyword')) {}
-            else {
-                this.exception.error('error in token ', this.currentLexeme);
-            }
+            else if (endLexeme.indexOf(this.currentLexeme.name) >= 0) {}
+            else this.exception.error('error in token ', this.currentLexeme);
         }
         return result;
     },
