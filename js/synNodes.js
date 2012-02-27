@@ -577,6 +577,11 @@ Statment = new Class ({
         var program = $('#programPanel');
         while (program.val()[y-1] == ' ') y--;
         program.get(0).setSelectionRange(this.selectPos[0],y);
+    },
+    goStatment: function() {
+        this.symStatment.color = '#66CC99';
+        this.symStatment.angleOfRotation = 0;
+        this.symStatment.transp = 1;
     }
 });
 
@@ -594,7 +599,8 @@ SynEnd = new Class ({
     },
     visualization: function(ctx,tools) {
         app.paint();
-    }
+    },
+    goStatment: function() {}
 });
 
 StmtAssignment = new Class ({
@@ -630,6 +636,7 @@ StmtAssignment = new Class ({
         var k, varBeg, varGo, var1, st;
         with(this) {
             if (showVisual) {
+                if (this.aRight instanceof SynBinOp) this.aRight.symBinOp.visible = true;
                 k = app.insertRowVis();
                 st = new SymChangeStatment(this,0.4,1);
                 app.insertElementVis(k,st);
@@ -669,11 +676,15 @@ StmtIf = new Class({
         this.exprIf = exprIf;
         this.stmtThen = sThen;
         this.stmtElse = sElse;
+        this.begThenHeight = this.stmtThen.symStatment.height;
+        this.begElseHeight = this.stmtElse.symStatment.height;
 	},
 	result: true,
     exprIf: null,
     stmtThen: null,
     stmtElse: null,
+    begThenHeight: null,
+    begElseHeight: null,
     getExprIf: function(){
         return this.exprIf;
     },
@@ -743,6 +754,7 @@ StmtIf = new Class({
         var k, varBeg, varGo, var1,st, varInput;
         with (this) {
             if (showVisual) {
+                if (this.exprIf instanceof SynBinOp) this.exprIf.symBinOp.visible = true;
                 k = app.insertRowVis();
                 st = new SymChangeStatment(this,0.2,1);
                 app.insertElementVis(k,st);
@@ -767,6 +779,8 @@ StmtIf = new Class({
                 symStatment.color = 'teal';
                 symStatment.angleOfRotation = Math.PI/9;
                 var d = Math.abs(Math.cos(Math.PI/9))*symStatment.width/2.5;
+                stmtThen.symStatment.height = begThenHeight;
+                stmtElse.symStatment.height = begElseHeight;
                 if (!result) {
                     d = -d;
                     symStatment.angleOfRotation = -symStatment.angleOfRotation
@@ -797,6 +811,13 @@ StmtIf = new Class({
         find = this.stmtThen.findSynExpr(pos,tools);
         if (find != -1) return find;
         return this.stmtElse.findSynExpr(pos,tools);
+    },
+    goStatment: function() {
+        this.parent();
+        this.stmtThen.symStatment.height = this.begThenHeight;
+        this.stmtElse.symStatment.height = this.begElseHeight;
+        this.stmtThen.goStatment();
+        this.stmtElse.goStatment();
     }
 });
 
@@ -881,6 +902,11 @@ StmtBlock = new Class ({
             if (findSyn != -1) return findSyn;
         }
         return -1;
+    },
+    goStatment: function() {
+        for (var i = 0; i < this.treeStatment.length; i++)
+            this.treeStatment[i].goStatment();
+        this.currentStatment =- 1;
     }
 });
 
@@ -995,6 +1021,21 @@ StmtWrite = new Class ({
                 app.insertElementVis(k,text);
             }
             app.paint();
+        }
+    }
+});
+
+StmtWhile = new Class({
+    Extends: StmtIf,
+    initialize: function(exprIf,sThen,sElse,symStatment,pos) {
+        this.parent(exprIf,sThen,sElse,symStatment,pos);
+    },
+    visualization: function(ctx,tools) {
+        this.parent(ctx,tools);
+        if (this.showVisual) this.goStatment();
+        else {
+            this.stmtThen.goStatment();
+            this.stmtElse.goStatment();
         }
     }
 });

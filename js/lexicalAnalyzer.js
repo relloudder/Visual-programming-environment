@@ -169,6 +169,7 @@ LexicalAnalyzer = new Class ({
                 else if (this.currentLexeme.name == 'read') synBlock.push(this.parseRead(tree));
                 else if (this.currentLexeme.name == 'writeln') synBlock.push(this.parseWrite(tree,true));
                 else if (this.currentLexeme.name == 'write') synBlock.push(this.parseWrite(tree,false));
+                else if (this.currentLexeme.name == 'while') synBlock.push(this.parseWhile(tree));
                 else if (this.currentLexeme.name == 'begin') synBlock.push(this.getBlock(tree));
             } else this.exception.error('error statment ',this.currentLexeme);
             if (this.currentLexeme.name != ';')
@@ -188,11 +189,13 @@ LexicalAnalyzer = new Class ({
             if (this.currentLexeme.name == 'read') return this.parseRead(tree);
             if (this.currentLexeme.name == 'writeln') return this.parseWrite(tree,true);
             if (this.currentLexeme.name == 'write') return this.parseWrite(tree,false);
+            if (this.currentLexeme.name == 'while') return this.parseWhile(tree);
             if (this.currentLexeme.name == 'begin' ) {
                 var block = this.getBlock(tree);
                 return block;
             }
         }
+        return new Statment(new SymStatment(0,0,'red','1null'),[0,0]);
     },
     parseRead: function(tree) {
         var pos = [this.currentLexeme.currentLexemePos];
@@ -270,6 +273,20 @@ LexicalAnalyzer = new Class ({
         }
         else stElse = new Statment(new SymStatment(0,0,'red','1null'),pos);
         return new StmtIf(expression,stThen,stElse,symIf,pos);
+    },
+    parseWhile: function(tree) {
+        Scanner.popCodePart('');
+        var pos = [this.currentLexeme.currentLexemePos];
+        this.currentLexeme = Scanner.next(this.currentLexeme.nextLexemePos);
+        var expression = this.parseExpr(tree,'do');
+        if (this.currentLexeme.name != 'do')
+            this.exception.error('expected do ',this.currentLexeme);
+        var text = Scanner.popCodePart('');
+        var symWhile = new SymWhile(0,0,'#66CC99',text.substring(0,text.length-2));
+        this.currentLexeme = Scanner.next(this.currentLexeme.nextLexemePos);
+        var stDo = this.getStatment(tree);
+        var stElse = new Statment(new SymStatment(0,0,'red','1null'),pos);
+        return new StmtWhile(expression,stDo,stElse,symWhile,pos);
     },
     parseExpr: function(treeVar,endLexeme) {
         return this.parseCompare(treeVar,endLexeme);

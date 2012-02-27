@@ -208,6 +208,7 @@ Application = new Class({
         pred = this.visualStatments.treeStatment[this.visualStatments.currentStatment];
         if (pred instanceof StmtIf)
             if ((pred.result == false) && (pred.stmtElse.symStatment.value == '1null')) {}
+            else if ((pred.result == true) && (pred.stmtThen.symStatment.value == '1null')) {}
         else {
             var next;
             if ((pred.result) && (pred.stmtThen instanceof StmtBlock)) next = pred.stmtThen;
@@ -224,7 +225,9 @@ Application = new Class({
         }
         while (this.visualStatments.currentStatment == (this.visualStatments.treeStatment.length-1))
             this.visualStatments = this.visualStatments.parent;
-        this.visualStatments.currentStatment++;
+        if ((this.visualStatments.treeStatment[this.visualStatments.currentStatment] instanceof StmtWhile) &&
+            (this.visualStatments.treeStatment[this.visualStatments.currentStatment].result)) {}
+        else this.visualStatments.currentStatment++;
         return this.visualStatments.treeStatment[this.visualStatments.currentStatment];
     }
 });
