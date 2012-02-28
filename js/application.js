@@ -174,30 +174,28 @@ Application = new Class({
         return (this.treeVis[item].length - 1);
     },
     paint: function() {
-        self = this;
-       	this.idTimer = setInterval("self.drawTreeVis()",this.dTime);
+        var x = this;
+        this.idTimer = setInterval(function() { x.drawTreeVis(); }, this.dTime);
     },
     drawTreeVis: function() {
-        with(this) {
-            if (showInput) return;
-            DrawForVis(ctx).back('#202020','#aaa',width,height);
-            tree.draw(ctx,tools,width,height);
-            var stopPaint = 0;
-            if(treeVis[0] != null) {
-                for (var i = 0; i < treeVis[0].length; i++) {
-                    stopPaint += treeVis[0][i].draw(ctx,tools);
-                }
+        if (this.showInput) return;
+        DrawForVis(this.ctx).back('#202020','#aaa',this.width,this.height);
+        this.tree.draw(this.ctx,this.tools,this.width,this.height);
+        var stopPaint = 0;
+        if(this.treeVis[0] != null) {
+            for (var i = 0; i < this.treeVis[0].length; i++) {
+                stopPaint += this.treeVis[0][i].draw(this.ctx, this.tools);
             }
-            if (stopPaint == 0) {
-                clearInterval(idTimer);
-                if (treeVis.length > 0) {
-                    treeVis.splice(0,1); //delete 0 row
-                    selfNew = this;
-                    idTimer = setInterval('selfNew.drawTreeVis()',this.dTime);
-                } else if (byStep == false) {
-                     var next = this.nextStatmentForVis();
-                     if (next != null) next.visualization(ctx,tools);
-                }
+        }
+        if (stopPaint == 0) {
+            clearInterval(this.idTimer);
+            if (this.treeVis.length > 0) {
+                this.treeVis.splice(0,1); //delete 0 row
+                selfNew = this;
+                this.idTimer = setInterval('selfNew.drawTreeVis()',this.dTime);
+            } else if (this.byStep == false) {
+                var next = this.nextStatmentForVis();
+                if (next != null) next.visualization(this.ctx,this.tools);
             }
         }
     },

@@ -209,6 +209,7 @@ var DrawForVis = function(ctx) {
             var arrFont = new Array(0,1,1,4/5,2.5/4,1.5/3);
             var arrR = new Array(0,0.35,0.5,0.65,0.6,0.65);
             var arrPos = new Array(0,1/2,1/2,1/2,1/4,1/4);
+            if (type == 'binOp') r = r*0.65;
             ctx.font = 'bold ' + arrFont[lengthVal]*r + 'px Courier New';
             if (stringVal != '') ctx.fillText(stringVal,-arrR[lengthVal]*r,arrPos[lengthVal]*r);
             ctx.restore();

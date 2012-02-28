@@ -8,6 +8,7 @@ SynExpr = new Class({
     symbolName: null,
     selectPos: null,
     show: null,
+    setVisible: function (flag) {},
     getValue: function() {
         return 0;
     },
@@ -455,6 +456,12 @@ SynBinOp = new Class({
         var pos1 = this.getSymBinOp().getPosSuch(false);
         this.getLeft().putPosition(pos0);
         this.getRight().putPosition(pos1);
+    },
+    setVisible: function (flag) {
+        this.symBinOp.visible = flag;
+        this.symBinOp.val = this.binOp;
+        this.getLeft().setVisible(flag);
+        this.getRight().setVisible(flag);
     }
 });
 
@@ -636,7 +643,7 @@ StmtAssignment = new Class ({
         var k, varBeg, varGo, var1, st;
         with(this) {
             if (showVisual) {
-                if (this.aRight instanceof SynBinOp) this.aRight.symBinOp.visible = true;
+                this.aRight.setVisible(true);
                 k = app.insertRowVis();
                 st = new SymChangeStatment(this,0.4,1);
                 app.insertElementVis(k,st);
@@ -754,7 +761,7 @@ StmtIf = new Class({
         var k, varBeg, varGo, var1,st, varInput;
         with (this) {
             if (showVisual) {
-                if (this.exprIf instanceof SynBinOp) this.exprIf.symBinOp.visible = true;
+                this.exprIf.setVisible(true);
                 k = app.insertRowVis();
                 st = new SymChangeStatment(this,0.2,1);
                 app.insertElementVis(k,st);
@@ -992,6 +999,7 @@ StmtWrite = new Class ({
                     k = app.insertRowVis();
                     varEnd.setPosX(30*(i+1));
                     app.insertElementVis(k, new SymDinamicVisible(this.arrayWrite[i], true));
+                    arrayWrite[i].setVisible(true);
                     arrayWrite[i].interpretation([symStatment.getPosX(),symStatment.getPosY()]);
                     arrayWrite[i].operation(true,arrayWrite[i].getType());
                     arrayWrite[i].symbolName.visible = false;
