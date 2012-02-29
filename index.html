@@ -140,14 +140,32 @@
     <div id="code">
         <textarea cols=30 rows=40 id="programPanel">
 var
-    s,s1,s2:string;
-    a,b: real;
-    c: integer;
-    ch: array[1..2] of char;
+
+    a: array [1..9] of integer;
+    i, work, n: integer;
+
 begin
-    a := random(60);
-    while (a < 5) do
-      a := a+1;
+    read(n);
+    i:=1;
+    while (i <= n) do begin
+        a[i]:=random(60);
+        write(a[i],'   ');
+        i:=i+1;
+    end;
+    writeln('new aray ');
+
+    i:=1;
+    while (i<= n div 2) do begin
+       work:=a[i];
+       a[i]:=a[n+1-i];
+       a[n+1-i]:=work;
+       i:=i+1;
+    end;
+    i:=1;
+    while (i <= n) do begin
+        write(a[i],'   ');
+        i:=i+1;
+    end;
 end.
 
         </textarea>

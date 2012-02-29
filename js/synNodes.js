@@ -218,6 +218,9 @@ SynArray = new Class({
     left: null, //link for synArray
     right: null, //expression for index
     symbolArray: null, //type of array's items
+    setValue: function(value) {
+        this.getSymbol().setValue(value);
+    },
     getValue: function() {
         return this.getSymbol().getValue();
     },
@@ -519,6 +522,11 @@ SynCallFunction = new Class({
             }
             this.symCallFunction.draw(ctx,tools);
         }
+    },
+    setVisible: function(flag) {
+        this.symCallFunction.visible = true;
+        this.symCallFunction.rVar = 20;
+        this.symCallFunction = this.symCallFunction.clone();
     }
 });
 
