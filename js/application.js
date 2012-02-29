@@ -7,6 +7,7 @@ VariableTree = new Class({
         this.treeVar.push(new SymFunction(0,0,'real','sin',['real']));
         this.treeVar.push(new SymFunction(0,0,'real','cos',['real']));
         this.treeVar.push(new SymFunction(0,0,'real','tan',['real']));
+        this.treeVar.push(new SymFunction(0,0,'int','random',['int']));
         this.treeStatment = [];
     },
     treeVar: null,

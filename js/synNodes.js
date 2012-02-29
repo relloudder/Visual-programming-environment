@@ -155,8 +155,11 @@ SynExpr = new Class({
                 var part = [];
                 for (var i = 0; i < listFactParam.length; i++)
                     part.push(listFactParam[i].operation(visible,'int'));
-                var name = (symCallFunction.name == 'trunc')?'floor':symCallFunction.name;
-                result = eval('Math.'+name+'('+part[0]+')');
+                if (symCallFunction.name == 'random') result = Math.floor(Math.random()*part[0]);
+                else {
+                    var name = (symCallFunction.name == 'trunc')?'floor':symCallFunction.name;
+                    result = eval('Math.'+name+'('+part[0]+')');
+                }
                 if (visible) {
                     varGo = new SymChangeCallFunction(symCallFunction,symCallFunction.rVar*2,0);
                     r = symCallFunction.rVar;
