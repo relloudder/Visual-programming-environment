@@ -150,6 +150,7 @@ Application = new Class({
         this.visualStatments = -1;
         this.byStep = false;
     },
+    pause : false,
     showInput: false,
     flagMove: false,
     flagCanvasMove: false,
@@ -178,6 +179,10 @@ Application = new Class({
         var x = this;
         this.idTimer = setInterval(function() { x.drawTreeVis(); }, this.dTime);
     },
+    draw: function() {
+        DrawForVis(this.ctx).back('#202020','#aaa',this.width,this.height);
+        this.tree.draw(this.ctx,this.tools,this.width,this.height);
+    },
     drawTreeVis: function() {
         if (this.showInput) return;
         DrawForVis(this.ctx).back('#202020','#aaa',this.width,this.height);
@@ -192,10 +197,15 @@ Application = new Class({
             clearInterval(this.idTimer);
             if (this.treeVis.length > 0) {
                 this.treeVis.splice(0,1); //delete 0 row
-                selfNew = this;
-                this.idTimer = setInterval('selfNew.drawTreeVis()',this.dTime);
+                var selfNew = this;
+                this.idTimer = setInterval(function() { selfNew.drawTreeVis(); }, this.dTime);
             } else if (this.byStep == false) {
+                if (this.pause) return;
                 var next = this.nextStatmentForVis();
+                if (next instanceof SynStop) {
+                    clearInterval(this.idTimer);
+                    return
+                }
                 if (next != null) next.visualization(this.ctx,this.tools);
             }
         }
@@ -204,7 +214,8 @@ Application = new Class({
         if (this.visualStatments == -1) return null;
         var pred = null;
         if (this.visualStatments.currentStatment != -1)
-        pred = this.visualStatments.treeStatment[this.visualStatments.currentStatment];
+            pred = this.visualStatments.treeStatment[this.visualStatments.currentStatment];
+        if (pred instanceof SynStop) return pred;
         if (pred instanceof StmtIf)
             if ((pred.result == false) && (pred.stmtElse.symStatment.value == '1null')) {}
             else if ((pred.result == true) && (pred.stmtThen.symStatment.value == '1null')) {}

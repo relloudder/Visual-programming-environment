@@ -603,6 +603,14 @@ Statment = new Class ({
     }
 });
 
+SynStop = new Class ({
+    Extends: Statment,
+        initialize: function() {
+        this.parent(new SymStatment(0,0,'red','1null'),[0,0]);
+        this.symStatment.height = 0;
+    }
+});
+
 SynEnd = new Class ({
     Extends: Statment,
     initialize: function(symStatment) {

@@ -26,6 +26,7 @@ LexicalAnalyzer = new Class ({
         }
         if (this.currentLexeme.name.toLowerCase() == 'begin') {
             var main = this.getBlock(app.tree.treeVar);
+            main.push(new SynStop());
             main.mainBlock = true;
             app.tree.treeStatment.push(main);
             if (this.currentLexeme.name!='.')

@@ -9,6 +9,7 @@ $(function() {
 function runInterface() {
     $('#playMenu, #draw').click(function() {
         var sp = app.speed;
+        var zoom = app.tools.scale;
         initApplication();
         app.speed = sp;
         var textProgram = $('#programPanel');
@@ -18,7 +19,7 @@ function runInterface() {
         lex.getProgram();
         app.tree.treeLocation(app.width,app.height);
 		app.tree.treeStatment[0].putPosition([500,10])
-		app.paint();
+		app.draw();
     });
 
     $('#new, #reset').click(function() {
@@ -27,12 +28,12 @@ function runInterface() {
 
     $('#zoomIn, #zoomInMenu').click(function() {
         app.tools.scale += 0.01;
-        app.paint();
+        app.draw();
     });
 
     $('#zoomOut, #zoomOutMenu').click(function() {
         app.tools.scale -= 0.01;
-        app.paint();
+        app.draw();
     });
 
     $("#canvas").mousedown(function(event) {
@@ -40,7 +41,7 @@ function runInterface() {
         var y = event.pageY - $("#wCanvas").offset().top;
         app.tree.varMove = app.tree.findByPos([x,y],app.tools);
         if (app.tree.varMove != -1) {
-            if (app.tree.varMove instanceof Statment) app.paint();
+            if (app.tree.varMove instanceof Statment) app.draw();
             else app.flagMove = true;
             if (app.tree.varMove instanceof StmtBlock)
                 if (app.tree.varMove.mainBlock) app.flagMove = true;
@@ -58,10 +59,10 @@ function runInterface() {
         if (app.flagCanvasMove) {
             app.tools.setTop(app.tools.getTop() - (yOld - y)/app.tools.getScale());
             app.tools.setLeft(app.tools.getLeft() - (xOld - x)/app.tools.getScale());
-			app.paint();
+			app.draw();
         } else if (app.flagMove) {
 	        app.tree.varMove.changePos([x,y],app.tools);
-			app.paint();
+			app.draw();
 	    }
 	    xOld = x;
 	    yOld = y;
@@ -83,8 +84,13 @@ function runInterface() {
 
     $("#play").click(function() {
         app.byStep = false;
+        app.pause = false;
         app.visualStatments = app.tree.treeStatment[0];
         app.nextStatmentForVis().visualization(app.ctx,app.tools);
+    });
+
+    $('#pause, #pauseMenu').click(function() {
+        app.pause = true;
     });
 
     $("#SpeedMin").click(function() {
@@ -100,6 +106,7 @@ function runInterface() {
     });
 
     $("#step").click(function() {
+        app.pause = false;
         if (app.byStep == false)
             app.visualStatments = app.tree.treeStatment[0];
         app.byStep = true;

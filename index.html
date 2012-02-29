@@ -56,7 +56,7 @@
                 </li>
                 <li><a href="#">Step over</a></li>
                 <li><a href="#">Save</a></li>
-                <li><a href="#">Pause</a></li>
+                <li><a href="#" id="pauseMenu">Pause</a></li>
                 <li><a href="#" id="reset">Reset</a></li>
                 <li class="last">
                     <img class="corner_left"  src="images/corner_left.png"/>
@@ -123,6 +123,7 @@
         <img style="float:left;"  src="images/panel_left.png"/>
         <li id="draw"><img src="images/draw.png"></li>
         <li id="play"><img src="images/play.png"></li>
+        <li id="pause"><img src="images/pause.png"></li>
         <li id="step"><img src="images/steps.png"></li>
         <li id="zoomIn"><img src="images/zoomin.png"></li>
         <li id="zoomOut"><img src="images/zoomout.png"></li>
@@ -140,8 +141,7 @@
     <div id="code">
         <textarea cols=30 rows=40 id="programPanel">
 var
-
-    a: array [1..9] of integer;
+    a: array [1..4] of integer;
     i, work, n: integer;
 
 begin
