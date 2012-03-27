@@ -39,6 +39,10 @@ SymVarMove = new Class ({
 		var t = this.timeOneMove*this.numberOfMove;
 		this.vX = (endX - pX)/t;
         this.vY = (pY - endY + this.aY*Math.pow(t,2)/2)/t;
+        if (pY-Math.pow(this.vY,2)/(2*this.aY) < 0) {
+            this.aY = 0.003;
+            this.vY = (pY - endY + this.aY*Math.pow(t,2)/2)/t;
+        }
     },
     aY: 0,
     vY: 0,
@@ -264,6 +268,7 @@ SymVarOpenClose = new Class ({
     Extends: SymVarChange,
     initialize: function(change,open,visible) {
         this.parent(change);
+        this.numberOfMove = Math.ceil(4/app.speed);
         this.visible = visible;
         if (open) {
             this.angle = -90;

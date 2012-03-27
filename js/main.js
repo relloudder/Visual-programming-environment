@@ -135,5 +135,6 @@ function initApplication() {
         canvas.height = $('#wCanvas').height();
         app = new Application(ctx,canvas.width,canvas.height);
         DrawForVis(app.ctx).back("#7cb7e3","#cccccc",canvas.width,canvas.height);
+        //DrawForVis(app.ctx).back("#FFFFFF","#FFFFFF",canvas.width,canvas.height);
     }
 }

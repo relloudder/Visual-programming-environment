@@ -571,6 +571,7 @@ Statment = new Class ({
     },
     setWidth: function(width) {
         this.symStatment.width = width;
+        this.symStatment.setPosMaxX(width);
     },
     putPosition: function(pos) {
         this.symStatment.posX = pos[0];
@@ -597,7 +598,7 @@ Statment = new Class ({
         program.get(0).setSelectionRange(this.selectPos[0],y);
     },
     goStatment: function() {
-        this.symStatment.color = '#66CC99';
+        this.symStatment.color =  'rgba(102,204,153,1)';
         this.symStatment.angleOfRotation = 0;
         this.symStatment.transp = 1;
     }
@@ -683,7 +684,7 @@ StmtAssignment = new Class ({
                 var setVal = aRight.operation(false,aLeft.type);
                 if (aLeft.type == 'string') aLeft.getSymbol().setNewString(setVal);
                 else aLeft.setValue(setVal);
-                symStatment.color = 'teal';
+                symStatment.color = 'rgba(49,79,79,1)';
             }
         }
         app.paint();
@@ -802,7 +803,7 @@ StmtIf = new Class({
                 app.insertElementVis(k,st);
             } else {
                 result = exprIf.operation(false,'int');
-                symStatment.color = 'teal';
+                symStatment.color = 'rgba(49,79,79,1)';
                 symStatment.angleOfRotation = Math.PI/9;
                 var d = Math.abs(Math.cos(Math.PI/9))*symStatment.width/2.5;
                 stmtThen.symStatment.height = begThenHeight;
@@ -828,7 +829,9 @@ StmtIf = new Class({
     },
     setWidth: function(width) {
         this.parent(width);
-        this.stmtThen.setWidth(this.stmtThen.getWidth());
+        var k = this.stmtThen.getWidth();
+        this.stmtThen.setWidth(k);
+        this.symStatment.setPosMaxX(k+this.symStatment.getPosMaxX());
         this.stmtElse.setWidth(this.stmtElse.getWidth());
     },
     findSynExpr: function(pos,tools) {
@@ -920,9 +923,16 @@ StmtBlock = new Class ({
             width = Math.max(width,this.treeStatment[i].getWidth());
         return width;
     },
+
     findSynExpr: function(pos,tools) {
         var find = this.symStatment.findVar(pos,tools);
-        if (find != -1) return this;
+        if (find != -1) {
+            for (var k = this.treeStatment.length - 1; k >= 0 ; k--) {
+                this.treeStatment[k].showVisual =! this.treeStatment[k].showVisual;
+                this.treeStatment[k].symStatment.showVisual = this.treeStatment[k].showVisual;
+            }
+            return this;
+        }
         for (var k = this.treeStatment.length - 1; k >= 0 ; k--) {
             var findSyn = this.treeStatment[k].findSynExpr(pos,tools);
             if (findSyn != -1) return findSyn;
@@ -1043,7 +1053,7 @@ StmtWrite = new Class ({
                 }
                 if (ln == false) text = new SymVarWrite(str,'string',false,n);
                 else text = new SymVarWrite(str,'string',true,n);
-                symStatment.color = 'teal';
+                symStatment.color = 'rgba(49,79,79,1)';
                 k = app.insertRowVis();
                 app.insertElementVis(k,text);
             }

@@ -15,6 +15,7 @@ VariableTree = new Class({
     varMove: null,
     draw: function(ctx,tools,width,height) {
         DrawForVis(ctx).back("#7cb7e3","#cccccc",width,height);
+        //DrawForVis(ctx).back("#FFFFFF","#FFFFFF",width,height);
         for (var i = 0; i < this.treeStatment.length; i++) {
             this.treeStatment[i].drawLine(ctx,tools);
         }
@@ -181,11 +182,13 @@ Application = new Class({
     },
     draw: function() {
         DrawForVis(this.ctx).back('#202020','#aaa',this.width,this.height);
+        //DrawForVis(ctx).back("#FFFFFF","#FFFFFF",width,height);
         this.tree.draw(this.ctx,this.tools,this.width,this.height);
     },
     drawTreeVis: function() {
         if (this.showInput) return;
         DrawForVis(this.ctx).back('#202020','#aaa',this.width,this.height);
+        //DrawForVis(ctx).back("#FFFFFF","#FFFFFF",width,height);
         this.tree.draw(this.ctx,this.tools,this.width,this.height);
         var stopPaint = 0;
         if(this.treeVis[0] != null) {

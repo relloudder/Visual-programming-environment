@@ -31,7 +31,7 @@ var DrawForVis = function(ctx) {
     }
 
     var colorFigure = function (col1,col2,w,h) {
-        var gradient = ctx.createLinearGradient(-w,-h,w,h);
+        var gradient = ctx.createLinearGradient(-w,-w,w,w);
         gradient.addColorStop(0.3,col1);
         gradient.addColorStop(1,col2);
         ctx.fillStyle = gradient;
@@ -62,36 +62,43 @@ var DrawForVis = function(ctx) {
         this.dy = y0 + Math.sin(alpha2)*r/2;
     }
 
-    var getGradient = function(col) {
-        var s,s1,s2,s3;
-        s = parseInt(col.substring(1,3),16) + 100;
-        if (s <= 255) {
-            s1=s.toString(16);
-        } else {
-            s1 = 'ff';
-        }
-        if (s1.length == 1) {
-            s1 = '0' + s1;
-        }
-        s = parseInt(col.substring(3,5),16) + 100;
-        if (s <= 255) {
-            s2 = s.toString(16);
-        } else {
-            s2 = 'ff';
-        }
-        if (s2.length == 1) {
-            s2 = '0' + s2;
-        }
-        s = parseInt(col.substring(5,7),16) + 100;
-        if (s <= 255) {
-            s3 = s.toString(16);
-        } else {
-            s3 = 'ff';
-        }
-        if (s3.length == 1) {
-            s3 = '0' + s3;
-        }
-        return('#'+s1+s2+s3);
+    var getGradient = function(col, tr) {
+        if (col.substr(0,col.length-3) == 'rgba(102,204,153') return 'rgba(152,251,152,'+tr+')';
+        if (col.substr(0,col.length-3) == 'rgba(0,128,128') return 'rgba(143,188,143,'+tr+')';
+        return 'rgba(238,233,233,'+tr+')';
+    }
+
+    var lineConnection = function (x,y,k,width,h,col,tr) {
+        ctx.beginPath();
+        ctx.fillStyle = col;
+        ctx.moveTo(x,y+h/3);
+        ctx.lineTo(x+h,y-h*2/3);
+        ctx.lineTo(x+width+k+h,y-h*2/3);
+        ctx.lineTo(x+width+k,y+h/3);
+        ctx.fill();
+        ctx.closePath();
+        ctx.beginPath();
+        ctx.fillStyle = 'rgba(250,200,200,'+tr+')';
+        ctx.moveTo(x,y);
+        ctx.lineTo(x+h,y-h);
+        ctx.lineTo(x+width+k+h,y-h);
+        ctx.lineTo(x+width+k,y);
+        ctx.fill();
+        ctx.closePath();
+        ctx.fillStyle = col;
+        ctx.fillRect(x,y,width+k,h/3);
+	}
+
+    var ballConnection = function (x,y,h,alpha,col) {
+        ctx.save();
+        ctx.translate(x,y);
+        ctx.rotate(alpha);
+        ctx.beginPath();
+        ctx.arc(0,0,h*4/3,Math.PI,0);
+        colorBall(0,0,h,col);
+        ctx.fill();
+        ctx.closePath();
+        ctx.restore();
     }
 
     return {
@@ -244,7 +251,7 @@ var DrawForVis = function(ctx) {
         connect: function(xBeg,yBeg,xEnd,yEnd,r,col) {
             var rr = Math.sqrt((xBeg-xEnd)*(xBeg-xEnd)+(yBeg-yEnd)*(yBeg-yEnd));
             if ((yBeg-yEnd) == 0) {
-                alpha = -Math.PI/2;
+                alpha = Math.PI/2;
             } else {
                 alpha = Math.atan((xBeg-xEnd)/(yBeg-yEnd));
             }
@@ -370,38 +377,35 @@ var DrawForVis = function(ctx) {
             ctx.translate(x0,y0);
             ctx.rotate(alpha);
             ctx.beginPath();
+            if (!vis) tr = 0.55;
             ctx.moveTo(2*k*r,-r);
             ctx.lineTo(2*k*r,-r+h);
             ctx.lineTo(k/2*r,r+h);
             ctx.lineTo(-2*k*r,r+h);
             ctx.lineTo(-2*k*r,r);
+            ctx.lineTo(-k/2*r,-r);
             ctx.fillStyle = 'rgba(250,200,200,'+tr+')';
             ctx.fill();
             ctx.closePath();
             ctx.beginPath();
-            colorFigure(col,getGradient(col),k*r,r);
+            col = col.substr(0,col.length-3)+','+tr+')';
+            colorFigure(col,getGradient(col,tr),k*r,r);
             ctx.moveTo(-k/2*r,-r);
             ctx.lineTo(2*k*r,-r);
             ctx.lineTo(k/2*r,r);
             ctx.lineTo(-2*k*r,r);
             ctx.fill();
             ctx.closePath();
-            this.roundedRect(-k*r+h,-k*r+h*2,2.5*k*r,r*1.5,h/2,'rgba(255,255,255,'+tr+')','rgba(200,200,200,'+tr+')',3);
-            this.textStatment(val,-r*k+1.5*h,-r,r*0.8,21);
-            ctx.beginPath();
-            ctx.arc(0,0,r/1.5,Math.PI,0);
-            ctx.closePath();
-            if (vis) colorBall(r/3,0,r/2,'rgba(0,0,255,'+tr+')');
-            else colorBall(r/3,0,r/2,'rgba(255,102,00,'+tr+')')
-            ctx.fill();
+            this.textStatment(val,-r*(k+2),0,r*1.25,11);
             ctx.restore();
         },
 
-        conditionIf: function(x,y,r,k,h,col,val,alpha,tr,width,height,vis,picWhile) {
+        conditionIf: function(x,y,r,k,h,col,val,alpha,tr,width,height,vis,picWhile,posMaxY) {
             ctx.save();
             ctx.translate(x, y);
             ctx.rotate(alpha);
             ctx.beginPath();
+            if (!vis) tr = 0.4;
             ctx.moveTo(0,-r*k);
             ctx.lineTo(h,-r*k-h/2);
             ctx.lineTo(k*2*r,-h);
@@ -412,12 +416,12 @@ var DrawForVis = function(ctx) {
                 ctx.moveTo(-2*k*r-w/Math.cos(1.6*alpha),0);
                 ctx.lineTo(-2*k*r-w/Math.cos(1.6*alpha)+h,-h);
                 ctx.lineTo(-2*k*r+h*2,-h);
-                ctx.lineTo(-2*k*r+h*2,0);
+                ctx.lineTo(-2*k*r+h,0);
                 ctx.fill();
                 ctx.moveTo(2*k*r+w/Math.cos(1.6*alpha),0);
                 ctx.lineTo(2*k*r+w/Math.cos(1.6*alpha)+h,-h);
-                ctx.lineTo(2*k*r-h*2,-h);
-                ctx.lineTo(2*k*r-h*2,0);
+                ctx.lineTo(2*k*r,-h);
+                ctx.lineTo(2*k*r,0);
                 ctx.fill();
             }
             ctx.fill();
@@ -428,63 +432,32 @@ var DrawForVis = function(ctx) {
                 ctx.fillRect(-2*k*r+2*h,-h/6,-w/Math.cos(1.6*alpha)-2*h,h/3);
                 ctx.fillRect(2*k*r-2,-h/6,w/Math.cos(1.6*alpha)+2,h/3);
             }
-            colorFigure(col,getGradient(col),k*r,r);
+            colorFigure(col,getGradient(col,tr),k*r,r);
             ctx.moveTo(-k*2*r,0);
             ctx.lineTo(0,-r*k);
             ctx.lineTo(k*2*r,0);
             ctx.lineTo(0,r*k);
             ctx.fill();
             ctx.closePath();
-            ctx.beginPath();
-            this.roundedRect(-k*r,-r*k/2+r/4,2*k*r,r*k-r/2,h/2,'rgba(255,255,255,'+tr+')','rgba(200,200,200,'+tr+')',3);
-            this.textStatment(val,-r*k+r/10,r/4,r/2,18);
-            ctx.closePath();
+            this.textStatment(val,-r*(k+2.5),r/4,r*0.8,16);
             ctx.restore();
             ctx.save();
-            ctx.beginPath();
-            ctx.fillStyle = 'rgba(250,200,200,'+tr+')';
-            var k = width;
-            if (picWhile) k = 0;
-            ctx.moveTo(x-width,y+height);
-            ctx.lineTo(x-width+h,y+height-h);
-            ctx.lineTo(x+k+h,y+height-h);
-            ctx.lineTo(x+k,y+height);
-            ctx.fill();
-            ctx.closePath();
-            ctx.fillStyle = col;
-            if (picWhile) ctx.fillRect(x-width,y+height,width,h/3);
-            else ctx.fillRect(x-width,y+height,width*2,h/3);
-            ctx.beginPath();
-            ctx.arc(x,y+r*1.5,r/2.5,Math.PI*2,0);
-            ctx.closePath();
-            if (vis) colorBall(x,y+r*1.5,r/4,'rgba(0,0,255,'+tr+')');
-            else colorBall(x,y+r*1.5,r/4,'rgba(255,102,00,'+tr+')');
-            ctx.fill();
+            if (picWhile) {
+                lineConnection(x-width,y+height,0,width,h,col,tr);
+                this.connect(x+width,y+height,x+posMaxY,y+height,h,'#555555');
+                this.connect(x,y-r*k,x+posMaxY+h,y-r*k,h,'#555555');
+                ballConnection(x+posMaxY,y-r*k,h,Math.PI/4,'#555555');
+                ballConnection(x+width+h,y+height-h*0.7,h,-Math.PI/4*3,'#555555');
+                ballConnection(x+posMaxY,y+height-h*0.7,h,Math.PI/4*3,'#555555');
+            } else {
+                lineConnection(x-width,y+height,width,width,h,col,tr);
+            }
             ctx.restore();
         },
 
-        conditionWhile: function(x,y,r,k,h,col,val,alpha,tr,width,height,vis) {
-            this.connect(x,y,x,y+height-3*h,h,'#555555');
-            this.conditionIf(x,y,r,k,h,col,val,alpha,tr,width,height,vis,true);
-            this.connect(x+width+h,y+height-1.5*h,x,y+height-3*h,h,'#555555');
-            ctx.save();
-            ctx.translate(x+6,y+height-3*h);
-            ctx.rotate(-Math.PI/4*3);
-            ctx.beginPath();
-            ctx.arc(0,0,h*4/3,Math.PI,0);
-            colorBall(0,0,h,'#555555');
-            ctx.fill();
-            ctx.closePath();
-            ctx.restore();
-            ctx.save();
-            ctx.translate(x+width,y+height-1.5*h);
-            ctx.rotate(Math.PI/4*3);
-            ctx.beginPath();
-            ctx.arc(0,0,h*4/3,Math.PI,0);
-            colorBall(0,0,h,'#555555');
-            ctx.fill();
-            ctx.closePath();
-            ctx.restore();
+        conditionWhile: function(x,y,r,k,h,col,val,alpha,tr,width,height,vis,flWhile,posMaxY) {
+            this.connect(x+posMaxY-width *1/5,y-r*2,x+posMaxY-width *1/5,y+height,h,'#555555');
+            this.conditionIf(x,y,r,k,h,col,val,alpha,tr,width,height,vis,true,posMaxY-width*1/5);
         },
 
         roundedRect: function(x,y,width,height,radius,col1,col2,h) {
@@ -540,10 +513,18 @@ var DrawForVis = function(ctx) {
                 if (newText.indexOf(doubleS[i]) >= 0)
                     newText = newText.substr(0,newText.indexOf(doubleS[i]))+newText.substr(newText.indexOf(doubleS[i])+k,newText.length-k);
             }
+            if (newText.charAt(newText.length-1)==';')  newText = newText.substr(0,newText.length-1);
+			if (newText.charAt(0)==';')  newText = newText.substr(1,newText.length);
             if (newText.length > maxSize)
                 newText = newText.substr(0,maxSize-2) + '~';
-                ctx.font = r+'px Arial';
-                ctx.fillText(newText,x0,y0);
+            var l = (maxSize-newText.length)/2+1;
+            while (l > 0) {
+                newText = ' ' + newText;
+                l--;
+            }
+            ctx.fillStyle = '#333333'
+            ctx.font = r + 'px Courier';
+            ctx.fillText(newText,x0,y0);
         },
 
         oval: function(x0,y0,r,k,h,col,val,alpha,tr,vis) {
@@ -551,28 +532,24 @@ var DrawForVis = function(ctx) {
             ctx.translate(x0,y0);
             ctx.rotate(alpha);
             ctx.beginPath();
+            if (!vis) tr = 0.55;
             ctx.moveTo(-r,0);
             ctx.lineTo(-r,h);
             ctx.bezierCurveTo(-r/7*6,r/2+h,r/7*6,r/4+h,+r,h);
             ctx.lineTo(r,0);
+            ctx.bezierCurveTo(r/7*6,-r/2,-r/7*6,-r/4,-r,0);
             ctx.fillStyle = 'rgba(250,200,200,'+tr+')';
             ctx.fill();
             ctx.closePath();
             ctx.beginPath();
-            colorFigure(col,getGradient(col),r/3,r/2);
+            col = col.substr(0,col.length-3)+','+tr+')';
+            colorFigure(col,getGradient(col,tr),r*3/4,r*3/4);
             ctx.moveTo(-r,0);
             ctx.bezierCurveTo(-r/7*6,r/2,r/7*6,r/4,+r,0);
             ctx.bezierCurveTo(r/7*6,-r/2,-r/7*6,-r/4,-r,0);
             ctx.fill();
             ctx.closePath();
-            this.roundedRect(-r+h*3,-r/2.5,1.5*r,r/3,4,'rgba(255,255,255,'+tr+')','rgba(200,200,200,'+tr+')',3);
-            this.textStatment(val,-r+h*3.5,-r/5.5,r/6,19);
-            ctx.beginPath();
-            ctx.arc(0,0,r/7.5,Math.PI,0);
-            ctx.closePath();
-            if (vis) colorBall(r/15,0,r/10,'rgba(0,0,255,'+tr+')');
-            else colorBall(r/15,0,r/10,'rgba(255,102,00,'+tr+')')
-            ctx.fill();
+            this.textStatment(val,-r*1.2,0,r/4,13);
             ctx.restore();
         }
     };
