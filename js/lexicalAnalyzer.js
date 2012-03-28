@@ -21,10 +21,10 @@ LexicalAnalyzer = new Class ({
     exception: null,
     currentLexeme: null,
     getProgram: function() {
-        if (this.currentLexeme.name.toLowerCase() == 'var') {
+        if (this.currentLexeme.name == 'var') {
             this.getVar();
         }
-        if (this.currentLexeme.name.toLowerCase() == 'begin') {
+        if (this.currentLexeme.name == 'begin') {
             var main = this.getBlock(app.tree.treeVar);
             main.push(new SynStop());
             main.mainBlock = true;
@@ -81,19 +81,19 @@ LexicalAnalyzer = new Class ({
     getType: function() {
         var pos = this.currentLexeme.nextLexemePos;
         this.currentLexeme = Scanner.next(this.currentLexeme.nextLexemePos);
-        if (this.currentLexeme.name.toLowerCase() == 'integer') {
+        if (this.currentLexeme.name == 'integer') {
             return new SymVarName(0,0,0,'int','');
-        } else if (this.currentLexeme.name.toLowerCase() == 'real') {
+        } else if (this.currentLexeme.name == 'real') {
             return new SymVarName(0,0,0,'real','');
-        } else if (this.currentLexeme.name.toLowerCase() == 'char') {
+        } else if (this.currentLexeme.name == 'char') {
             return new SymVarName(0,0,0,'char','');
-        } else if (this.currentLexeme.name.toLowerCase() == 'boolean') {
+        } else if (this.currentLexeme.name == 'boolean') {
             return new SymVarName(0,0,0,'boolean','');
-        } else if (this.currentLexeme.name.toLowerCase() == 'array') {
+        } else if (this.currentLexeme.name == 'array') {
             return this.getDeclarationArray();
-        } else if (this.currentLexeme.name.toLowerCase() == 'string') {
+        } else if (this.currentLexeme.name == 'string') {
             return this.getDeclarationString();
-        } else if(this.currentLexeme.name.toLowerCase() == 'record') {
+        } else if(this.currentLexeme.name == 'record') {
             return this.getDeclarationRecord();
         } else {
             this.exception.error('error type ',this.currentLexeme);
@@ -109,7 +109,7 @@ LexicalAnalyzer = new Class ({
             this.exception.error('expect ] ',this.currentLexeme);
         pos = this.currentLexeme.nextLexemePos;
         this.currentLexeme = Scanner.next(this.currentLexeme.nextLexemePos);
-        if (this.currentLexeme.name.toLowerCase() != 'of')
+        if (this.currentLexeme.name != 'of')
             this.exception.error('expect of ',this.currentLexeme);
         return new SymArray(0,0,(bounder[1]-bounder[0]),bounder[0]*1,this.getType(),'');
     },
@@ -153,13 +153,12 @@ LexicalAnalyzer = new Class ({
     getDeclarationRecord: function() {
         var rec = new SymRecord(0,0,'record','');
         this.currentLexeme = Scanner.next(this.currentLexeme.nextLexemePos);
-        while (this.currentLexeme.name.toLowerCase() != 'end') {
+        while (this.currentLexeme.name != 'end') {
             this.getDeclaration(rec);
         }
         return rec;
     },
     getBlock: function(tree) {
-        Scanner.popCodePart('');
         this.currentLexeme = Scanner.next(this.currentLexeme.nextLexemePos);
         var synBlock = new StmtBlock();
         while (this.currentLexeme.name != 'end') {
@@ -171,6 +170,7 @@ LexicalAnalyzer = new Class ({
                 else if (this.currentLexeme.name == 'writeln') synBlock.push(this.parseWrite(tree,true));
                 else if (this.currentLexeme.name == 'write') synBlock.push(this.parseWrite(tree,false));
                 else if (this.currentLexeme.name == 'while') synBlock.push(this.parseWhile(tree));
+                else if (this.currentLexeme.name == 'for') synBlock.push(this.parseFor(tree));
                 else if (this.currentLexeme.name == 'begin') synBlock.push(this.getBlock(tree));
             } else this.exception.error('error statment ',this.currentLexeme);
             if (this.currentLexeme.name != ';')
@@ -196,7 +196,9 @@ LexicalAnalyzer = new Class ({
                 return block;
             }
         }
-        return new Statment(new SymStatment(0,0,'red','1null'),[0,0]);
+        var syn = new Statment(new SymStatment(),[0,0]);
+        syn.symStatment.value = '1null';
+        return syn;
     },
     parseRead: function(tree) {
         var pos = [this.currentLexeme.currentLexemePos];
@@ -214,7 +216,7 @@ LexicalAnalyzer = new Class ({
                 this.exception.error('expected , or ) ',this.currentLexeme);
         }
         this.currentLexeme = Scanner.next(this.currentLexeme.nextLexemePos);
-        var symRead = new SymRead(0,0,'#66CC99',Scanner.popCodePart(''));
+        var symRead = new SymRead();
         pos.push(this.currentLexeme.currentLexemePos);
         return new StmtRead(listRead,symRead,pos);
     },
@@ -231,7 +233,7 @@ LexicalAnalyzer = new Class ({
             this.exception.error('expected , or ) ',this.currentLexeme);
         }
         this.currentLexeme = Scanner.next(this.currentLexeme.nextLexemePos);
-        var symWrite = new SymWrite(0,0,'#66CC99',Scanner.popCodePart(''));
+        var symWrite = new SymWrite();
         pos.push(this.currentLexeme.currentLexemePos);
         if (ln == false) return new StmtWrite(listWrite,symWrite,false,pos);
         else return new StmtWrite(listWrite,symWrite,true,pos);
@@ -250,44 +252,65 @@ LexicalAnalyzer = new Class ({
                 this.exception.error('Incompatible types in assignment '+varLeft.type+' and '+expression.type,this.currentLexeme);
         }
         if ((typeCompare == 'real') && (expression.type =='int')) expression.setType('real');
-        var st2 = new SymAssignment(0,0,'#66CC99',Scanner.popCodePart(''));
+        var st2 = new SymAssignment();
         pos.push(this.currentLexeme.currentLexemePos);
         var statment = new StmtAssignment(varLeft,expression,st2,pos);
         return statment;
     },
     parseIfElse : function (tree){
-        Scanner.popCodePart('');
         var pos = [this.currentLexeme.currentLexemePos];
         this.currentLexeme = Scanner.next(this.currentLexeme.nextLexemePos);
         var expression = this.parseExpr(tree,'then');
+		pos.push(this.currentLexeme.currentLexemePos);
         if (this.currentLexeme.name!='then')
             this.exception.error('expected then ',this.currentLexeme);
-        var text = Scanner.popCodePart('');
-        var symIf = new	SymIf(0,0,'#66CC99',text.substring(0,text.length-4));
+        var symIf = new SymIf();
         this.currentLexeme = Scanner.next(this.currentLexeme.nextLexemePos);
         var stThen = this.getStatment(tree);
         var stElse = null;
         if (this.currentLexeme.name == 'else') {
-            Scanner.popCodePart('');
             this.currentLexeme = Scanner.next(this.currentLexeme.nextLexemePos);
             stElse = this.getStatment(tree);
         }
-        else stElse = new Statment(new SymStatment(0,0,'red','1null'),pos);
+        else {
+            stElse = new Statment(new SymStatment(),[0,0]);
+            stElse.symStatment.value = '1null';
+        }
         return new StmtIf(expression,stThen,stElse,symIf,pos);
     },
     parseWhile: function(tree) {
-        Scanner.popCodePart('');
         var pos = [this.currentLexeme.currentLexemePos];
         this.currentLexeme = Scanner.next(this.currentLexeme.nextLexemePos);
         var expression = this.parseExpr(tree,'do');
+        pos.push(this.currentLexeme.currentLexemePos);
         if (this.currentLexeme.name != 'do')
             this.exception.error('expected do ',this.currentLexeme);
-        var text = Scanner.popCodePart('');
-        var symWhile = new SymWhile(0,0,'#66CC99',text.substring(0,text.length-2));
+        var symWhile = new SymWhile();
         this.currentLexeme = Scanner.next(this.currentLexeme.nextLexemePos);
         var stDo = this.getStatment(tree);
-        var stElse = new Statment(new SymStatment(0,0,'red','1null'),pos);
+        var stElse = new Statment(new SymStatment(),[0,0]);
+        stElse.symStatment.value = '1null';
         return new StmtWhile(expression,stDo,stElse,symWhile,pos);
+    },
+    parseFor: function(tree) {
+        var pos = [this.currentLexeme.currentLexemePos];
+        this.currentLexeme = Scanner.next(this.currentLexeme.nextLexemePos);
+        var stAssignment = this.parseAssignment(tree);
+        if ((stAssignment.aLeft.type != 'int') && (stAssignment.aLeft.type != 'char'))
+            this.exception.error('must be integer type of variable ',this.currentLexeme);
+        if (this.currentLexeme.name != 'to')
+            this.exception.error('expected to ',this.currentLexeme);
+        this.currentLexeme = Scanner.next(this.currentLexeme.nextLexemePos);
+        var expression = this.parseExpr(tree,'do');
+        pos.push(this.currentLexeme.currentLexemePos);
+        if (this.currentLexeme.name != 'do')
+            this.exception.error('expected do ',this.currentLexeme);
+        var symFor = new SymFor();
+        this.currentLexeme = Scanner.next(this.currentLexeme.nextLexemePos);
+        var stDo = this.getStatment(tree);
+        var stElse = new Statment(new SymStatment(),[0,0]);
+        stElse.symStatment.value = '1null';
+        return new StmtFor(expression,stAssignment,stDo,stElse,symFor,pos);
     },
     parseExpr: function(treeVar,endLexeme) {
         return this.parseCompare(treeVar,endLexeme);
@@ -308,7 +331,7 @@ LexicalAnalyzer = new Class ({
     parseAdd: function(treeVar,endLexeme) {
         var left = this.parseTerm(treeVar,endLexeme);
         while ((this.currentLexeme.name == '+') || (this.currentLexeme.name == '-') ||
-	        (this.currentLexeme.name.toLowerCase() == 'or')) {
+            (this.currentLexeme.name == 'or')) {
 			if (((left.type == 'string') || (left.type == 'char')) && (this.currentLexeme.name != '+'))
 			    this.exception.error('invalid operation '+this.currentLexeme.name,this.currentLexeme);
 		    var binOp = new SymBinOp(this.currentLexeme.name,0,0,'#5500ff',Math.random()-0.5);
@@ -323,8 +346,8 @@ LexicalAnalyzer = new Class ({
     parseTerm: function(treeVar,endLexeme) {
         var left = this.parseFactor(treeVar,endLexeme);
         while ((this.currentLexeme.name == '*') || (this.currentLexeme.name == '/')||
-            (this.currentLexeme.name.toLowerCase() == 'and') || (this.currentLexeme.name.toLowerCase() == 'div')
-            || (this.currentLexeme.name.toLowerCase() == 'mod')) {
+            (this.currentLexeme.name == 'and') || (this.currentLexeme.name == 'div')
+            || (this.currentLexeme.name == 'mod')) {
                 if ((left.type == 'string') || (left.type == 'char'))
                     this.exception.error('invalid operation '+this.currentLexeme.name,this.currentLexeme);
             var binOp = new SymBinOp(this.currentLexeme.name,0,0,'#5500ff',Math.random()-0.5);
@@ -369,7 +392,6 @@ LexicalAnalyzer = new Class ({
         if (this.currentLexeme.name != '(') {
             this.exception.error('expect ( ',this.currentLexeme);
         }
-        text1 = Scanner.popCodePart('');
         this.currentLexeme = Scanner.next(this.currentLexeme.nextLexemePos);
         return this.parseCallParam(item,treeVar);
     },
@@ -380,15 +402,12 @@ LexicalAnalyzer = new Class ({
             if (i == (item.listParam.length-1)) endLexeme = ')';
             var param = this.parseExpr(treeVar,endLexeme);
             newSynExpr.push(param);
-            param.symbolName.text = Scanner.popCodePart('');
-            text1+=param.symbolName.text;
             param.symbolName.text = param.symbolName.text.substr(0,param.symbolName.text.length-1);
             if (this.currentLexeme.name != endLexeme)
                 this.exception.error('error parametr',this.currentLexeme);
             if (i < (item.listParam.length-1))
                 this.currentLexeme = Scanner.next(this.currentLexeme.nextLexemePos);
             }
-            Scanner.popCodePart(text1);
             var synF = new SynCallFunction(item,newSynExpr);
             if (synF.errorType != '')
                 this.exception.error(synF.errorType,this.currentLexeme);
@@ -421,7 +440,6 @@ LexicalAnalyzer = new Class ({
         if (this.currentLexeme.name!='[') {
             this.exception.error('expect [ ',this.currentLexeme);
         }
-        text = Scanner.popCodePart('')
         this.currentLexeme = Scanner.next(this.currentLexeme.nextLexemePos);
         return this.parseIndexArray(item,treeVar,']');
     },
@@ -436,8 +454,6 @@ LexicalAnalyzer = new Class ({
 	        endLexeme = ']';
 	    }
         var arrIndex = this.parseExpr(treeVar,endLexeme);
-        arrIndex.symbolName.text = Scanner.popCodePart('');
-        Scanner.popCodePart(text + arrIndex.symbolName.text);
 	    if (this.currentLexeme.name == ',') {
 		    if (!(item instanceof SymArray)) {
 		        this.exception.error('error index ',this.currentLexeme);

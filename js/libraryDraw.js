@@ -396,42 +396,29 @@ var DrawForVis = function(ctx) {
             ctx.lineTo(-2*k*r,r);
             ctx.fill();
             ctx.closePath();
-            this.textStatment(val,-r*(k+2),0,r*1.25,11);
+            this.textStatment(val,-r*k*1.15,0,r*1.25,17,2.8*r*k);
             ctx.restore();
         },
 
         conditionIf: function(x,y,r,k,h,col,val,alpha,tr,width,height,vis,picWhile,posMaxY) {
             ctx.save();
+            if (!vis) tr = 0.4;
             ctx.translate(x, y);
             ctx.rotate(alpha);
+            var w = width - 2*k*r;
+            if (w > 0) {
+                lineConnection(-2*k*r+2*h,-h/6,k,-w/Math.cos(1.6*alpha)-2*h,h*0.8,col,tr);
+                lineConnection(2*k*r-4,-h/6,k,w/Math.cos(1.6*alpha)+2,h*0.8,col,tr);
+            }
             ctx.beginPath();
-            if (!vis) tr = 0.4;
             ctx.moveTo(0,-r*k);
             ctx.lineTo(h,-r*k-h/2);
             ctx.lineTo(k*2*r,-h);
             ctx.lineTo(k*2*r,0);
             ctx.fillStyle = 'rgba(250,200,200,'+tr+')';
-            var w = width - 2*k*r;
-            if (w > 0) {
-                ctx.moveTo(-2*k*r-w/Math.cos(1.6*alpha),0);
-                ctx.lineTo(-2*k*r-w/Math.cos(1.6*alpha)+h,-h);
-                ctx.lineTo(-2*k*r+h*2,-h);
-                ctx.lineTo(-2*k*r+h,0);
-                ctx.fill();
-                ctx.moveTo(2*k*r+w/Math.cos(1.6*alpha),0);
-                ctx.lineTo(2*k*r+w/Math.cos(1.6*alpha)+h,-h);
-                ctx.lineTo(2*k*r,-h);
-                ctx.lineTo(2*k*r,0);
-                ctx.fill();
-            }
             ctx.fill();
             ctx.closePath();
             ctx.beginPath();
-            if (w > 0) {
-                ctx.fillStyle = col;
-                ctx.fillRect(-2*k*r+2*h,-h/6,-w/Math.cos(1.6*alpha)-2*h,h/3);
-                ctx.fillRect(2*k*r-2,-h/6,w/Math.cos(1.6*alpha)+2,h/3);
-            }
             colorFigure(col,getGradient(col,tr),k*r,r);
             ctx.moveTo(-k*2*r,0);
             ctx.lineTo(0,-r*k);
@@ -439,7 +426,7 @@ var DrawForVis = function(ctx) {
             ctx.lineTo(0,r*k);
             ctx.fill();
             ctx.closePath();
-            this.textStatment(val,-r*(k+2.5),r/4,r*0.8,16);
+            this.textStatment(val,-r*k*1.3,r/4,r*0.8,16,r*k*2.5);
             ctx.restore();
             ctx.save();
             if (picWhile) {
@@ -456,8 +443,50 @@ var DrawForVis = function(ctx) {
         },
 
         conditionWhile: function(x,y,r,k,h,col,val,alpha,tr,width,height,vis,flWhile,posMaxY) {
-            this.connect(x+posMaxY-width *1/5,y-r*2,x+posMaxY-width *1/5,y+height,h,'#555555');
+            this.connect(x+posMaxY-width*1/5,y-r*2,x+posMaxY-width*1/5,y+height,h,'#555555');
             this.conditionIf(x,y,r,k,h,col,val,alpha,tr,width,height,vis,true,posMaxY-width*1/5);
+        },
+
+        conditionFor: function(x,y,r,k,h,col,val,alpha,tr,width,height,vis,posMaxY) {
+            this.connect(x+posMaxY,y-r*2,x+posMaxY,y+height,h,'#555555');
+            ctx.save();
+            if (!vis) tr = 0.4;
+            ctx.translate(x, y);
+            ctx.rotate(alpha);
+            var w = width - 2*k*r;
+            if (w > 0) {
+                lineConnection (-2*k*r+2*h,-h/6,k,-w/Math.cos(1.6*alpha)-2*h,h*0.8,col,tr);
+                lineConnection (2*k*r-4,-h/6,k,w/Math.cos(1.6*alpha)+2,h*0.8,col,tr);
+            }
+            ctx.beginPath();
+            ctx.moveTo(-k*2*r,0);
+            ctx.lineTo(-k*r+h,-r*k/2-h*0.8);
+            ctx.lineTo(k*r+h,-r*k/2-h*0.65);
+            ctx.lineTo(k*2*r,-h);
+            ctx.lineTo(k*2*r,0);
+            ctx.fillStyle = 'rgba(250,200,200,'+tr+')';
+            ctx.fill();
+            ctx.closePath();
+            ctx.beginPath();
+            colorFigure(col,getGradient(col,tr),k*r,r);
+            ctx.moveTo(-k*2*r,0);
+            ctx.lineTo(-k*r,-r*k/2);
+            ctx.lineTo(k*r,-r*k/2);
+            ctx.lineTo(k*2*r,0);
+            ctx.lineTo(k*r,r*k/2);
+            ctx.lineTo(-k*r,r*k/2);
+            ctx.fill();
+            ctx.closePath();
+            this.textStatment(val,-r*k*1.3,r/4,r*0.8,18,2.5*r*k);
+            ctx.restore();
+            ctx.save();
+            lineConnection(x-width,y+height,0,width,h,col,tr);
+            this.connect(x+width,y+height,x+posMaxY,y+height,h,'#555555');
+            this.connect(x,y-r*k,x+posMaxY+h,y-r*k,h,'#555555');
+            ballConnection(x+posMaxY,y-r*k,h,Math.PI/4,'#555555');
+            ballConnection(x+width+h,y+height-h*0.7,h,-Math.PI/4*3,'#555555');
+            ballConnection(x+posMaxY,y+height-h*0.7,h,Math.PI/4*3,'#555555');
+            ctx.restore();
         },
 
         roundedRect: function(x,y,width,height,radius,col1,col2,h) {
@@ -504,27 +533,14 @@ var DrawForVis = function(ctx) {
             ctx.restore();
         },
 
-        textStatment: function(val,x0,y0,r,maxSize) {
+        textStatment: function(val,x0,y0,r,maxSize,maxPixel) {
             ctx.fillStyle = '#000';
             var newText = val;
-            var doubleS=[':=:=','<=<=','>=>=','<><>','++','[[','==','<<','>>'];
-            for (i = 0; i < doubleS.length; i++) {
-                var k = doubleS[i].length/2;
-                if (newText.indexOf(doubleS[i]) >= 0)
-                    newText = newText.substr(0,newText.indexOf(doubleS[i]))+newText.substr(newText.indexOf(doubleS[i])+k,newText.length-k);
-            }
-            if (newText.charAt(newText.length-1)==';')  newText = newText.substr(0,newText.length-1);
-			if (newText.charAt(0)==';')  newText = newText.substr(1,newText.length);
-            if (newText.length > maxSize)
-                newText = newText.substr(0,maxSize-2) + '~';
-            var l = (maxSize-newText.length)/2+1;
-            while (l > 0) {
-                newText = ' ' + newText;
-                l--;
-            }
-            ctx.fillStyle = '#333333'
+            if (val.length > maxSize) newText = val.substr(0,maxSize-1)+'~';
+            while (newText.length <= (maxSize/2-val.length/2)) newText = ' ' + newText;
+            ctx.fillStyle = '#000000';
             ctx.font = r + 'px Courier';
-            ctx.fillText(newText,x0,y0);
+            ctx.fillText(newText,x0,y0,maxPixel);
         },
 
         oval: function(x0,y0,r,k,h,col,val,alpha,tr,vis) {
@@ -549,7 +565,7 @@ var DrawForVis = function(ctx) {
             ctx.bezierCurveTo(r/7*6,-r/2,-r/7*6,-r/4,-r,0);
             ctx.fill();
             ctx.closePath();
-            this.textStatment(val,-r*1.2,0,r/4,13);
+            this.textStatment(val,-r,0,r/4,24,r*2);
             ctx.restore();
         }
     };

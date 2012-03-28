@@ -12,6 +12,13 @@ SynExpr = new Class({
     getValue: function() {
         return 0;
     },
+    clearText: function(text) {
+        while(text.indexOf(' ',0) != -1)
+            text = text.substr(0,text.indexOf(' ',0))+text.substr(text.indexOf(' ',0)+1,text.length-1);
+        if (text.indexOf('{',0) != -1)
+            text = text.substr(0,text.indexOf('{',0))+text.substr(text.indexOf('}',0)+1,text.length-1);
+        return text;
+    },
     setValue: function(value) {},
     getType : function() {
         return this.type;
@@ -536,6 +543,10 @@ Statment = new Class ({
         this.selectPos = pos;
         this.symbolName = new SymbolName(0,0,'');
         this.symStatment = symStatment;
+        if (pos instanceof Array) {
+            var program = $('#programPanel');
+            this.symStatment.value = this.clearText(program.val().substr(this.selectPos[0],this.selectPos[1]-this.selectPos[0]));
+        }
     },
     parentStatment: null,
     symStatment: null,
@@ -684,7 +695,7 @@ StmtAssignment = new Class ({
                 var setVal = aRight.operation(false,aLeft.type);
                 if (aLeft.type == 'string') aLeft.getSymbol().setNewString(setVal);
                 else aLeft.setValue(setVal);
-                symStatment.color = 'rgba(49,79,79,1)';
+                symStatment.color = 'rgba(69,139,0,1)';
             }
         }
         app.paint();
@@ -705,6 +716,7 @@ StmtIf = new Class({
         this.stmtElse = sElse;
         this.begThenHeight = this.stmtThen.symStatment.height;
         this.begElseHeight = this.stmtElse.symStatment.height;
+        this.symStatment.value = this.symStatment.value.replace('if','');
 	},
 	result: true,
     exprIf: null,
@@ -803,7 +815,7 @@ StmtIf = new Class({
                 app.insertElementVis(k,st);
             } else {
                 result = exprIf.operation(false,'int');
-                symStatment.color = 'rgba(49,79,79,1)';
+                symStatment.color = 'rgba(69,139,0,1)';
                 symStatment.angleOfRotation = Math.PI/9;
                 var d = Math.abs(Math.cos(Math.PI/9))*symStatment.width/2.5;
                 stmtThen.symStatment.height = begThenHeight;
@@ -948,8 +960,8 @@ StmtBlock = new Class ({
 
 StmtRead = new Class ({
     Extends: Statment,
-    initialize: function(arrayRead,symStatment) {
-        this.parent(symStatment);
+    initialize: function(arrayRead,symStatment,pos) {
+        this.parent(symStatment,pos);
         this.arrayRead = arrayRead;
     },
     arrayRead: null,
@@ -1019,14 +1031,14 @@ StmtWrite = new Class ({
         this.parent(ctx,tools);
         with (this) {
             if (showVisual) {
-                varEnd = new SymVarName (0,30,app.height+30,'int','');
+                varEnd = new SymVarName (0,tools.getAdjustedX(30),(app.height+30)/tools.scale,'int','');
                 varEnd.setVisible(false);
                 k = app.insertRowVis();
                 st = new SymChangeStatment(this,0.4,1);
                 app.insertElementVis(k,st);
                 for (var i = 0; i < arrayWrite.length; i++) {
                     k = app.insertRowVis();
-                    varEnd.setPosX(30*(i+1));
+                    varEnd.setPosX(tools.getAdjustedX(30*(i+1)));
                     app.insertElementVis(k, new SymDinamicVisible(this.arrayWrite[i], true));
                     arrayWrite[i].setVisible(true);
                     arrayWrite[i].interpretation([symStatment.getPosX(),symStatment.getPosY()]);
@@ -1053,7 +1065,7 @@ StmtWrite = new Class ({
                 }
                 if (ln == false) text = new SymVarWrite(str,'string',false,n);
                 else text = new SymVarWrite(str,'string',true,n);
-                symStatment.color = 'rgba(49,79,79,1)';
+                symStatment.color = 'rgba(69,139,0,1)';
                 k = app.insertRowVis();
                 app.insertElementVis(k,text);
             }
@@ -1066,6 +1078,7 @@ StmtWhile = new Class({
     Extends: StmtIf,
     initialize: function(exprIf,sThen,sElse,symStatment,pos) {
         this.parent(exprIf,sThen,sElse,symStatment,pos);
+        this.symStatment.value = this.symStatment.value.replace('while','')
     },
     visualization: function(ctx,tools) {
         this.parent(ctx,tools);
@@ -1074,5 +1087,35 @@ StmtWhile = new Class({
             this.stmtThen.goStatment();
             this.stmtElse.goStatment();
         }
+    }
+});
+
+StmtFor = new Class({
+    Extends: StmtWhile,
+    initialize: function(exprIf,synAssign,sThen,sElse,symStatment,pos) {
+        this.parent(exprIf,sThen,sElse,symStatment,pos);
+        this.synAssign = synAssign;
+        this.symStatment.value = this.symStatment.value.replace('for','')
+        this.symStatment.value = this.symStatment.value.replace('to','..')
+        this.synEndFor = exprIf;
+    },
+    synAssign: null,
+    synEndFor: null,
+    init : true,
+    visualization: function(ctx,tools) {
+        var result, result1;
+        if (this.init) {
+            result = this.synAssign.aRight.operation(false,'int');
+            this.synAssign.aLeft.setValue(result);
+            result1 = this.synEndFor.operation(false,'int');
+            this.symStatment.value=this.synAssign.aLeft.symVar.name+':='+result+'..'+result1;
+            var binOp = new SymBinOp('<=',0,0,'#5500ff',Math.random()-0.5);
+            this.exprIf = new SynBinOp(binOp,this.synAssign.aLeft,new SynConstInt(result1));
+            this.exprIf.putPosition([this.symStatment.posX,this.symStatment.posY-50]);
+            this.synAssign.aLeft.symVar.setPosX(this.symStatment.posX - 10);
+            this.synAssign.aLeft.symVar.setPosY(this.symStatment.posY +80);
+            this.init = false;
+        } else this.synAssign.aLeft.setValue(this.synAssign.aLeft.getValue()*1+1);
+        this.parent(ctx,tools);
     }
 });

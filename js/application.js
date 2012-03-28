@@ -61,7 +61,7 @@ VariableTree = new Class({
         if (length/2 != Math.ceil(length/2)) {
             length++;
         }
-        var sizeX = width/4, sizeY = height/length*2;
+        var sizeX = width/12, sizeY = height/length*2;
         var k = 0;
         for(var i = 0; i < 2; i++) {
             for(var j = 0; j < length/2; j++) {
@@ -220,7 +220,9 @@ Application = new Class({
             pred = this.visualStatments.treeStatment[this.visualStatments.currentStatment];
         if (pred instanceof SynStop) return pred;
         if (pred instanceof StmtIf)
-            if ((pred.result == false) && (pred.stmtElse.symStatment.value == '1null')) {}
+            if ((pred.result == false) && (pred.stmtElse.symStatment.value == '1null')) {
+                if (pred instanceof StmtFor) pred.init = true;
+            }
             else if ((pred.result == true) && (pred.stmtThen.symStatment.value == '1null')) {}
         else {
             var next;

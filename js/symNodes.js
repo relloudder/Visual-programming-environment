@@ -122,21 +122,21 @@ SymVarName = new Class({
     Extends: SymVar,
     initialize: function (v,pX,pY,type,nameV) {
         var colorAndRadius = function(color, radius) {
-    		this.color = color;
-    		this.radius = radius;
-    	}
-    var typeAndValue = {
-          'int': new colorAndRadius('rgba(255,0,0,1)', 20),
-          'real': new colorAndRadius('rgba(0,128,0,1)', 25),
-          'record': new colorAndRadius('grey', 20),
-          'boolean': new colorAndRadius('rgba(0,0,255,1)', 15),
-          'char': new colorAndRadius('rgba(255,153,255,1)', 15),
-          'array': new colorAndRadius('black', 20),
-          'string': new colorAndRadius('black', 20),
-          'binOp': new colorAndRadius('IndianRed', 30),
-          'const': new colorAndRadius('gray', 25)
-    }
-    var t = typeAndValue[type];
+            this.color = color;
+            this.radius = radius;
+        }
+        var typeAndValue = {
+            'int': new colorAndRadius('rgba(255,0,0,1)', 15),
+            'real': new colorAndRadius('rgba(0,128,0,1)', 20),
+            'record': new colorAndRadius('grey', 20),
+            'boolean': new colorAndRadius('rgba(0,0,255,1)', 10),
+            'char': new colorAndRadius('rgba(255,153,255,1)', 10),
+            'array': new colorAndRadius('black', 20),
+            'string': new colorAndRadius('black', 20),
+            'binOp': new colorAndRadius('IndianRed', 25),
+            'const': new colorAndRadius('gray', 25)
+        }
+        var t = typeAndValue[type];
         this.parent(v,pX,pY,t.color,t.radius);
         this.name = nameV;
         this.type = type;

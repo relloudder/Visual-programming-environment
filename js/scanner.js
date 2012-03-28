@@ -137,7 +137,7 @@ var Scanner = (function() {
 
         updateCodeAndPosition(lexemeEndPos);
         if ((lexemeName != 'else') && (lexemeName != 'end')) codePart += lexemeName;
-        return new Lexeme(lexemeName, lexemeType, position, position - lexemeEndPos);
+        return new Lexeme(lexemeName.toLowerCase(), lexemeType, position, position - lexemeEndPos);
     };
 
 
