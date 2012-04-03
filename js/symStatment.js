@@ -43,7 +43,7 @@ SymStatment = new Class ({
         return this.posMaxX;
     },
     setPosMaxX: function(val) {
-        this.posMaxX+=val;
+        this.posMaxX = val;
     },
     draw: function(ctx,tools) {},
     findVar: function(pos,tools) {
@@ -59,6 +59,7 @@ SymBegin = new Class ({
     initialize: function() {
         this.parent();
         this.color = '#E8E8E8';
+        this.width = 90;
     },
     draw: function(ctx,tools) {
         with(this) {
@@ -108,6 +109,7 @@ SymAssignment = new Class ({
     initialize: function() {
         this.parent();
         this.height = 70;
+        this.width = 90;
     },
     draw: function(ctx,tools) {
         with(this) {
@@ -239,8 +241,8 @@ SymRead = new Class ({
     Extends: SymStatment,
     initialize: function() {
         this.parent();
-        this.heightStatment = 50;
         this.height = 70;
+        this.width = 90;
     },
     draw : function(ctx,tools) {
         with (this) {
@@ -254,8 +256,8 @@ SymWrite = new Class ({
     Extends: SymStatment,
     initialize: function() {
         this.parent();
-        this.heightStatment = 50;
         this.height = 70;
+        this.width = 90;
     },
     draw : function(ctx,tools) {
         with (this) {

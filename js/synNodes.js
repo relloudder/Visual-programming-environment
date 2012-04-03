@@ -114,7 +114,7 @@ SynExpr = new Class({
             if (this instanceof SynBinOp) {
                 part2 = getRight().operation(visible,type);
                 part1 = getLeft().operation(visible,type);
-                if ((type != 'char') && (type != 'string') && (type != 'boolean')) {
+                if ((type != 'char') && (type != 'string')) {
                     part1 = part1*1;
                     part2 = part2*1;
                 }
@@ -555,10 +555,10 @@ Statment = new Class ({
         return this.constValue;
     },
     getPosY: function() {
-        this.symStatment.getPosY();
+        return this.symStatment.getPosY();
     },
-    getPosY: function() {
-        this.symStatment.getPosX();
+    getPosX: function() {
+        return this.symStatment.getPosX();
     },
     drawLine: function(ctx,tools) {
         with (this.symStatment)
@@ -695,7 +695,7 @@ StmtAssignment = new Class ({
                 var setVal = aRight.operation(false,aLeft.type);
                 if (aLeft.type == 'string') aLeft.getSymbol().setNewString(setVal);
                 else aLeft.setValue(setVal);
-                symStatment.color = 'rgba(69,139,0,1)';
+                symStatment.color = 'rgba(49,79,79,1)';
             }
         }
         app.paint();
@@ -724,14 +724,12 @@ StmtIf = new Class({
     stmtElse: null,
     begThenHeight: null,
     begElseHeight: null,
-    getExprIf: function(){
+    getExprIf: function () {
         return this.exprIf;
     },
-    getWidth: function (){
-        var wElse = 0;
-        if (this.stmtElse != null) wElse = this.stmtElse.getWidth();
-        return (this.symStatment.width+(wElse+this.stmtThen.getWidth())/3);
-	  },
+    getPosX: function() {
+        return this.stmtThen.getPosX();
+    },
     drawLine: function(ctx,tools) {
         with(this.symStatment) {
             DrawForVis(ctx).connect(tools.getAdjustedX(posX),tools.getAdjustedY(posY - height),
@@ -754,9 +752,9 @@ StmtIf = new Class({
         this.parent(pos);
         var x = pos[0] + this.getWidth();
         var y = pos[1] + this.stmtThen.getHeight();
-        this.setWidth(this.getWidth());
         this.exprIf.putPosition([pos[0],pos[1]-70]);
         this.stmtThen.putPosition([x,y]);
+        this.symStatment.setPosMaxX(this.getPosX()-pos[0]+this.stmtThen.symStatment.width-10);
         x -= 2*this.getWidth();
         y = pos[1] + this.stmtElse.getHeight();
         this.stmtElse.putPosition([x,y]);
@@ -815,7 +813,7 @@ StmtIf = new Class({
                 app.insertElementVis(k,st);
             } else {
                 result = exprIf.operation(false,'int');
-                symStatment.color = 'rgba(69,139,0,1)';
+                symStatment.color = 'rgba(49,79,79,1)';
                 symStatment.angleOfRotation = Math.PI/9;
                 var d = Math.abs(Math.cos(Math.PI/9))*symStatment.width/2.5;
                 stmtThen.symStatment.height = begThenHeight;
@@ -840,11 +838,7 @@ StmtIf = new Class({
         return Math.max(this.symStatment.width,this.stmtElse.getWidth()+this.stmtThen.getWidth()+10);
     },
     setWidth: function(width) {
-        this.parent(width);
-        var k = this.stmtThen.getWidth();
-        this.stmtThen.setWidth(k);
-        this.symStatment.setPosMaxX(k+this.symStatment.getPosMaxX());
-        this.stmtElse.setWidth(this.stmtElse.getWidth());
+        this.parent (this.getWidth());
     },
     findSynExpr: function(pos,tools) {
         var find = this.parent(pos,tools);
@@ -890,6 +884,7 @@ StmtBlock = new Class ({
         for(var k = 0; k < this.treeStatment.length; k++) {
             pos[1] += this.treeStatment[k].getHeight();
             this.treeStatment[k].putPosition(pos);
+            this.treeStatment[k].symStatment.setPosMaxX(this.treeStatment[k].getPosX()-pos[0]+this.treeStatment[k].symStatment.width);
         }
     },
     getHeightStatment: function() {
@@ -1065,7 +1060,7 @@ StmtWrite = new Class ({
                 }
                 if (ln == false) text = new SymVarWrite(str,'string',false,n);
                 else text = new SymVarWrite(str,'string',true,n);
-                symStatment.color = 'rgba(69,139,0,1)';
+                symStatment.color = 'rgba(49,79,79,1)';
                 k = app.insertRowVis();
                 app.insertElementVis(k,text);
             }

@@ -239,9 +239,13 @@ Application = new Class({
             return this.visualStatments.treeStatment[this.visualStatments.currentStatment];
         }
         while (this.visualStatments.currentStatment == (this.visualStatments.treeStatment.length-1))
-            this.visualStatments = this.visualStatments.parent;
+            if (this.visualStatments.treeStatment[this.visualStatments.currentStatment] instanceof StmtWhile) {
+                if (this.visualStatments.treeStatment[this.visualStatments.currentStatment].result == false)
+                    this.visualStatments = this.visualStatments.parent
+                else break;
+            } else  this.visualStatments = this.visualStatments.parent;
         if ((this.visualStatments.treeStatment[this.visualStatments.currentStatment] instanceof StmtWhile) &&
-            (this.visualStatments.treeStatment[this.visualStatments.currentStatment].result)) {}
+           (this.visualStatments.treeStatment[this.visualStatments.currentStatment].result)) {}
         else this.visualStatments.currentStatment++;
         return this.visualStatments.treeStatment[this.visualStatments.currentStatment];
     }

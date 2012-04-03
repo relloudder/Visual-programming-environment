@@ -191,6 +191,7 @@ LexicalAnalyzer = new Class ({
             if (this.currentLexeme.name == 'writeln') return this.parseWrite(tree,true);
             if (this.currentLexeme.name == 'write') return this.parseWrite(tree,false);
             if (this.currentLexeme.name == 'while') return this.parseWhile(tree);
+            if (this.currentLexeme.name == 'for') return this.parseFor(tree);
             if (this.currentLexeme.name == 'begin' ) {
                 var block = this.getBlock(tree);
                 return block;
