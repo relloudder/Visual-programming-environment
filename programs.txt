@@ -1,0 +1,158 @@
+{Найти максимум из двух чисел}
+Var
+  a, b, max : integer;
+begin
+    read(a, b);
+    if a>b then max := a
+    else max := b;
+    write(max);
+end.
+
+{Найти максимум из трех чисел}
+Var
+  a, b, c, max : integer;
+begin
+    read(a, b, c);
+    max:=a;
+    if b>max then max := b;
+    if c > max then max := c;
+    write(max);
+end.
+
+{найти сумму цифр трехзначного числа}
+Var
+    a, cif,sum : integer;
+begin
+    read(a);
+    cif:=a mod 10;
+    a := a div 10;
+    sum := sum+cif;
+    cif := a mod 10;
+    a := a div 10;
+    sum := sum+cif+a;
+    write(sum);
+end.
+  
+
+
+{найти сумму цифр целого числа}
+var
+    num, x, sum, dig : integer;
+begin
+    read(num);
+    x:=num;
+    while x>0 do begin
+        dig := x mod 10;
+        x:=x div 10;
+        sum:= sum+dig;
+    end;
+     write ('num=', num,'  sum=',sum);
+end.
+
+{найти наибольший общий делитель двух чисел, алгоритм Эвклида}
+var
+    y, x, num1, num2, nod: integer;
+begin
+    read(num1,num2);
+    x:=num1;
+    y:=num2;
+    while x*y >0 do begin
+        if x>y then 
+            x:= x mod y
+        else
+          y:=y mod x;
+    end;
+    nod :=x+y;
+    write ('num1=', num1,'  num2=',num2,'   nod =',x+y);
+end.
+
+{определяет, простое число или составное}
+var
+  num, k: integer;
+   s: string;
+begin
+    read(num);
+   k:=2;
+    while (num mod k <>0) do 
+        k:=k+1;
+    if k = num then
+       s:='simple'
+    else
+      s:='composite';
+	writeln (num,' -',s,' number');
+end.
+        
+		
+{вывести все числа фибоначчи, сумма которых не превышает n}		
+var
+   	num0, num1, num, sum, n: integer; 
+begin
+    read(n);
+    num1:=1;
+    num:=num0+num1;
+    while (sum< n) do begin
+	  write(num,' '); 
+          num:=num0+num1;
+           num0:=num1;
+           num1 :=num;
+           sum:=sum+num;
+	end;
+    sum:=sum - num;
+end.
+
+{Напечатать все делители числа}    
+var
+  num, k: integer;
+   s: string;
+begin
+    read(num);
+   k:=1;
+    while (num <> k) do begin
+      if num mod k =0 then
+          write(k,' ');
+        k:=k+1;
+    end;
+end.	
+
+{массив в обратном порядке}
+var 
+    a: array [1..9] of integer;
+	i, work, n: integer;
+begin
+    read(n);
+   for i:=1 to n do begin
+         a[i]:=random(60);
+         write(a[i],'   ');
+   end;
+   writeln('new aray   ');
+ for i:=1 to  n div 2 do begin
+      work:=a[i];
+      a[i]:=a[n+1-i];
+      a[n+1-i]:=work;
+end;
+ for i:=1 to n do 
+      write(a[i],'   ');
+end.
+
+{сортировка пузырьком}
+var 
+    a: array [1..9] of integer;
+	i, work, n, k: integer;
+   
+begin
+    read(n);
+   for i:=1 to n do 
+	a[i]:=random(60);
+   
+  for i:=1 to  n  do 
+     for k:=1 to n-i do 
+        if a[k]>a[k+1] then begin
+	   work:=a[k];
+	   a[k]:=a[k+1];
+	   a[k+1]:=work;
+	end;
+
+  for i:=1 to n do 
+      write(a[i],'   ');
+	
+end.
