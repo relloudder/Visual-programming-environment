@@ -57,9 +57,11 @@ function runInterface() {
         var x = event.pageX - $("#wCanvas").offset().left;
         var y = event.pageY - $("#wCanvas").offset().top;
         if (app.flagCanvasMove) {
-            app.tools.setTop(app.tools.getTop() - (yOld - y)/app.tools.getScale());
-            app.tools.setLeft(app.tools.getLeft() - (xOld - x)/app.tools.getScale());
-			app.draw();
+            var pos =[app.tools.getLeft() - (xOld - x)/app.tools.getScale(),app.tools.getTop() - (yOld - y)/app.tools.getScale()]
+            app.tools.setTop(pos[1]);
+            app.tools.setLeft(pos[0]);
+            app.tree.putPosition([(xOld - x)/app.tools.getScale(),(yOld - y)/app.tools.getScale()]);
+            app.draw();
         } else if (app.flagMove) {
 	        app.tree.varMove.changePos([x,y],app.tools);
 			app.draw();

@@ -29,6 +29,12 @@ Symbol = new Class({
     setPosY: function(pY) {
         this.posY = pY;
     },
+    setNewPosX: function(pX) {
+        this.posX = pX;
+    },
+    setNewPosY: function(pY) {
+        this.posY = pY;
+    },
     clone: function() {
         return new Symbol(this.posX,this.posY);
     }
@@ -134,7 +140,7 @@ SymVarName = new Class({
             'array': new colorAndRadius('black', 20),
             'string': new colorAndRadius('black', 20),
             'binOp': new colorAndRadius('IndianRed', 25),
-            'const': new colorAndRadius('gray', 25)
+            'const': new colorAndRadius('gray', 20)
         }
         var t = typeAndValue[type];
         this.parent(v,pX,pY,t.color,t.radius);
@@ -229,8 +235,8 @@ SymArray = new Class({
 	        var x = this.posX + this.rVar*2.2*i; //положение каждого шарика по x
 		    var y = this.posY - i*this.rVar*Math.sin(this.turn);
             var item  =  cloneItem.clone();
-            item.setPosX(x);
-            item.setPosY(y);
+            item.setNewPosX(x);
+            item.setNewPosY(y);
             item.setName(i + this.firstIndex);
 		    this.itemsElement.push(item);
 	    }
@@ -238,7 +244,7 @@ SymArray = new Class({
     firstIndex: 0,
     sizeElement: 0,
     itemsElement: null,
-    setPosX: function(pX) {
+    setNewPosX: function(pX) {
         with(this) {
             posX = pX;
             for (var i = 0; i <= sizeElement; i++) {
@@ -246,12 +252,28 @@ SymArray = new Class({
             }
         }
     },
-    setPosY: function(pY) {
+    setNewPosY: function(pY) {
         with(this) {
             posY = pY;
             for (var i = 0; i <= sizeElement; i++) {
                 itemsElement[i].setPosY(posY + i*itemsElement[i].rVar*Math.sin(this.turn)*1.2);
             }
+        }
+    },
+    setPosX: function(pX) {
+        with(this) {
+            for (var i = 0; i <= sizeElement; i++) {
+                itemsElement[i].setPosX(itemsElement[i].getPosX()-posX +pX);
+            }
+            posX = pX;
+        }
+    },
+    setPosY: function(pY) {
+        with(this) {
+            for (var i = 0; i <= sizeElement; i++) {
+                itemsElement[i].setPosY(itemsElement[i].getPosY()-posY +pY);
+            }
+            posY = pY;
         }
     },
     setName: function(name) {
@@ -368,7 +390,7 @@ SymString = new Class({
             k = k+1.1*1/(i/4+1);
         }
     },
-    setPosX: function(pX) {
+    setNewPosX: function(pX) {
         with(this) {
             posX = pX;
             for (var i = 0; i <= sizeElement; i++) {
@@ -376,7 +398,7 @@ SymString = new Class({
             }
         }
     },
-    setPosY: function(pY) {
+    setNewPosY: function(pY) {
         with(this) {
             posY = pY;
             for (var i = 0; i <= sizeElement; i++) {
@@ -439,6 +461,12 @@ SymRecord = new Class({
             for(var i = 0; i < sizeElement; i++)
                 itemsElement[i].setPosY(itemsElement[i].posY - y + posY);
         }
+    },
+    setNewPosX:function(vX) {
+        this.setPosX(vX);
+    },
+    setNewPosY:function(vY) {
+        this.setPosY(vY);
     },
     clone: function() {
         var record =  new SymRecord(this.posX,this.posY,this.type,this.name);

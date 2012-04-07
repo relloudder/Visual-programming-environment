@@ -92,12 +92,12 @@ VariableTree = new Class({
         return -1;
     },
     putPosition: function(pos) {
-        for(var k = 1; k < this.treeStatment.length; k++) {
-            pos[1] += this.treeStatment[k].getHeight();
-            this.treeStatment[k].putPosition(pos);
+        for (var j = 0; j < this.treeVar.length; j++) {
+            this.treeVar[j].setPosX(this.treeVar[j].getPosX()+pos[0]);
+            this.treeVar[j].setPosY(this.treeVar[j].getPosY()+pos[1]);
         }
-    },
-    setPrev: function(pos) {}
+    }
+    //setPrev: function(pos) {}
 });
 
 Tools = new Class({
@@ -206,6 +206,7 @@ Application = new Class({
                 if (this.pause) return;
                 var next = this.nextStatmentForVis();
                 if (next instanceof SynStop) {
+                    next.visualization(this.ctx,this.tools);
                     clearInterval(this.idTimer);
                     return
                 }

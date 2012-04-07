@@ -13,8 +13,8 @@ SynExpr = new Class({
         return 0;
     },
     clearText: function(text) {
-        while(text.indexOf(' ',0) != -1)
-            text = text.substr(0,text.indexOf(' ',0))+text.substr(text.indexOf(' ',0)+1,text.length-1);
+        //while(text.indexOf(' ',0) != -1)
+        //    text = text.substr(0,text.indexOf(' ',0))+text.substr(text.indexOf(' ',0)+1,text.length-1);
         if (text.indexOf('{',0) != -1)
             text = text.substr(0,text.indexOf('{',0))+text.substr(text.indexOf('}',0)+1,text.length-1);
         return text;
@@ -220,7 +220,7 @@ SynArray = new Class({
         this.right = right;
         this.symbolArray = symbol;
         this.type = this.symbolArray.type;
-        this.symbolName = new SymbolName(0,0,this.getAllName(this.left.name+'['));
+        this.symbolName = new SymbolName(0,0,this.left.name+'[');
     },
     left: null, //link for synArray
     right: null, //expression for index
@@ -242,6 +242,7 @@ SynArray = new Class({
         if (Math.ceil(result) != result) {
             alert('Error type of index of array '+this.left.name); error;
         }
+        this.symbolName.text=this.getAllName(this.left.name+'[');
         var item = this.left.getItemArrByNum(result);
         if((this.symbolArray instanceof SynArray)||(this.symbolArray instanceof SynRecord)) {
             this.symbolArray.setItemLeft(item);
@@ -253,10 +254,7 @@ SynArray = new Class({
         this.left = item;
     },
     getAllName: function(name) {
-        var index = this.right.getValue();
-        if(index == null) {
-            index = this.right.symbolName.text.substring(0,this.right.symbolName.text.length-1);
-        }
+        var index = this.right.operation(false,'int');
         if(this.symbolArray instanceof SynArray) {
             name = name + index + ',';
             return this.symbolArray.getAllName(name);
@@ -582,7 +580,6 @@ Statment = new Class ({
     },
     setWidth: function(width) {
         this.symStatment.width = width;
-        this.symStatment.setPosMaxX(width);
     },
     putPosition: function(pos) {
         this.symStatment.posX = pos[0];
@@ -617,9 +614,10 @@ Statment = new Class ({
 
 SynStop = new Class ({
     Extends: Statment,
-        initialize: function() {
-        this.parent(new SymStatment(0,0,'red','1null'),[0,0]);
+        initialize: function(pos) {
+        this.parent(new SymStatment(0,0,'red','1null'),pos);
         this.symStatment.height = 0;
+        this.symStatment.width = 0;
     }
 });
 
@@ -724,11 +722,8 @@ StmtIf = new Class({
     stmtElse: null,
     begThenHeight: null,
     begElseHeight: null,
-    getExprIf: function () {
+    getExprIf: function() {
         return this.exprIf;
-    },
-    getPosX: function() {
-        return this.stmtThen.getPosX();
     },
     drawLine: function(ctx,tools) {
         with(this.symStatment) {
@@ -835,10 +830,13 @@ StmtIf = new Class({
        this.stmtElse.changePosStatment(pos);
     },
     getWidth: function() {
-        return Math.max(this.symStatment.width,this.stmtElse.getWidth()+this.stmtThen.getWidth()+10);
+        return Math.max(this.symStatment.width,this.stmtElse.getWidth()+this.stmtThen.getWidth());
+    },
+    getPosX: function() {
+        return this.stmtThen.getPosX();
     },
     setWidth: function(width) {
-        this.parent (this.getWidth());
+        this.parent(this.getWidth());
     },
     findSynExpr: function(pos,tools) {
         var find = this.parent(pos,tools);
@@ -899,9 +897,7 @@ StmtBlock = new Class ({
     },
     treeLocation: function() {
         for (var i = 0; i < this.treeStatment.length; i++) {
-            var w = this.treeStatment[i].symStatment.width;
-            var wNew = this.treeStatment[i].getWidth();
-            if (w < wNew) this.treeStatment[i].symStatment.width = wNew;
+            this.treeStatment[i].setWidth(this.treeStatment[i].getWidth());
         }
         for (var i = 0; i < this.treeStatment.length; i++) {
             this.treeStatment[i].treeLocation();
@@ -1101,16 +1097,16 @@ StmtFor = new Class({
         var result, result1;
         if (this.init) {
             result = this.synAssign.aRight.operation(false,'int');
-            this.synAssign.aLeft.setValue(result);
+            this.synAssign.aLeft.getSymbol().setValue(result);
             result1 = this.synEndFor.operation(false,'int');
-            this.symStatment.value=this.synAssign.aLeft.symVar.name+':='+result+'..'+result1;
+            this.symStatment.value=this.synAssign.aLeft.getSymbol().name+':='+result+'..'+result1;
             var binOp = new SymBinOp('<=',0,0,'#5500ff',Math.random()-0.5);
             this.exprIf = new SynBinOp(binOp,this.synAssign.aLeft,new SynConstInt(result1));
             this.exprIf.putPosition([this.symStatment.posX,this.symStatment.posY-50]);
-            this.synAssign.aLeft.symVar.setPosX(this.symStatment.posX - 10);
-            this.synAssign.aLeft.symVar.setPosY(this.symStatment.posY +80);
+            this.synAssign.aLeft.getSymbol().setPosX(this.symStatment.posX - 10);
+            this.synAssign.aLeft.getSymbol().setPosY(this.symStatment.posY +80);
             this.init = false;
-        } else this.synAssign.aLeft.setValue(this.synAssign.aLeft.getValue()*1+1);
+        } else this.synAssign.aLeft.getSymbol().setValue(this.synAssign.aLeft.getSymbol().getValue()*1+1);
         this.parent(ctx,tools);
     }
 });
