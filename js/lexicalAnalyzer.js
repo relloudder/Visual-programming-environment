@@ -403,7 +403,6 @@ LexicalAnalyzer = new Class ({
             if (i == (item.listParam.length-1)) endLexeme = ')';
             var param = this.parseExpr(treeVar,endLexeme);
             newSynExpr.push(param);
-            param.symbolName.text = param.symbolName.text.substr(0,param.symbolName.text.length-1);
             if (this.currentLexeme.name != endLexeme)
                 this.exception.error('error parametr',this.currentLexeme);
             if (i < (item.listParam.length-1))

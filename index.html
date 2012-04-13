@@ -141,9 +141,15 @@
     <div id="code">
         <textarea cols=30 rows=40 id="programPanel">
 var
+    s,s1 : string;
+    i, work, n, k: integer;
 
 begin
-
+    read(s);
+    writeln(s);
+    while pos('--',s) <> 0 do
+        s := delete(s,pos('--',s),1);
+    writeln(s);
 end.
 
         </textarea>

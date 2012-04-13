@@ -199,23 +199,23 @@ var DrawForVis = function(ctx) {
                 val = Math.ceil(val*10)/10;
                 stringVal = val.toString(10);
             }
-            if (type == 'real' && stringVal.indexOf('.') < 0 && Number(val) == val) {
+            if (type == 'real' && stringVal.indexOf('.') < 0 && Number(val) == val)
                 stringVal += '.0';
-            }
-            if (type == 'real' && stringVal.indexOf('.') < 0) {
+            if (type == 'real' && stringVal.indexOf('.') < 0)
                 stringVal += '.0';
-            }
-            if((type == 'char') || (type == 'string')) {
-                stringVal="'"+stringVal+"'";
-            }
             var lengthVal = stringVal.length;
-            if (lengthVal > 5) {
-                stringVal = stringVal.substring(0,5);
-                lengthVal = 5;
+            if ((val != 'delete') && (val != 'copy') && (val != 'random')){
+                if((type == 'char') || (type == 'string'))
+                    stringVal = "'" + stringVal + "'";
+                var lengthVal = stringVal.length;
+                if (lengthVal > 5) {
+                    stringVal = stringVal.substring(0,5);
+                    lengthVal = 5;
+                }
             }
-            var arrFont = new Array(0,1,1,4/5,2.5/4,1.5/3);
-            var arrR = new Array(0,0.35,0.5,0.65,0.6,0.65);
-            var arrPos = new Array(0,1/2,1/2,1/2,1/4,1/4);
+            var arrFont = new Array(0,1,1,4/5,2.5/4,1.5/3,0.45);
+            var arrR = new Array(0,0.35,0.5,0.65,0.6,0.65,0.6);
+            var arrPos = new Array(0,1/2,1/2,1/2,1/4,1/4,1/5);
             if (type == 'binOp') r = r*0.65;
             ctx.font = 'bold ' + arrFont[lengthVal]*r + 'px Courier New';
             if (stringVal != '') ctx.fillText(stringVal,-arrR[lengthVal]*r,arrPos[lengthVal]*r);

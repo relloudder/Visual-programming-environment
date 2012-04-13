@@ -346,13 +346,23 @@ SymChangeCallFunction = new Class({
     initialize: function(change,changeEnd, endTransp) {
         this.parent(change);
         this.numberOfMove = 30;
+        this.oldR = this.changeableObject.rVar ;
+        this.oldTransp = this.changeableObject.transp ;
+        this.changeableObject.visible = true;
         this.deltaRadius = (changeEnd - change.rVar)/this.numberOfMove;
         this.deltaTransp = (change.transp - endTransp)/this.numberOfMove;
     },
+    oldR: null,
+    oldTransp: null,
     deltaTransp: null,
     draw: function(ctx,tools) {
         with(this) {
-            if (numberOfMove == 0) return 0;
+            if (numberOfMove == 0) {
+                this.changeableObject.rVar = this.oldR  ;
+                this.changeableObject.transp = this.oldTransp;
+                this.changeableObject.visible = false;
+                return 0;
+            }
             changeableObject.draw(ctx,tools);
             numberOfMove--;
             changeableObject.transp -= deltaTransp;

@@ -134,11 +134,11 @@ SymVarName = new Class({
         var typeAndValue = {
             'int': new colorAndRadius('rgba(255,0,0,1)', 15),
             'real': new colorAndRadius('rgba(0,128,0,1)', 20),
-            'record': new colorAndRadius('grey', 20),
+            'record': new colorAndRadius('rgba(160,160,160,1)', 20),
             'boolean': new colorAndRadius('rgba(0,0,255,1)', 10),
             'char': new colorAndRadius('rgba(255,153,255,1)', 10),
-            'array': new colorAndRadius('black', 20),
-            'string': new colorAndRadius('black', 20),
+            'array': new colorAndRadius('rgba(0,0,0,1)', 20),
+            'string': new colorAndRadius('rgba(255,153,255,1)', 20),
             'binOp': new colorAndRadius('IndianRed', 25),
             'const': new colorAndRadius('gray', 20)
         }

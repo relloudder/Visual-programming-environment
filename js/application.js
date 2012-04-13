@@ -8,6 +8,10 @@ VariableTree = new Class({
         this.treeVar.push(new SymFunction(0,0,'real','cos',['real']));
         this.treeVar.push(new SymFunction(0,0,'real','tan',['real']));
         this.treeVar.push(new SymFunction(0,0,'int','random',['int']));
+        this.treeVar.push(new SymFunction(0,0,'string','copy',['string','int','int']));
+        this.treeVar.push(new SymFunction(0,0,'int','pos',['string','string']));
+        this.treeVar.push(new SymFunction(0,0,'int','length',['string']));
+        this.treeVar.push(new SymFunction(0,0,'string','delete',['string','int','int']));
         this.treeStatment = [];
     },
     treeVar: null,
@@ -28,6 +32,9 @@ VariableTree = new Class({
     },
     push: function(item) {
         this.treeVar.push(item);
+        for(var i = 0; i < this.treeVar.length-1; i++)
+            if (item.name == this.treeVar[i].name) return -1;
+        return 0;
     },
     findByPos: function(pos,tools) {
         for (var k = this.treeVar.length - 1; k >= 0; k--) {

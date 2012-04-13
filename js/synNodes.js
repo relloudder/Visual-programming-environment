@@ -57,6 +57,7 @@ SynExpr = new Class({
             this.getRight().interpretation(this.symBinOp.getPosSuch(false));
         } else if (this instanceof SynCallFunction) {
             k = app.treeVis.length - 1;
+            this.symCallFunction.visible = true;
             for (var i = 0; i < this.listFactParam.length; i++)
                 if (this.listFactParam[i] instanceof SynBinOp) this.listFactParam[i].interpretation();
             else  if (this.listFactParam[i] instanceof SynCallFunction) this.listFactParam[i].interpretation();
@@ -163,13 +164,16 @@ SynExpr = new Class({
                 for (var i = 0; i < listFactParam.length; i++)
                     part.push(listFactParam[i].operation(visible,'int'));
                 if (symCallFunction.name == 'random') result = Math.floor(Math.random()*part[0]);
+                else if (symCallFunction.name == 'copy') result = part[0].substr(part[1]-1,part[2]);
+                else if (symCallFunction.name == 'delete') result = part[0].substr(0,part[1])+part[0].substr(part[1]*1+part[2]*1);
+                else if (symCallFunction.name == 'length') result = part[0].length;
+                else if (symCallFunction.name == 'pos') result = part[1].indexOf(part[0])+1;
                 else {
                     var name = (symCallFunction.name == 'trunc')?'floor':symCallFunction.name;
                     result = eval('Math.'+name+'('+part[0]+')');
                 }
                 if (visible) {
                     varGo = new SymChangeCallFunction(symCallFunction,symCallFunction.rVar*2,0);
-                    r = symCallFunction.rVar;
                     k = app.insertRowVis();
                     for (var i = 0; i < listFactParam.length; i++) {
                         cVarL = app.tree.findSymbolByPos([this.listFactParam[i].getPosX(),this.listFactParam[i].getPosY()]);
@@ -177,12 +181,9 @@ SynExpr = new Class({
                         app.insertElementVis(k,varGoL);
                     }
                     app.insertElementVis(k,varGo);
-                    varNew = new SymVar(result,symCallFunction.getPosX(),symCallFunction.getPosY(),'#999',varGoL.rVar);
+                    varNew = new SymVar(result,symCallFunction.getPosX(),symCallFunction.getPosY(),'rgba(144,144,144,1)', symCallFunction.rVar);
                     varNew.setVisible(false);
                     app.tree.push(varNew);
-                    k = app.insertRowVis();
-                    varGo = new SymVarBiggerSmaller(varNew,r);
-                    app.insertElementVis(k,varGo);
                 }
                 return result;
             }
