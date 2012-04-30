@@ -299,8 +299,12 @@ LexicalAnalyzer = new Class ({
         var stAssignment = this.parseAssignment(tree);
         if ((stAssignment.aLeft.type != 'int') && (stAssignment.aLeft.type != 'char'))
             this.exception.error('must be integer type of variable ',this.currentLexeme);
-        if (this.currentLexeme.name != 'to')
-            this.exception.error('expected to ',this.currentLexeme);
+        if ((this.currentLexeme.name != 'to') && (this.currentLexeme.name != 'downto'))
+            this.exception.error('expected to or downto ',this.currentLexeme);
+        var downto;
+        if (this.currentLexeme.name == 'to')
+            downto = false;
+        else downto = true;
         this.currentLexeme = Scanner.next(this.currentLexeme.nextLexemePos);
         var expression = this.parseExpr(tree,'do');
         pos.push(this.currentLexeme.currentLexemePos);
@@ -311,7 +315,7 @@ LexicalAnalyzer = new Class ({
         var stDo = this.getStatment(tree);
         var stElse = new Statment(new SymStatment(),[0,0]);
         stElse.symStatment.value = '1null';
-        return new StmtFor(expression,stAssignment,stDo,stElse,symFor,pos);
+        return new StmtFor(expression,stAssignment,stDo,stElse,symFor,pos,downto);
     },
     parseExpr: function(treeVar,endLexeme) {
         return this.parseCompare(treeVar,endLexeme);

@@ -24,6 +24,7 @@ var Scanner = (function() {
         /^if/gi,
         /^then/gi,
         /^else/gi,
+        /^downto/gi,
         /^do/gi,
         /^to/gi,
         /^end/gi,

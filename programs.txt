@@ -1,3 +1,101 @@
+{test programs}
+
+{Подсчитать сумму цифр  в десятичной записи целого неотрицательного числа k}
+
+var
+  k, sum, a: integer;
+
+begin
+  writeln('сумма цифр натурального числа');
+  read(k);
+  if k<=0 then writeln('error number ',k)
+  else begin
+    sum:=0;
+    while k<>0 do begin
+      a:=k mod 10;
+      k:=k div 10;
+      sum:=sum+a;
+    end;
+    writeln('sum= ',sum);
+    end;
+end.
+
+{Получить число, полученное выписыванием в обратном порядке цифр  целого неотрицательного числа k}
+
+var
+  k,n,a: integer;
+
+begin
+  writeln('число в обратном порядке');
+  read(k);
+  if k<=0 then writeln('error number ',k)
+  else begin
+    n:=0;
+    while k<>0 do begin
+      a:=k mod 10;
+      k:=k div 10;
+      n:=n*10+a;
+    end;
+    writeln('new n= ',n);
+  end;
+end.
+
+{Вычислить значение n!}
+
+var
+  f: integer;
+  n,i: integer;
+
+begin
+  read(n);
+  if n<=0 then writeln ('error ',n)
+  else begin
+    f:=1;
+    for i:=2 to n do
+      f:=f*i;
+    writeln(n, '!=',f);
+   end;
+end.
+
+{Дана последовательность чисел, заканчивающаяся 0. Найти среднее арифметическое этой последовательности}
+
+var
+  n: integer;
+  sum, x :real;
+
+begin
+  read(x);
+  sum:=0;
+  n:=0;
+  while x<>0 do begin
+    sum:=sum+x;
+    n:=n+1;
+    read(x);
+  end;
+  if n=0 then writeln ('no number')
+  else writeln('среднее арифметическое = ', sum/n);
+end.
+
+{Вычислить сумму n чисел}
+
+var
+  sum,x: integer;
+  n,i:integer;
+begin
+  read(n);
+  if n<=0 then writeln ('error ',n)
+  elsebegin
+    sum:=0;
+    for i:=1 to n do begin
+      read(x);
+      sum:=sum+x;
+    end;
+    writeln('sum=',sum);
+  end;
+end.
+
+------------------------------
+
 {Найти максимум из двух чисел}
 Var
   a, b, max : integer;
@@ -33,8 +131,6 @@ begin
     write(sum);
 end.
   
-
-
 {найти сумму цифр целого числа}
 var
     num, x, sum, dig : integer;

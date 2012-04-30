@@ -1084,14 +1084,17 @@ StmtWhile = new Class({
 
 StmtFor = new Class({
     Extends: StmtWhile,
-    initialize: function(exprIf,synAssign,sThen,sElse,symStatment,pos) {
+    initialize: function(exprIf,synAssign,sThen,sElse,symStatment,pos,downto) {
         this.parent(exprIf,sThen,sElse,symStatment,pos);
         this.synAssign = synAssign;
-        this.symStatment.value = this.symStatment.value.replace('for','')
-        this.symStatment.value = this.symStatment.value.replace('to','..')
+        this.downto = downto;
+        this.symStatment.value = this.symStatment.value.replace('for','');
+        this.symStatment.value = this.symStatment.value.replace('downto','..')
+        this.symStatment.value = this.symStatment.value.replace('to','..');
         this.synEndFor = exprIf;
     },
     synAssign: null,
+    downto: null,
     synEndFor: null,
     init : true,
     visualization: function(ctx,tools) {
@@ -1100,14 +1103,17 @@ StmtFor = new Class({
             result = this.synAssign.aRight.operation(false,'int');
             this.synAssign.aLeft.getSymbol().setValue(result);
             result1 = this.synEndFor.operation(false,'int');
-            this.symStatment.value=this.synAssign.aLeft.getSymbol().name+':='+result+'..'+result1;
-            var binOp = new SymBinOp('<=',0,0,'#5500ff',Math.random()-0.5);
+            this.symStatment.value = this.synAssign.aLeft.getSymbol().name+':='+result+'..'+result1;
+            var binOp;
+            if (this.downto) binOp = new SymBinOp('>=',0,0,'#5500ff',Math.random()-0.5);
+            else binOp = new SymBinOp('<=',0,0,'#5500ff',Math.random()-0.5);
             this.exprIf = new SynBinOp(binOp,this.synAssign.aLeft,new SynConstInt(result1));
             this.exprIf.putPosition([this.symStatment.posX,this.symStatment.posY-50]);
             this.synAssign.aLeft.getSymbol().setPosX(this.symStatment.posX - 10);
             this.synAssign.aLeft.getSymbol().setPosY(this.symStatment.posY +80);
             this.init = false;
-        } else this.synAssign.aLeft.getSymbol().setValue(this.synAssign.aLeft.getSymbol().getValue()*1+1);
+        } else if (this.downto) this.synAssign.aLeft.getSymbol().setValue(this.synAssign.aLeft.getSymbol().getValue()*1-1);
+        else this.synAssign.aLeft.getSymbol().setValue(this.synAssign.aLeft.getSymbol().getValue()*1+1);
         this.parent(ctx,tools);
     }
 });
