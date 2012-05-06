@@ -25,7 +25,7 @@ LexicalAnalyzer = new Class ({
             this.getVar();
         }
         if (this.currentLexeme.name == 'begin') {
-            var main = this.getBlock(app.tree.treeVar);
+            var main = this.getBlock(app.tree.treeVar,'end');
             main.push(new SynStop([this.currentLexeme.currentLexemePos-3,this.currentLexeme.currentLexemePos]));
             main.mainBlock = true;
             app.tree.treeStatment.push(main);
@@ -158,10 +158,10 @@ LexicalAnalyzer = new Class ({
         }
         return rec;
     },
-    getBlock: function(tree) {
+    getBlock: function(tree,endWord) {
         this.currentLexeme = Scanner.next(this.currentLexeme.nextLexemePos);
         var synBlock = new StmtBlock();
-        while (this.currentLexeme.name != 'end') {
+        while (this.currentLexeme.name != endWord) {
             if (this.currentLexeme.type == 'Identifier')
                 synBlock.push(this.parseAssignment(tree));
             else if (this.currentLexeme.type == 'Keyword') {
@@ -170,8 +170,9 @@ LexicalAnalyzer = new Class ({
                 else if (this.currentLexeme.name == 'writeln') synBlock.push(this.parseWrite(tree,true));
                 else if (this.currentLexeme.name == 'write') synBlock.push(this.parseWrite(tree,false));
                 else if (this.currentLexeme.name == 'while') synBlock.push(this.parseWhile(tree));
+                else if (this.currentLexeme.name == 'repeat') synBlock.push(this.parseRepeat(tree));
                 else if (this.currentLexeme.name == 'for') synBlock.push(this.parseFor(tree));
-                else if (this.currentLexeme.name == 'begin') synBlock.push(this.getBlock(tree));
+                else if (this.currentLexeme.name == 'begin') synBlock.push(this.getBlock(tree,'end'));
             } else this.exception.error('error statment ',this.currentLexeme);
             if (this.currentLexeme.name != ';')
                 this.exception.error('expected ; ',this.currentLexeme);
@@ -191,9 +192,10 @@ LexicalAnalyzer = new Class ({
             if (this.currentLexeme.name == 'writeln') return this.parseWrite(tree,true);
             if (this.currentLexeme.name == 'write') return this.parseWrite(tree,false);
             if (this.currentLexeme.name == 'while') return this.parseWhile(tree);
+            if (this.currentLexeme.name == 'repeat') return this.parseRepeat(tree);
             if (this.currentLexeme.name == 'for') return this.parseFor(tree);
             if (this.currentLexeme.name == 'begin' ) {
-                var block = this.getBlock(tree);
+                var block = this.getBlock(tree,'end');
                 return block;
             }
         }
@@ -292,6 +294,18 @@ LexicalAnalyzer = new Class ({
         var stElse = new Statment(new SymStatment(),[0,0]);
         stElse.symStatment.value = '1null';
         return new StmtWhile(expression,stDo,stElse,symWhile,pos);
+    },
+    parseRepeat: function(tree) {
+        var symRepeat = new SymRepeat();
+        var stDo =  this.getBlock(app.tree.treeVar,'until');
+        stDo.repeatBlock = true;
+        stDo.symStatment.height = 0;
+        var stElse = new Statment(new SymStatment(),[0,0]);
+        stElse.symStatment.value = '1null';
+        var pos = [this.currentLexeme.currentLexemePos];
+        var expression = this.parseExpr(tree,';');
+        pos.push(this.currentLexeme.currentLexemePos);
+        return new StmtRepeat(expression,stDo,stElse,symRepeat,pos);
     },
     parseFor: function(tree) {
         var pos = [this.currentLexeme.currentLexemePos];

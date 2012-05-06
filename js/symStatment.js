@@ -18,6 +18,7 @@ SymStatment = new Class ({
     heightStatment: 0,
     showVisual: true,
     posMaxX: 0,
+    posMinX: 0,
     getValue: function() {
         return this.val;
     },
@@ -45,6 +46,12 @@ SymStatment = new Class ({
     setPosMaxX: function(val) {
         this.posMaxX = val;
     },
+    getPosMinX: function() {
+        return this.posMinX;
+    },
+    setPosMinX: function(val) {
+        this.posMinX = val;
+    },
     draw: function(ctx,tools) {},
     findVar: function(pos,tools) {
         var x = pos[0]/tools.scale - tools.left;
@@ -59,7 +66,6 @@ SymBegin = new Class ({
     initialize: function() {
         this.parent();
         this.color = '#E8E8E8';
-        this.width = 90;
     },
     draw: function(ctx,tools) {
         with(this) {
@@ -85,6 +91,7 @@ SymEnd = new Class ({
         this.parent();
         this.color = '#E8E8E8';
         this.height = 50;
+        this.heightStatment = 0;
     },
     draw: function(ctx,tools) {
         with(this) {
@@ -134,7 +141,7 @@ SymIf = new Class ({
         this.heightStatment = 50;
         this.height = 70;
     },
-    draw : function(ctx, tools){
+    draw : function(ctx, tools) {
         DrawForVis(ctx).conditionIf(tools.getAdjustedX(this.posX),tools.getAdjustedY(this.posY),
             tools.getAdjustedR(this.r/4*3),2,tools.getAdjustedR(6),this.color,this.value,this.angleOfRotation,
             this.transp,tools.getAdjustedR(this.width),tools.getAdjustedR(this.heightStatment),this.showVisual,
@@ -220,19 +227,20 @@ SymChangeIf = new Class ({
             symChange.draw(ctx,tools);
             if (numberOfMove > 0) {
                 var d = Math.abs(Math.cos(dfi))*symChange.width/55;
-                if (dfi > 0) {
-                    leftSt.symStatment.height-=d;
-                    rightSt.symStatment.height+=d;
-                } else {
-                    leftSt.symStatment.height+=d;
-                    rightSt.symStatment.height-=d;
+                if (symChange instanceof SymRepeat) {}
+                else {
+                    if (dfi > 0) {
+                        leftSt.symStatment.height-=d;
+                        rightSt.symStatment.height+=d;
+                    } else {
+                        leftSt.symStatment.height+=d;
+                        rightSt.symStatment.height-=d;
+                    }
                 }
                 numberOfMove--;
                 angleOfRotation+=dfi;
                 return 1;
-            } else  {
-                return 0;
-            }
+            } else return 0;
         }
     }
 });
@@ -299,4 +307,25 @@ SymFor = new Class ({
             tools.getAdjustedR(this.r/4*3),2,tools.getAdjustedR(6),this.color,this.value,this.angleOfRotation,
             this.transp,tools.getAdjustedR(this.width),tools.getAdjustedR(this.heightStatment),this.showVisual,tools.getAdjustedR(this.getPosMaxX()));
     },
+});
+
+SymRepeat = new Class ({
+    Extends: SymWhile,
+    initialize: function() {
+        this.parent();
+        this.height = 90;
+        this.heightStatment = 10;
+    },
+    draw : function(ctx, tools){
+        DrawForVis(ctx).conditionRepeat(tools.getAdjustedX(this.posX),tools.getAdjustedY(this.posY-50),
+            tools.getAdjustedR(this.r/4*3),2,tools.getAdjustedR(6),this.color,this.value,this.angleOfRotation,
+            this.transp,tools.getAdjustedR(this.width),tools.getAdjustedR(this.heightStatment),this.showVisual,true,tools.getAdjustedR(this.getPosMinX()));
+    },
+    findVar: function(pos,tools) {
+        var x = pos[0]/tools.scale - tools.left;
+        var y = pos[1]/tools.scale - tools.top;
+        if (((this.posX-this.r) < x) && ((this.posX+this.r) > x) && ((this.posY+this.r*0.5-50) < y) && ((this.posY+this.r*2-50) > y))
+            return this;
+        return -1;
+    }
 });

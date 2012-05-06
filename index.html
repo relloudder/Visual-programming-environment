@@ -141,11 +141,15 @@
     <div id="code">
         <textarea cols=30 rows=40 id="programPanel">
 var
-  i: integer;
+x,y: integer;
 
 begin
-  for i := 10 downto 1 do
-    writeln(i);
+  read(x,y);
+  repeat
+    if x>y then x:= x mod y
+    else y:=y mod x;
+  until x*y=0;
+  write(x+y);
 end.
 
 

@@ -89,12 +89,13 @@ var DrawForVis = function(ctx) {
         ctx.fillRect(x,y,width+k,h/3);
 	}
 
-    var ballConnection = function (x,y,h,alpha,col) {
+    var ballConnection = function (x,y,h,alpha,col,all) {
         ctx.save();
         ctx.translate(x,y);
         ctx.rotate(alpha);
         ctx.beginPath();
-        ctx.arc(0,0,h*4/3,Math.PI,0);
+        if (all) ctx.arc(0,0,h,Math.PI*2,0);
+        else ctx.arc(0,0,h*4/3,Math.PI,0);
         colorBall(0,0,h,col);
         ctx.fill();
         ctx.closePath();
@@ -406,8 +407,13 @@ var DrawForVis = function(ctx) {
             ctx.translate(x, y);
             ctx.rotate(alpha);
             var w = width - 2*k*r;
+            var w1 = w;
+            if (picWhile == 2) {
+                w = k*r*0.75;
+                w1 = posMaxY - 1.8*k*r;
+            }
             if (w > 0) {
-                lineConnection(-2*k*r+2*h,-h/6,k,-w/Math.cos(1.6*alpha)-2*h,h*0.8,col,tr);
+                lineConnection(-2*k*r+2*h,-h/6,k,-w1/Math.cos(1.6*alpha)-2*h,h*0.8,col,tr);
                 lineConnection(2*k*r-4,-h/6,k,w/Math.cos(1.6*alpha)+2,h*0.8,col,tr);
             }
             ctx.beginPath();
@@ -429,22 +435,37 @@ var DrawForVis = function(ctx) {
             this.textStatment(val,-r*k*1.3,r/4,r*0.8,16,r*k*2.5);
             ctx.restore();
             ctx.save();
-            if (picWhile) {
+            if (picWhile == 2) {
+                lineConnection(x,y+r*k*1.3,0,w+r*k*2,h,col,tr);
+                this.connect(x-posMaxY,y-height-k*r*1.5,x+2,y-height-k*r*1.5,h,'#555555',false);
+                var y1 = 0;
+                if (alpha != 0) y1 = posMaxY*Math.tan(-alpha);
+                this.connect(x-posMaxY,y+y1,x-posMaxY,y-height-k*r*1.5,h,'#555555',false);
+                ballConnection(x-posMaxY,y-height-k*r*1.5,h,-Math.PI/4,'#555555',false);
+                ballConnection(x+h/2,y-height-k*r*1.55,h,-Math.PI/4,'#555555',true);
+            } else if (picWhile) {
                 lineConnection(x-width,y+height,0,width,h,col,tr);
                 this.connect(x+width,y+height,x+posMaxY,y+height,h,'#555555');
                 this.connect(x,y-r*k,x+posMaxY+h,y-r*k,h,'#555555');
-                ballConnection(x+posMaxY,y-r*k,h,Math.PI/4,'#555555');
-                ballConnection(x+width+h,y+height-h*0.7,h,-Math.PI/4*3,'#555555');
-                ballConnection(x+posMaxY,y+height-h*0.7,h,Math.PI/4*3,'#555555');
-            } else {
-                lineConnection(x-width,y+height,width,width,h,col,tr);
-            }
+                ballConnection(x+posMaxY,y-r*k,h,Math.PI/4,'#555555',false);
+                ballConnection(x+width+h,y+height-h*0.7,h,-Math.PI/4*3,'#555555',false);
+                ballConnection(x+posMaxY,y+height-h*0.7,h,Math.PI/4*3,'#555555',false);
+                ballConnection(x+h/4*3,y-r*k-h,h,-Math.PI/4,'#555555',true);
+            } else lineConnection(x-width,y+height,width,width,h,col,tr);
             ctx.restore();
         },
 
         conditionWhile: function(x,y,r,k,h,col,val,alpha,tr,width,height,vis,flWhile,posMaxY) {
+
             this.connect(x+posMaxY-width*1/5,y-r*2,x+posMaxY-width*1/5,y+height,h,'#555555');
             this.conditionIf(x,y,r,k,h,col,val,alpha,tr,width,height,vis,true,posMaxY-width*1/5);
+        },
+
+        conditionRepeat: function(x,y,r,k,h,col,val,alpha,tr,width,height,vis,flWhile,posMaxY) {
+            var y1 = 0;
+            if (alpha != 0) y1 = 2.55*k*r*Math.tan(alpha);
+            this.connect(x+k*r*2.6,y+y1,x+k*r*2.6,y+r*k*1.4,h,'#555555');
+            this.conditionIf(x,y,r,k,h,col,val,alpha,tr,width,height,vis,2,posMaxY-width*1/5);
         },
 
         conditionFor: function(x,y,r,k,h,col,val,alpha,tr,width,height,vis,posMaxY) {

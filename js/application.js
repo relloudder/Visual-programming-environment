@@ -227,7 +227,8 @@ Application = new Class({
         if (this.visualStatments.currentStatment != -1)
             pred = this.visualStatments.treeStatment[this.visualStatments.currentStatment];
         if (pred instanceof SynStop) return pred;
-        if (pred instanceof StmtIf)
+		if (pred instanceof StmtRepeat) {}
+        else if (pred instanceof StmtIf)
             if ((pred.result == false) && (pred.stmtElse.symStatment.value == '1null')) {
                 if (pred instanceof StmtFor) pred.init = true;
             }
@@ -246,14 +247,29 @@ Application = new Class({
             this.visualStatments = next;
             return this.visualStatments.treeStatment[this.visualStatments.currentStatment];
         }
-        while (this.visualStatments.currentStatment == (this.visualStatments.treeStatment.length-1))
-            if (this.visualStatments.treeStatment[this.visualStatments.currentStatment] instanceof StmtWhile) {
+        while (this.visualStatments.currentStatment == (this.visualStatments.treeStatment.length-1)) {
+            if ((this.visualStatments.parent instanceof StmtBlock) && (this.visualStatments.repeatBlock)) {
+                this.visualStatments = this.visualStatments.parent;
+                return this.visualStatments.treeStatment[this.visualStatments.currentStatment];
+            } else if (this.visualStatments.treeStatment[this.visualStatments.currentStatment] instanceof StmtWhile) {
                 if (this.visualStatments.treeStatment[this.visualStatments.currentStatment].result == false)
-                    this.visualStatments = this.visualStatments.parent
+                    this.visualStatments = this.visualStatments.parent;
                 else break;
             } else  this.visualStatments = this.visualStatments.parent;
-        if ((this.visualStatments.treeStatment[this.visualStatments.currentStatment] instanceof StmtWhile) &&
+        }
+		if (this.visualStatments.treeStatment[this.visualStatments.currentStatment] instanceof StmtRepeat) {}
+        else if ((this.visualStatments.treeStatment[this.visualStatments.currentStatment] instanceof StmtWhile) &&
            (this.visualStatments.treeStatment[this.visualStatments.currentStatment].result)) {}
+        else this.visualStatments.currentStatment++;
+        var resultSt = this.visualStatments.treeStatment[this.visualStatments.currentStatment];
+        if (resultSt instanceof StmtRepeat)
+            if (resultSt.result == false) {
+                next = resultSt.stmtThen;
+                next.parent = this.visualStatments;
+                next.currentStatment = 0;
+                this.visualStatments = next;
+                return this.visualStatments.treeStatment[this.visualStatments.currentStatment];
+            }
         else this.visualStatments.currentStatment++;
         return this.visualStatments.treeStatment[this.visualStatments.currentStatment];
     }
