@@ -74,6 +74,11 @@ var Scanner = (function() {
         /^\'[^\'\n]*\'/g
     ],
 
+    booleanConst = [
+        /^true/gi,
+        /^false/gi
+    ],
+
     position = 0,
     code = null,
     program = null;
@@ -109,6 +114,7 @@ var Scanner = (function() {
         };
 
         var precedence = [
+            new LexemeType('BooleanConst', booleanConst),
             new LexemeType('Keyword', keywords),
             new LexemeType('Separator', separators),
             new LexemeType('Comparison', comparisons),

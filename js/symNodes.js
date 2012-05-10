@@ -161,7 +161,7 @@ SymVarName = new Class({
         if (this.type == 'char') {
             this.val =  maxValue ==0 ? this.val = ' ': String.fromCharCode(48 + Math.floor(Math.random() * 80));
         } else if (this.type == 'boolean') {
-            this.val =  maxValue ==0 ? 'F': Math.round(Math.random()) == 0 ? 'F' : 'T';
+            this.val =  maxValue == 0 ? 'false': Math.round(Math.random()) == 0 ? 'false' : 'true';
         } else {
             this.val = Math.floor(Math.random() * maxValue);
         }
@@ -208,12 +208,18 @@ SymVarName = new Class({
         var reReal = /^\-?\d+[.]\d+/g;
         var reChar = /^\'.\'/;
         var reString = /^[^\'\n]*/g;
-        if ((this.type == 'int') && (reInt.exec(value) != value))
+        if ((this.type == 'int') && (reInt.exec(value) != value)) {
             alert('invalid input, must be integer number');
-        else if ((this.type == 'real') && (reReal.exec(value) != value) && (reInt.exec(value) != value))
+            return 'null';
+        }
+        else if ((this.type == 'real') && (reReal.exec(value) != value) && (reInt.exec(value) != value)) {
             alert('invalid input, must be real number');
-        else if ((this.type == 'char') && (reString.exec(value) != value))
+            return 'null';
+        }
+        else if ((this.type == 'char') && (reString.exec(value) != value)) {
             alert('invalid input, must be char number');
+            return 'null';
+        }
         else return value;
     }
 })
@@ -336,7 +342,7 @@ SymArray = new Class({
     },
     getItemArrByNum : function(num) {
         if (((num - this.firstIndex) < 0) || ((num - this.firstIndex) > this.sizeElement)) {
-            alert('Element with number ' + num + ' does not exist'); error;
+            app.exception.error('Element with number ' + num + ' does not exist');
             return -1;
         }
         return this.itemsElement[num - this.firstIndex];

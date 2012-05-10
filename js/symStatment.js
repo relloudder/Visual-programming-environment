@@ -4,14 +4,16 @@ SymStatment = new Class ({
         this.parent(0,0);
         this.value = '';
         this.color = 'rgba(102,204,153,1)';
-        this.r = 25;
+        this.r = 15;
+        this.h = 4;
         this.angleOfRotation = 0;
-        this.height = 100;
+        this.height = 66;
         this.width = 0;
     },
     value: null,
     color: null,
     r: null,
+    h: null,
     angleOfRotation: null,
     height: null,
     width: null,
@@ -56,7 +58,7 @@ SymStatment = new Class ({
     findVar: function(pos,tools) {
         var x = pos[0]/tools.scale - tools.left;
         var y = pos[1]/tools.scale - tools.top;
-        if (((this.posX-3*this.r) < x) && ((this.posX-this.r+90) > x) && ((this.posY-20) < y) && ((this.posY+20) > y)) return this;
+        if (((this.posX-3*this.r) < x) && ((this.posX-this.r*5) > x) && ((this.posY-this.r) < y) && ((this.posY+this.r) > y)) return this;
         return -1;
     }
 });
@@ -69,18 +71,16 @@ SymBegin = new Class ({
     },
     draw: function(ctx,tools) {
         with(this) {
-            DrawForVis(ctx).roundedRect(tools.getAdjustedX(posX-30),tools.getAdjustedY(posY),
-                tools.getAdjustedR(60),tools.getAdjustedR(20),4,color,"#C8C8C8",tools.getAdjustedR(3));
-            DrawForVis(ctx).textStatment("begin",tools.getAdjustedX(this.posX-r),tools.getAdjustedY(this.posY+r/2),
-                tools.getAdjustedR(12),16,tools.getAdjustedR(60));
+            DrawForVis(ctx).roundedRect(tools.getAdjustedX(posX)-tools.getAdjustedR(this.r*4/3),tools.getAdjustedY(posY),
+                tools.getAdjustedR(this.r*3),tools.getAdjustedR(this.r),tools.getAdjustedR(this.h/2),color,"#C8C8C8",tools.getAdjustedR(this.h/2));
+            DrawForVis(ctx).textStatment("begin",tools.getAdjustedX(this.posX)-tools.getAdjustedR(this.r),tools.getAdjustedY(this.posY)+tools.getAdjustedR(this.r*2/3),
+                tools.getAdjustedR(this.h*3),tools.getAdjustedR(this.h*3),tools.getAdjustedR(this.r*3));
         }
     },
     findVar: function(pos,tools) {
         var x = pos[0]/tools.scale - tools.left;
         var y = pos[1]/tools.scale - tools.top;
-        if (((this.posX-30) < x) && ((this.posX+30) > x) && ((this.posY-5) < y) && ((this.posY+15) > y)) {
-            return this;
-        }
+        if (((this.posX-this.r*2) < x) && ((this.posX+this.r*2) > x) && ((this.posY-this.h) < y) && ((this.posY+this.r) > y)) return this;
         return -1;
     }
 });
@@ -90,23 +90,20 @@ SymEnd = new Class ({
     initialize: function() {
         this.parent();
         this.color = '#E8E8E8';
-        this.height = 50;
-        this.heightStatment = 0;
+        this.height = this.r*2;
     },
     draw: function(ctx,tools) {
         with(this) {
-            DrawForVis(ctx).roundedRect(tools.getAdjustedX(posX-r),tools.getAdjustedY(posY),
-                tools.getAdjustedR(60),tools.getAdjustedR(20),4,color,"#C8C8C8",3);
-            DrawForVis(ctx).textStatment("end",tools.getAdjustedX(this.posX-r),tools.getAdjustedY(this.posY+r/2),
-                tools.getAdjustedR(12),14, tools.getAdjustedR(50));
+            DrawForVis(ctx).roundedRect(tools.getAdjustedX(posX)-tools.getAdjustedR(this.r*4/3),tools.getAdjustedY(posY),
+                tools.getAdjustedR(this.r*3),tools.getAdjustedR(this.r),tools.getAdjustedR(this.h/2),color,"#C8C8C8",tools.getAdjustedR(this.h/2));
+            DrawForVis(ctx).textStatment("end",tools.getAdjustedX(this.posX)-tools.getAdjustedR(this.r*1.5),tools.getAdjustedY(this.posY)+tools.getAdjustedR(this.r*2/3),
+                tools.getAdjustedR(this.h*3),tools.getAdjustedR(this.h*3),tools.getAdjustedR(this.r*3));
         }
     },
     findVar: function(pos,tools) {
         var x = pos[0]/tools.scale - tools.left;
         var y = pos[1]/tools.scale - tools.top;
-        if (((this.posX-this.r) < x) && ((this.posX-this.r+60) > x) && ((this.posY-5) < y) && ((this.posY+15) > y)) {
-            return this;
-        }
+        if (((this.posX-this.r*2) < x) && ((this.posX+this.r*2) > x) && ((this.posY-this.h) < y) && ((this.posY+this.r) > y)) return this;
         return -1;
     }
 });
@@ -115,20 +112,18 @@ SymAssignment = new Class ({
     Extends: SymStatment,
     initialize: function() {
         this.parent();
-        this.height = 70;
-        this.width = 90;
+        this.height = this.r*3;
+        this.width = this.r*4;
     },
     draw: function(ctx,tools) {
         with(this) {
-            DrawForVis(ctx).rect(tools.getAdjustedX(posX),tools.getAdjustedY(posY),tools.getAdjustedR(r)/2,3,tools.getAdjustedR(6),color,value,0,transp,this.showVisual);
+            DrawForVis(ctx).rect(tools.getAdjustedX(posX),tools.getAdjustedY(posY),tools.getAdjustedR(r/2),3.5,tools.getAdjustedR(4),color,value,0,transp,this.showVisual);
         }
     },
     findVar: function(pos,tools) {
         var x = pos[0]/tools.scale - tools.left;
         var y = pos[1]/tools.scale - tools.top;
-        if (((this.posX-3*this.r) < x) && ((this.posX-this.r+90) > x) && ((this.posY-20) < y) && ((this.posY+20) > y)) {
-            return this;
-        }
+        if (((this.posX-3*this.r) < x) && ((this.posX-this.r*5) > x) && ((this.posY-this.r) < y) && ((this.posY+this.r) > y)) return this;
         return -1;
     }
 });
@@ -137,13 +132,13 @@ SymIf = new Class ({
     Extends: SymStatment,
     initialize : function() {
         this.parent();
-        this.width = 100;
-        this.heightStatment = 50;
-        this.height = 70;
+        this.width = this.r*4;
+        this.heightStatment = this.r*2;
+        this.height = this.r*3;
     },
-    draw : function(ctx, tools) {
+    draw : function(ctx,tools) {
         DrawForVis(ctx).conditionIf(tools.getAdjustedX(this.posX),tools.getAdjustedY(this.posY),
-            tools.getAdjustedR(this.r/4*3),2,tools.getAdjustedR(6),this.color,this.value,this.angleOfRotation,
+            tools.getAdjustedR(this.r/4*3),2,tools.getAdjustedR(this.h),this.color,this.value,this.angleOfRotation,
             this.transp,tools.getAdjustedR(this.width),tools.getAdjustedR(this.heightStatment),this.showVisual,
             false,tools.getAdjustedR(this.getPosMaxX()));
     },
@@ -210,7 +205,7 @@ SymChangeIf = new Class ({
             if (numberOfMove < 10) numberOfMove = 10;
             if (numberOfMove > 25) numberOfMove = 25;
             symChange = aSymIf;
-            dfi = Math.PI/12/numberOfMove;
+            dfi = Math.PI/25/numberOfMove;
             if (!direct) dfi=-dfi;
             leftSt = aLeft;
             rightSt = aRight;
@@ -226,7 +221,7 @@ SymChangeIf = new Class ({
             symChange.angleOfRotation = angleOfRotation;
             symChange.draw(ctx,tools);
             if (numberOfMove > 0) {
-                var d = Math.abs(Math.cos(dfi))*symChange.width/55;
+                var d = Math.abs(Math.tan(dfi))*symChange.width;
                 if (symChange instanceof SymRepeat) {}
                 else {
                     if (dfi > 0) {
@@ -249,13 +244,14 @@ SymRead = new Class ({
     Extends: SymStatment,
     initialize: function() {
         this.parent();
-        this.height = 70;
-        this.width = 90;
+        this.height = this.r*2;
+        this.height = this.r*3;
+        this.width = this.r*4;
     },
     draw : function(ctx,tools) {
         with (this) {
             DrawForVis(ctx).oval(tools.getAdjustedX(posX),tools.getAdjustedY(posY),tools.getAdjustedR(r)*2.5,3,
-                tools.getAdjustedR(6),color,value,0,transp,true);
+                tools.getAdjustedR(this.h),color,value,0,transp,true);
         }
     }
 });
@@ -264,13 +260,14 @@ SymWrite = new Class ({
     Extends: SymStatment,
     initialize: function() {
         this.parent();
-        this.height = 70;
-        this.width = 90;
+        this.height = this.r*2;
+        this.height = this.r*3;
+        this.width = this.r*4;
     },
     draw : function(ctx,tools) {
         with (this) {
             DrawForVis(ctx).oval(tools.getAdjustedX(posX),tools.getAdjustedY(posY),tools.getAdjustedR(r)*2.5,3,
-                tools.getAdjustedR(6),color,value,0,transp,this.showVisual);
+                tools.getAdjustedR(this.h),color,value,0,transp,this.showVisual);
         }
     }
 });
@@ -279,13 +276,13 @@ SymWhile = new Class ({
     Extends: SymStatment,
     initialize: function() {
         this.parent();
-        this.width = 100;
-        this.heightStatment = 50;
-        this.height = 70;
+        this.width = this.r*4;
+        this.heightStatment = this.r*2;
+        this.height = this.r*3;
     },
     draw : function(ctx, tools){
         DrawForVis(ctx).conditionWhile(tools.getAdjustedX(this.posX),tools.getAdjustedY(this.posY),
-            tools.getAdjustedR(this.r/4*3),2,tools.getAdjustedR(6),this.color,this.value,this.angleOfRotation,
+            tools.getAdjustedR(this.r/4*3),2,tools.getAdjustedR(this.h),this.color,this.value,this.angleOfRotation,
             this.transp,tools.getAdjustedR(this.width),tools.getAdjustedR(this.heightStatment),this.showVisual,true,tools.getAdjustedR(this.getPosMaxX()));
     },
     findVar: function(pos,tools) {
@@ -304,7 +301,7 @@ SymFor = new Class ({
     },
     draw : function(ctx, tools){
         DrawForVis(ctx).conditionFor(tools.getAdjustedX(this.posX),tools.getAdjustedY(this.posY),
-            tools.getAdjustedR(this.r/4*3),2,tools.getAdjustedR(6),this.color,this.value,this.angleOfRotation,
+            tools.getAdjustedR(this.r/4*3),2,tools.getAdjustedR(this.h),this.color,this.value,this.angleOfRotation,
             this.transp,tools.getAdjustedR(this.width),tools.getAdjustedR(this.heightStatment),this.showVisual,tools.getAdjustedR(this.getPosMaxX()));
     },
 });
@@ -313,18 +310,18 @@ SymRepeat = new Class ({
     Extends: SymWhile,
     initialize: function() {
         this.parent();
-        this.height = 90;
-        this.heightStatment = 10;
+        this.height = this.r*4;
+        this.heightStatment = this.r/2;
     },
     draw : function(ctx, tools){
-        DrawForVis(ctx).conditionRepeat(tools.getAdjustedX(this.posX),tools.getAdjustedY(this.posY-50),
-            tools.getAdjustedR(this.r/4*3),2,tools.getAdjustedR(6),this.color,this.value,this.angleOfRotation,
+       DrawForVis(ctx).conditionRepeat(tools.getAdjustedX(this.posX),tools.getAdjustedY(this.posY)-tools.getAdjustedR(this.r*2),
+            tools.getAdjustedR(this.r/4*3),2,tools.getAdjustedR(4),this.color,this.value,this.angleOfRotation,
             this.transp,tools.getAdjustedR(this.width),tools.getAdjustedR(this.heightStatment),this.showVisual,true,tools.getAdjustedR(this.getPosMinX()));
     },
     findVar: function(pos,tools) {
         var x = pos[0]/tools.scale - tools.left;
         var y = pos[1]/tools.scale - tools.top;
-        if (((this.posX-this.r) < x) && ((this.posX+this.r) > x) && ((this.posY+this.r*0.5-50) < y) && ((this.posY+this.r*2-50) > y))
+        if (((this.posX-this.r) < x) && ((this.posX+this.r) > x) && ((this.posY+this.r*0.5-this.r*3) < y) && ((this.posY+this.r*2-this.r*3) > y))
             return this;
         return -1;
     }

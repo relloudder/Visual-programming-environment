@@ -113,14 +113,24 @@ SynExpr = new Class({
             if (this instanceof SynBinOp) {
                 part2 = getRight().operation(visible,type);
                 part1 = getLeft().operation(visible,type);
-                if ((type != 'char') && (type != 'string')) {
+                if (type == 'boolean') {
+                    if (part1 == 'true') part1 = 1;
+                    if (part1 == 'false') part1 = 0;
+                    if (part2 == 'true') part2 = 1;
+                    if (part2 == 'false') part2 = 0;
+                    part1 = part1*1;
+                    part2 = part2*1;
+                } else if ((type != 'char') && (type != 'string')) {
                     part1 = part1*1;
                     part2 = part2*1;
                 }
                 if (getBinOpType() == '+') result = part1 + part2;
                 if (getBinOpType() == '-') result = part1 - part2;
                 if (getBinOpType() == '*') result = part1 * part2;
-                if (getBinOpType() == '/') result = part1 / part2;
+                if (getBinOpType() == '/') {
+                    if (part2 == 0) app.exception.error('division by zero');
+                    result = part1 / part2;
+                }
                 if (getBinOpType() == '<') result = part1 < part2;
                 if (getBinOpType() == '>') result = part1 > part2;
                 if (getBinOpType() == 'or') result = part1 || part2;
@@ -129,8 +139,14 @@ SynExpr = new Class({
                 if (getBinOpType() == '>=') result = part1 >= part2;
                 if (getBinOpType() == '<>') result = part1 != part2;
                 if (getBinOpType() == '=') result = part1 == part2;
-                if (getBinOpType() == 'mod') result = part1 - Math.floor(part1/part2)*part2;
-                if (getBinOpType() == 'div') result = Math.floor(part1/part2);
+                if (getBinOpType() == 'mod') {
+                    if (part2 == 0) app.exception.error('division by zero');
+                    result = part1 - Math.floor(part1/part2)*part2;
+                }
+                if (getBinOpType() == 'div') {
+                    if (part2 == 0) app.exception.error('division by zero');
+                    result = Math.floor(part1/part2);
+                }
                 if (visible) {
                     varGo = new SymVarOpenClose(symBinOp,false,false);
                     cVarL = app.tree.findSymbolByPos([this.left.getPosX(),this.left.getPosY()]);
@@ -239,7 +255,7 @@ SynArray = new Class({
     getSymbol: function() { //returns sym from treeVar
         var result = this.right.operation(false,'int'); //create calculating index expression
         if (Math.ceil(result) != result) {
-            alert('Error type of index of array '+this.left.name); error;
+            app.exception.error('Error type of array index' + this.left.name);
         }
         this.symbolName.text=this.getAllName(this.left.name+'[');
         var item = this.left.getItemArrByNum(result);
@@ -265,6 +281,7 @@ SynArray = new Class({
         return name;
     }
 });
+
 SynRecord = new Class({
     Extends: SynExpr,
     initialize: function(left,right) {
@@ -372,6 +389,16 @@ SynConstReal = new Class({
         this.parent(constValue);
         this.type = 'real';
         this.symConst.setType('real');
+    }
+});
+
+SynConstBoolean = new Class({
+    Extends: SynConstInt,
+    initialize: function(constValue) {
+        this.constValue = constValue;
+        this.type = 'boolean';
+        this.symbolName = new SymbolName(0,0,constValue);
+        this.symConst = new SymConst(constValue,0,0,this.type);
     }
 });
 
@@ -560,7 +587,7 @@ Statment = new Class ({
     drawLine: function(ctx,tools) {
         with (this.symStatment)
         DrawForVis(ctx).connect(tools.getAdjustedX(posX),tools.getAdjustedY(posY-height),
-            tools.getAdjustedX(posX),tools.getAdjustedY(posY), tools.getAdjustedR(6),'#555555');
+            tools.getAdjustedX(posX),tools.getAdjustedY(posY), tools.getAdjustedR(4),'#555555');
     },
     draw: function(ctx,tools) {
         this.symStatment.draw(ctx,tools);
@@ -589,7 +616,6 @@ Statment = new Class ({
     putPosition: function(pos) {
         this.symStatment.posX = pos[0];
         this.symStatment.posY = pos[1];
-        this.symStatment.setPosMaxX(this.symStatment.width/2);
     },
     findSynExpr: function(pos,tools) {
         var find = this.symStatment.findVar(pos,tools);
@@ -740,13 +766,17 @@ StmtIf = new Class({
     drawLine: function(ctx,tools) {
         with(this.symStatment) {
             DrawForVis(ctx).connect(tools.getAdjustedX(posX),tools.getAdjustedY(posY - height),
-                tools.getAdjustedX(posX),tools.getAdjustedY(posY),tools.getAdjustedR(6),'#555555');
+                tools.getAdjustedX(posX),tools.getAdjustedY(posY),tools.getAdjustedR(4),'#555555');
             this.stmtThen.drawLine(ctx,tools);
             DrawForVis(ctx).connect(tools.getAdjustedX(posX+width),tools.getAdjustedY(this.getPosLastThen()),
-                tools.getAdjustedX(posX+width),tools.getAdjustedY(posY + heightStatment),tools.getAdjustedR(6),'#555555');
-            this.stmtElse.drawLine(ctx,tools);
-            DrawForVis(ctx).connect(tools.getAdjustedX(posX-width),tools.getAdjustedY(this.getPosLastElse()-5),
-                tools.getAdjustedX(posX-width),tools.getAdjustedY(posY + heightStatment),tools.getAdjustedR(6),'#555555')  ;
+                tools.getAdjustedX(posX+width),tools.getAdjustedY(posY + heightStatment),tools.getAdjustedR(4),'#555555');
+            if (this.stmtElse.symStatment.value != '1null') {
+                this.stmtElse.drawLine(ctx,tools);
+                DrawForVis(ctx).connect(tools.getAdjustedX(posX-width),tools.getAdjustedY(this.getPosLastElse()-2),
+                    tools.getAdjustedX(posX-width),tools.getAdjustedY(posY + heightStatment),tools.getAdjustedR(4),'#555555');
+            } else
+                DrawForVis(ctx).connect(tools.getAdjustedX(posX-width),tools.getAdjustedY(posY - Math.tan(angleOfRotation )*width),
+                   tools.getAdjustedX(posX-width),tools.getAdjustedY(posY + heightStatment),tools.getAdjustedR(4),'#555555');
         }
     },
     draw: function(ctx,tools) {
@@ -760,7 +790,7 @@ StmtIf = new Class({
         var x = pos[0] + this.getWidth();
         var y = pos[1] + this.stmtThen.getHeight();
         this.setWidth(this.getWidth());
-        this.exprIf.putPosition([pos[0],pos[1]-70]);
+        this.exprIf.putPosition([pos[0],pos[1]-45]);
         this.stmtThen.putPosition([x,y]);
         x -= 2*this.getWidth();
         y = pos[1] + this.stmtElse.getHeight();
@@ -786,9 +816,9 @@ StmtIf = new Class({
         return (this.symStatment.heightStatment + Math.max(hElse,hThen));
     },
     setHeightStatment: function(val) {
-        this.symStatment.heightStatment = val - 20;
+        this.symStatment.heightStatment = val-this.symStatment.r;
         this.stmtThen.setHeightStatment(this.stmtThen.getHeightStatment());
-        if (this.stmtElse != null)this.stmtElse.setHeightStatment(this.stmtElse.getHeightStatment());
+        this.stmtElse.setHeightStatment(this.stmtElse.getHeightStatment());
     },
     treeLocation: function() {
         this.stmtThen.treeLocation();
@@ -810,10 +840,10 @@ StmtIf = new Class({
                 var1 = app.tree.treeVar[app.tree.treeVar.length-1];
                 k = app.insertRowVis();
                 varIf = new SymChangeIf(symStatment,stmtThen,stmtElse,var1.getValue());
-                var var2 = new Symbol(symStatment.posX+80,this.symStatment.posY);
+                var var2 = new Symbol(symStatment.posX+symStatment.r*3,var1.posY+symStatment.r*3);
                 result = var1.getValue();
                 if (result == false)
-                    var2 = new Symbol(symStatment.posX-80,this.symStatment.posY);
+                    var2 = new Symbol(symStatment.posX-symStatment.r*3,var1.posY+symStatment.r*3);
                 varGo = new SymVarDown(var1,var2,0);
                 app.insertElementVis(k,varGo);
                 app.insertElementVis(k,varIf);
@@ -822,8 +852,8 @@ StmtIf = new Class({
             } else {
                 result = exprIf.operation(false,'int');
                 symStatment.color = 'rgba(49,79,79,1)';
-                symStatment.angleOfRotation = Math.PI/9;
-                var d = Math.abs(Math.cos(Math.PI/9))*symStatment.width/2.5;
+                symStatment.angleOfRotation = Math.PI/25;
+                var d = Math.abs(Math.tan(symStatment.angleOfRotation ))*symStatment.width;
                 stmtThen.symStatment.height = begThenHeight;
                 stmtElse.symStatment.height = begElseHeight;
                 if (!result) {
@@ -838,23 +868,23 @@ StmtIf = new Class({
     },
     changePosStatment: function(pos) {
        this.parent(pos);
-       this.exprIf.putPosition([this.symStatment.posX,this.symStatment.posY-70]);
+       this.exprIf.putPosition([this.symStatment.posX,this.symStatment.posY-this.symStatment.r*3]);
        this.stmtThen.changePosStatment(pos);
        this.stmtElse.changePosStatment(pos);
     },
     getWidth: function() {
-        return Math.max(this.symStatment.width,(this.stmtElse.getWidth()/2+this.stmtThen.getWidth()));
+        return Math.max(this.symStatment.width,(this.stmtElse.getWidthAllLeft()*3/4+this.stmtThen.getWidthAll()*3/4));
     },
     getPosX: function() {
         return this.stmtThen.getPosX();
     },
     setWidth: function(width) {
-        this.parent(this.getWidth());
+        this.symStatment.width = width;
     },
-    getWidthAll:  function() {
+    getWidthAll: function() {
         return this.symStatment.width+this.stmtThen.getWidthAll()+10;
     },
-    getWidthAllLeft:  function() {
+	getWidthAllLeft: function() {
         return this.symStatment.width+this.getWidth()+10;
     },
     findSynExpr: function(pos,tools) {
@@ -1127,6 +1157,7 @@ StmtFor = new Class({
         this.symStatment.value = this.symStatment.value.replace('for','');
         this.symStatment.value = this.symStatment.value.replace('downto','..')
         this.symStatment.value = this.symStatment.value.replace('to','..');
+        this.symStatment.value = this.symStatment.value.replace(' .. ','..');
         this.synEndFor = exprIf;
     },
     synAssign: null,
@@ -1144,9 +1175,9 @@ StmtFor = new Class({
             if (this.downto) binOp = new SymBinOp('>=',0,0,'#5500ff',Math.random()-0.5);
             else binOp = new SymBinOp('<=',0,0,'#5500ff',Math.random()-0.5);
             this.exprIf = new SynBinOp(binOp,this.synAssign.aLeft,new SynConstInt(result1));
-            this.exprIf.putPosition([this.symStatment.posX,this.symStatment.posY-70]);
-            this.synAssign.aLeft.getSymbol().setPosX(this.symStatment.posX - 10);
-            this.synAssign.aLeft.getSymbol().setPosY(this.symStatment.posY +80);
+            this.exprIf.putPosition([this.symStatment.posX,this.symStatment.posY-this.symStatment.r*2.4]);
+            this.synAssign.aLeft.getSymbol().setPosX(this.symStatment.posX-this.symStatment.r);
+            this.synAssign.aLeft.getSymbol().setPosY(this.symStatment.posY+this.symStatment.r*3.5);
             this.init = false;
         } else if (this.downto) this.synAssign.aLeft.getSymbol().setValue(this.synAssign.aLeft.getSymbol().getValue()*1-1);
         else this.synAssign.aLeft.getSymbol().setValue(this.synAssign.aLeft.getSymbol().getValue()*1+1);
@@ -1166,18 +1197,20 @@ StmtRepeat = new Class({
         this.stmtThen.putPosition(pos);
         pos[1] = pos[1] + this.symStatment.height;
         this.symStatment.posY = pos[1];
-        this.exprIf.putPosition([pos[0],pos[1]-120]);
+        this.exprIf.putPosition([pos[0],pos[1]-this.symStatment.r*5]);
         this.setWidth(this.stmtThen.getWidth());
         this.symStatment.setPosMinX(this.getWidthAllLeft());
     },
-    getWidthAllLeft: function() {
-        return this.stmtThen.getWidthAllLeft()+20;
+    getWidthAllLeft:  function() {
+        return this.stmtThen.getWidthAllLeft()+15;
     },
     drawLine: function(ctx,tools) {
         with(this.symStatment) {
-            DrawForVis(ctx).connect(tools.getAdjustedX(posX),tools.getAdjustedY(posY-heightStatment-height-60),
-                tools.getAdjustedX(posX),tools.getAdjustedY(posY-heightStatment-height+15),tools.getAdjustedR(6),'#555555');
-                this.stmtThen.drawLine(ctx,tools);
+            DrawForVis(ctx).connect(tools.getAdjustedX(posX),tools.getAdjustedY(posY)-tools.getAdjustedR(heightStatment+height+r*2),
+                tools.getAdjustedX(posX),tools.getAdjustedY(posY)-tools.getAdjustedR(heightStatment+height-r*0.95), tools.getAdjustedR(h),'#555555');
+            DrawForVis(ctx).connect(tools.getAdjustedX(posX),tools.getAdjustedY(posY)-tools.getAdjustedR(height+r/2),
+                tools.getAdjustedX(posX),tools.getAdjustedY(posY)-tools.getAdjustedR(r/2), tools.getAdjustedR(h),'#555555');
+            this.stmtThen.drawLine(ctx,tools);
         }
     },
     draw: function(ctx,tools) {

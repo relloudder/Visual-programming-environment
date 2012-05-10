@@ -200,6 +200,7 @@ var DrawForVis = function(ctx) {
                 val = Math.ceil(val*10)/10;
                 stringVal = val.toString(10);
             }
+            if (type == 'boolean') stringVal = (val == 'true') ? 'T' : 'F';
             if (type == 'real' && stringVal.indexOf('.') < 0 && Number(val) == val)
                 stringVal += '.0';
             if (type == 'real' && stringVal.indexOf('.') < 0)
@@ -397,7 +398,7 @@ var DrawForVis = function(ctx) {
             ctx.lineTo(-2*k*r,r);
             ctx.fill();
             ctx.closePath();
-            this.textStatment(val,-r*k*1.15,0,r*1.25,17,2.8*r*k);
+            this.textStatment(val,-r*k*1.3,0,r*2.4,r*2,3*r*k);
             ctx.restore();
         },
 
@@ -432,7 +433,7 @@ var DrawForVis = function(ctx) {
             ctx.lineTo(0,r*k);
             ctx.fill();
             ctx.closePath();
-            this.textStatment(val,-r*k*1.3,r/4,r*0.8,16,r*k*2.5);
+            this.textStatment(val,-r*k*1.55,r/4,r*3/2.2,r*0.9,r*k*3.5);
             ctx.restore();
             ctx.save();
             if (picWhile == 2) {
@@ -456,7 +457,6 @@ var DrawForVis = function(ctx) {
         },
 
         conditionWhile: function(x,y,r,k,h,col,val,alpha,tr,width,height,vis,flWhile,posMaxY) {
-
             this.connect(x+posMaxY-width*1/5,y-r*2,x+posMaxY-width*1/5,y+height,h,'#555555');
             this.conditionIf(x,y,r,k,h,col,val,alpha,tr,width,height,vis,true,posMaxY-width*1/5);
         },
@@ -469,7 +469,7 @@ var DrawForVis = function(ctx) {
         },
 
         conditionFor: function(x,y,r,k,h,col,val,alpha,tr,width,height,vis,posMaxY) {
-            this.connect(x+posMaxY,y-r*2,x+posMaxY,y+height,h,'#555555');
+            this.connect(x+posMaxY,y-r*k*0.6,x+posMaxY,y+height,h,'#555555');
             ctx.save();
             if (!vis) tr = 0.4;
             ctx.translate(x, y);
@@ -498,15 +498,16 @@ var DrawForVis = function(ctx) {
             ctx.lineTo(-k*r,r*k/2);
             ctx.fill();
             ctx.closePath();
-            this.textStatment(val,-r*k*1.3,r/4,r*0.8,18,2.5*r*k);
+            this.textStatment(val,-r*k*1.6,r/4,r*3/2.1,r*0.9,r*k*3);
             ctx.restore();
             ctx.save();
             lineConnection(x-width,y+height,0,width,h,col,tr);
             this.connect(x+width,y+height,x+posMaxY,y+height,h,'#555555');
-            this.connect(x,y-r*k,x+posMaxY+h,y-r*k,h,'#555555');
-            ballConnection(x+posMaxY,y-r*k,h,Math.PI/4,'#555555');
-            ballConnection(x+width+h,y+height-h*0.7,h,-Math.PI/4*3,'#555555');
-            ballConnection(x+posMaxY,y+height-h*0.7,h,Math.PI/4*3,'#555555');
+            this.connect(x,y-r*k*0.6,x+posMaxY+h,y-r*k*0.6,h,'#555555');
+            ballConnection(x+posMaxY,y-r*k*0.6,h,Math.PI/4,'#555555',false);
+            ballConnection(x+width+h,y+height-h*0.7,h,-Math.PI/4*3,'#555555',false);
+            ballConnection(x+posMaxY,y+height-h*0.7,h,Math.PI/4*3,'#555555',false);
+            ballConnection(x+h/2,y-r*k*0.7,h,Math.PI/4*3,'#555555',true);
             ctx.restore();
         },
 
@@ -555,11 +556,13 @@ var DrawForVis = function(ctx) {
         },
 
         textStatment: function(val,x0,y0,r,maxSize,maxPixel) {
-            ctx.fillStyle = '#000';
             var newText = val;
-            if (val.length > maxSize) newText = val.substr(0,maxSize-1)+'~';
+            k = val.length;
+            while (val.charAt(k-1) == ' ') k--;
+            newText = val.substr(0,k);
+            if (newText.length > maxSize) newText = val.substr(0,maxSize-1) + '~';
             while (newText.length <= (maxSize/2-val.length/2)) newText = ' ' + newText;
-            ctx.fillStyle = '#000000';
+            ctx.fillStyle = 'black';
             ctx.font = r + 'px Courier';
             ctx.fillText(newText,x0,y0,maxPixel);
         },
@@ -586,7 +589,7 @@ var DrawForVis = function(ctx) {
             ctx.bezierCurveTo(r/7*6,-r/2,-r/7*6,-r/4,-r,0);
             ctx.fill();
             ctx.closePath();
-            this.textStatment(val,-r,0,r/4,24,r*2);
+            this.textStatment(val,-r/4*3,0,r/2.1,r/3,r*1.8);
             ctx.restore();
         }
     };

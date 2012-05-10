@@ -1,3 +1,11 @@
+ExceptionForApplication = new Class({
+    initialize: function() {},
+    error: function(error) {
+        alert(error);
+        jQuery.error();
+    }
+});
+
 VariableTree = new Class({
     initialize: function() {
         this.treeVar = [];
@@ -157,6 +165,7 @@ Application = new Class({
         this.speed = 0.3;
         this.visualStatments = -1;
         this.byStep = false;
+        this.exception = new ExceptionForApplication();
     },
     pause : false,
     showInput: false,
@@ -175,6 +184,7 @@ Application = new Class({
     visualStatments: null,
     numberOfVisualStatment: -1,
     byStep: false,
+    exception: null,
     insertRowVis: function() {
         this.treeVis.push([]);
         return (this.treeVis.length - 1);
@@ -198,9 +208,14 @@ Application = new Class({
         //DrawForVis(ctx).back("#FFFFFF","#FFFFFF",width,height);
         this.tree.draw(this.ctx,this.tools,this.width,this.height);
         var stopPaint = 0;
-        if(this.treeVis[0] != null) {
+        if (this.treeVis[0] != null) {
             for (var i = 0; i < this.treeVis[0].length; i++) {
-                stopPaint += this.treeVis[0][i].draw(this.ctx, this.tools);
+                var result = this.treeVis[0][i].draw(this.ctx, this.tools);
+                if (result == -1) {
+                    clearInterval(this.idTimer);
+                    return;
+                }
+                stopPaint += result;
             }
         }
         if (stopPaint == 0) {

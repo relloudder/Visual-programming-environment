@@ -290,6 +290,10 @@ SymVarOpenClose = new Class ({
                     if (newSym.input) {
                         newSym.input = false;
                         var vv = newSym.setValueWithIf($('#editInput').val());
+                        if (vv == 'null') {
+                            changeableObject.setVisible(true);
+                            return -1;
+                        }
                         if (changeableObject instanceof  SymString) changeableObject.setNewString(vv);
                         else if(changeableObject.type =='char') changeableObject.setValue(vv.charAt(0));
                         else changeableObject.setValue(vv);

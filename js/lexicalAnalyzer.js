@@ -388,6 +388,8 @@ LexicalAnalyzer = new Class ({
             result = new SynConstReal(this.currentLexeme.name);
         } else if (this.currentLexeme.type == 'NumberInt') {
             result = new SynConstInt(this.currentLexeme.name);
+        } else if (this.currentLexeme.type == 'BooleanConst') {
+            result = new SynConstBoolean(this.currentLexeme.name);
         } else if (this.currentLexeme.type == 'StringConst') {
             result = new SynConstString(this.currentLexeme.name.substr(1,this.currentLexeme.name.length-2));
         } else if (this.currentLexeme.name == '(') {
