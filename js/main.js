@@ -27,16 +27,19 @@ function runInterface() {
     });
 
     $('#zoomIn, #zoomInMenu').click(function() {
+        if( app.showInput) return;
         app.tools.scale += 0.01;
         app.draw();
     });
 
     $('#zoomOut, #zoomOutMenu').click(function() {
+        if (app.showInput) return;
         app.tools.scale -= 0.01;
         app.draw();
     });
 
     $("#canvas").mousedown(function(event) {
+        if (app.showInput) return;
         var x = event.pageX - $("#wCanvas").offset().left;
         var y = event.pageY - $("#wCanvas").offset().top;
         app.tree.varMove = app.tree.findByPos([x,y],app.tools);
@@ -54,6 +57,7 @@ function runInterface() {
     });
 
     $("#canvas").mousemove(function(event) {
+        if (app.showInput) return;
         var x = event.pageX - $("#wCanvas").offset().left;
         var y = event.pageY - $("#wCanvas").offset().top;
         if (app.flagCanvasMove) {
@@ -71,11 +75,13 @@ function runInterface() {
     });
 
     $("#canvas").mouseup(function(event) {
+        if (app.showInput) return;
         app.flagMove = false;
         app.flagCanvasMove = false;
     });
 
     $("#hand, #handMenu").click(function() {
+        if (app.showInput) return;
         app.move = !app.move;
         if (app.move) {
             $("#canvas").css("cursor","move");
@@ -85,6 +91,7 @@ function runInterface() {
     });
 
     $("#play").click(function() {
+        if (app.showInput) return;
         app.byStep = false;
         app.pause = false;
         app.visualStatments = app.tree.treeStatment[0];
@@ -92,6 +99,7 @@ function runInterface() {
     });
 
     $('#pause, #pauseMenu').click(function() {
+        if (app.showInput) return;
         app.pause = true;
     });
 
@@ -108,6 +116,7 @@ function runInterface() {
     });
 
     $("#step").click(function() {
+        if (app.showInput) return;
         app.pause = false;
         if (app.byStep == false)
             app.visualStatments = app.tree.treeStatment[0];

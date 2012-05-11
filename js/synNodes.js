@@ -884,7 +884,7 @@ StmtIf = new Class({
     getWidthAll: function() {
         return this.symStatment.width+this.stmtThen.getWidthAll()+10;
     },
-	getWidthAllLeft: function() {
+    getWidthAllLeft: function() {
         return this.symStatment.width+this.getWidth()+10;
     },
     findSynExpr: function(pos,tools) {
