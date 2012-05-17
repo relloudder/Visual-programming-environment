@@ -57,7 +57,10 @@ SynExpr = new Class({
             k = app.treeVis.length - 1;
             this.symCallFunction.visible = true;
             for (var i = 0; i < this.listFactParam.length; i++)
-                if (this.listFactParam[i] instanceof SynBinOp) this.listFactParam[i].interpretation();
+                 if (this.listFactParam[i] instanceof SynBinOp) {
+                    this.listFactParam[i].setVisible(true);
+                    this.listFactParam[i].interpretation();
+                }
             else  if (this.listFactParam[i] instanceof SynCallFunction) this.listFactParam[i].interpretation();
             else {
                 varBeg = this.listFactParam[i].getSymbol();

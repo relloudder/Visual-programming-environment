@@ -248,6 +248,121 @@ begin
   else writeln('min= ',min,'k= ',k);
 end.
 
+{Написать программу нахождения наибольшего общего делителя (НОД) двух неотрицательных чисел}
+
+var
+  x, y, nod: integer;
+
+begin
+  read(x);
+  read(y);
+  if (x<=0) or (y<=0) then writeln ('error number')
+  else begin
+    repeat
+      if x>y then x:=x mod y
+      else y:=y mod x;
+    until (x=0) or (y=0);
+    nod:=x+y;
+    writeln('нод=', nod);
+  end;
+end.
+
+{Найти все простые несократимые дроби, заключенные между 0 и 1, знаменатели которых не превышают 7}
+
+var
+  i,j,nod,x,y:integer;
+
+begin
+  for i:=1 to 6 do
+    {числитель меньше знаменателя}
+    for j:=i+1 to 7 do begin
+      x:=i;
+      y:=j;
+      {находим наибольший общий делитель чисел x и y}
+      while x*y<>0 do begin
+        if x>y then x:=x mod y
+        else y:=y mod x;
+      end;
+      nod:=x+y;
+      {если наибольший общий делитель чисел x и y равен 1, то соответствующая дробь - несократима}
+      if nod=1 then write(i,'/',j,' ',);
+    end;
+end.
+
+{Дана непустая последовательность различных натуральных чисел, за которой следует 0. Определить порядковый номер наименьшего из них.}
+
+var
+  i,k:integer;
+  x,min:real;
+
+begin
+  writeln('номер наименьшего числа последовательности');
+  read(x);
+  {считаем, что наименьшим является первое введенной число, и запоминаем его номер в переменной k}
+  min:= x;
+  k:=1;
+  i:=1;
+  while x<>0 do begin
+    i:=i+1;
+    read(x);
+    if (x<min) and (x<>0) then begin
+         min:=x;
+         k:=i; {запоминаем новый минимум и его номер}
+    end;
+  end;
+  if (min=0) and (k=1) then writeln ('no number')
+  else writeln('min= ',min,' k= ',k);
+end.
+
+{Найти все дружественные ему числа, меньшие n. Два натуральных числа называются дружественными, если каждое их них равно сумме всех делителей другого за исключением самого себя}
+
+var
+  i,n,p,k,j:integer;
+
+begin
+  writeln('дружественные числа');
+  read(n);
+  if n<=0 then writeln('error ',n)
+  else
+    for i:=1 to n do begin
+      {сумма делителей числа i}
+      p:=0;
+      for j:=1 to i-1 do
+        if (i mod j)=0 then p:=p+j;
+          {сумма делителей меньше n}
+          if p<n then begin
+            {сумма делителей числа p}
+            k:=0;
+            for j:=1 to p-1 do
+              if (p mod j)=0 then k:=k+j;
+              {проверяем, равна ли сумма делителей числа p исходному числу n}
+                if i=k then  writeln('k=',i, ' k1=',p);
+          end;
+    end;
+end.
+
+{Вычислить: сумм k=1 до 10 ((сумм n=1 до k (k*n))/k!)}
+
+var
+  s,s1,r: real;
+  n,k:integer;
+
+begin
+  writeln('сумма ряда');
+  s:=0;
+  r:=1;
+  for k:=1 to 10 do begin
+    {вычисляем внутреннюю сумму}
+    s1:=0;
+    for n:=1 to k do
+      s1:=s1+sin(k*n);
+    r:=r/k; {вычисляем факториал в знаменателе}
+    s:=s+s1*r;
+  end;
+  writeln('s=',s);
+end.
+
+
 ------------------------------
 
 {Найти максимум из двух чисел}

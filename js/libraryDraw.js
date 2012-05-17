@@ -398,7 +398,7 @@ var DrawForVis = function(ctx) {
             ctx.lineTo(-2*k*r,r);
             ctx.fill();
             ctx.closePath();
-            this.textStatment(val,-r*k*1.3,0,r*2.4,r*2,3*r*k);
+            this.textStatment(val,-r*k*1.2,0,r*2.4,r*2,3*r*k);
             ctx.restore();
         },
 
@@ -561,7 +561,6 @@ var DrawForVis = function(ctx) {
             while (val.charAt(k-1) == ' ') k--;
             newText = val.substr(0,k);
             if (newText.length > maxSize) newText = val.substr(0,maxSize-1) + '~';
-            while (newText.length <= (maxSize/2-val.length/2)) newText = ' ' + newText;
             ctx.fillStyle = 'black';
             ctx.font = r + 'px Courier';
             ctx.fillText(newText,x0,y0,maxPixel);
