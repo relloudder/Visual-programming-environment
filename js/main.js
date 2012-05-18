@@ -7,7 +7,7 @@ $(function() {
 });
 
 function runInterface() {
-    $('#playMenu, #draw').click(function() {
+    $('#drawMenu, #draw').click(function() {
         var sp = app.speed;
         var zoom = app.tools.scale;
         initApplication();
@@ -26,17 +26,23 @@ function runInterface() {
         initApplication();
     });
 
-    $('#zoomIn, #zoomInMenu').click(function() {
+    /*$('#zoomInMenu').click(function() {
         if( app.showInput) return;
         app.tools.scale += 0.01;
         app.draw();
     });
 
-    $('#zoomOut, #zoomOutMenu').click(function() {
+    $('#zoomOutMenu').click(function() {
         if (app.showInput) return;
         app.tools.scale -= 0.01;
         app.draw();
-    });
+    });*/
+
+    $("#rangeinput").change(function() {
+        document.getElementById("rangevalue").value = (Math.round(this.value*100)/100).toFixed(2);
+        app.tools.scale = (Math.round(this.value*100)/100).toFixed(2);
+        app.draw();
+    })
 
     $("#canvas").mousedown(function(event) {
         if (app.showInput) return;
@@ -90,7 +96,7 @@ function runInterface() {
         }
     });
 
-    $("#play").click(function() {
+    $("#play, #playMenu").click(function() {
         if (app.showInput) return;
         app.byStep = false;
         app.pause = false;
@@ -103,7 +109,7 @@ function runInterface() {
         app.pause = true;
     });
 
-    $("#SpeedMin").click(function() {
+    /*$("#SpeedMin").click(function() {
         app.speed -= 0.01;
         $("#SpeedMax").html('Speed (' + Math.ceil(app.speed*100)/100+')');
         $("#SpeedMin").html('Speed (' + Math.ceil(app.speed*100)/100+')');
@@ -113,9 +119,14 @@ function runInterface() {
         app.speed += 0.01;
         $("#SpeedMax").html('Speed (' + Math.ceil(app.speed*100)/100+')');
         $("#SpeedMin").html('Speed (' + Math.ceil(app.speed*100)/100+')');
-    });
+    });*/
 
-    $("#step").click(function() {
+    $("#rangeinput1").change(function() {
+        document.getElementById("rangevalue1").value = (Math.round(this.value*100)/100).toFixed(2);
+        app.speed = (Math.round(this.value*100)/100).toFixed(2);
+    })
+
+    $("#step, #stepMenu").click(function() {
         if (app.showInput) return;
         app.pause = false;
         if (app.byStep == false)

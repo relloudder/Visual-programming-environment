@@ -2,7 +2,8 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>Visualization</title>
-    <link href="style.css" rel="stylesheet" type="text/css">
+    <link href="css/style.css" rel="stylesheet" type="text/css">
+    <link href="css/navbar.css" rel="stylesheet" type="text/css">
     <script type="text/javascript"  src="js/lib/mootools-1.2.4-base.js"></script>
     <script type="text/javascript" src="js/lib/jquery-1.4.3.min.js"></script>
     <script type="text/javascript" src="js/libraryDraw.js"></script>
@@ -16,120 +17,84 @@
 	<script type="text/javascript" src="js/symStatment.js"></script>
 </head>
 
-<body>
-    <ul id="menu">
-        <li class="logo">
-            <img style="float:left;" src="images/menu_left.png"/>
-            <ul id="main">
-                <li>Welcome to <b>Visual programming environment</b>!</li>
-                <li class="last">
-                    <img class="corner_left"  src="images/corner_blue_left.png"/>
-                    <img class="middle"  src="images/dot_blue.png"/>
-                    <img class="corner_right"  src="images/corner_blue_right.png"/>
-                </li>
-            </ul>
-        </li>
-        <li><a href="#">About</a></li>
-        <li><a href="#">File</a>
-            <ul id="help">
-                <li>
-                    <img class="corner_inset_left"  src="images/corner_inset_left.png"/>
-                    <a href="#" id="new">New</a>
-                    <img class="corner_inset_right"  src="images/corner_inset_right.png"/>
-                </li>
-                <li><a href="#">Open</a></li>
-                <li><a href="#">Save</a></li>
-                <li><a href="#">Close</a></li>
-                <li class="last">
-                    <img class="corner_left"  src="images/corner_left.png"/>
-                    <img class="middle"  src="images/dot.gif"/>
-                    <img class="corner_right"  src="images/corner_right.png"/>
-                </li>
-            </ul>
-        </li>
-        <li><a href="#">Run</a>
-            <ul id="help">
-                <li>
-                    <img class="corner_inset_left"  src="images/corner_inset_left.png"/>
-                    <a href="#" id="playMenu">Run</a>
-                    <img class="corner_inset_right"  src="images/corner_inset_right.png"/>
-                </li>
-                <li><a href="#">Step over</a></li>
-                <li><a href="#">Save</a></li>
-                <li><a href="#" id="pauseMenu">Pause</a></li>
-                <li><a href="#" id="reset">Reset</a></li>
-                <li class="last">
-                    <img class="corner_left"  src="images/corner_left.png"/>
-                    <img class="middle"  src="images/dot.gif"/>
-                    <img class="corner_right"  src="images/corner_right.png"/>
-                </li>
-            </ul>
-        </li>
-        <li><a href="#">Tools</a>
-            <ul id="help">
-                <li>
-                    <img class="corner_inset_left"  src="images/corner_inset_left.png"/>
-                    <a href="#" id="SpeedMax">Speed+</a>
-                    <img class="corner_inset_right"  src="images/corner_inset_right.png"/>
-                </li>
-                <li><a href="#" id="SpeedMin">Speed-</a></li>
-                <li class="last">
-                    <img class="corner_left"  src="images/corner_left.png"/>
-                    <img class="middle"  src="images/dot.gif"/>
-                    <img class="corner_right"  src="images/corner_right.png"/>
-                </li>
-            </ul>
-        </li>
-        <li><a href="#">Window</a>
-            <ul id="help">
-                <li>
-                    <img class="corner_inset_left"  src="images/corner_inset_left.png"/>
-                    <a href="#">Select</a>
-                    <img class="corner_inset_right"  src="images/corner_inset_right.png"/>
-                </li>
-                <li><a href="#" id="zoomInMenu">Zoom in</a></li>
-                <li><a href="#" id="zoomOutMenu">Zoom out</a></li>
-                <li><a href="#" id="handMenu">Hand</a></li>
-                <li class="last">
-                    <img class="corner_left"  src="images/corner_left.png"/>
-                    <img class="middle"  src="images/dot.gif"/>
-                    <img class="corner_right"  src="images/corner_right.png"/>
-                </li>
-            </ul>
-        </li>
-        <li><a href="#">Help</a></li>
-        <li class="searchContainer">
-            <input type="text" id="searchField" />
-            <img src="images/magnifier.png" alt="Search" onclick="alert('You clicked on search button')" />
-            <ul id="search">
-                <li>
-                    <img class="corner_inset_left"  src="images/corner_inset_left.png"/>
-                    <input id="cbxAll" type="checkbox" />All
-                    <img class="corner_inset_right"  src="images/corner_inset_right.png"/>
-                </li>
-                <li><input id="Tutorials" type="checkbox" />Tutorials</li>
-                <li><input id="Reviews" type="checkbox" />Reviews</li>
-                <li class="last">
-                    <img class="corner_left"  src="images/corner_left.png"/>
-                    <img class="middle"  src="images/dot.gif"/>
-                    <img class="corner_right"  src="images/corner_right.png"/>
-                </li>
-            </ul>
-        </li>
-    </ul>
-    <img style="float:left;"  src="images/menu_right.png"/>
+<link rel="stylesheet" href="css/navbar.css">
 
-    <ul id="panel">
-        <img style="float:left;"  src="images/panel_left.png"/>
-        <li id="draw"><img src="images/draw.png"></li>
-        <li id="play"><img src="images/play.png"></li>
-        <li id="pause"><img src="images/pause.png"></li>
-        <li id="step"><img src="images/steps.png"></li>
-        <li id="zoomIn"><img src="images/zoomin.png"></li>
-        <li id="zoomOut"><img src="images/zoomout.png"></li>
-        <li id="hand"><img src="images/plus.png"></li>
-        <img style="float:right;"  src="images/panel_right.png"/>
-    </ul>
+<script type="text/javascript">
+$(document).ready(function() {
+    $("nav ul li").hover(function() {
+        $(this).addClass("active");
+        $(this).find("ul").show().animate({opacity: 1}, 400);
+        },function() {
+        $(this).find("ul").hide().animate({opacity: 0}, 200);
+        $(this).removeClass("active");
+    });
+    $('nav ul li ul li:first-child').prepend('<li class="arrow"></li>');
+    $('nav ul li:first-child').addClass('first');
+    $('nav ul li:last-child').addClass('last');
+    $('nav ul li ul').parent().append('<span class="dropdown"></span>').addClass('drop');
+});
+</script>
+
+<body>
+    <!--<h1>Vizual programming environment</h1>-->
+    <div class="wrapper">
+        <nav class="dark">
+            <ul class="clear">
+                <li><a href="#">Vizual Programming Environment</a></li>
+                <li><a href="#">File</a>
+                    <ul>
+                        <li><a href="#">New</a></li>
+                        <li><a href="#">Open</a></li>
+                        <li><a href="#">Save</a></li>
+                    </ul>
+                </li>
+                <li><a href="#">Run</a>
+                    <ul>
+                        <li><a href="#" id="drawMenu">Draw</a></li>
+                        <li><a href="#" id="playMenu">Run</a></li>
+                        <li><a href="#" id="stepMenu">Step over</a></li>
+                        <li><a href="#" id="pauseMenu">Puase</a></li>
+                        <li><a href="#" id="reset">Reset</a></li>
+                    </ul>
+                </li>
+                <!--<li><a href="#">Tools</a>
+                    <ul>
+                        <li><a href="#" id="SpeedMax">Speed+</a></li>
+                        <li><a href="#" id="SpeedMin">Speed-</a></li>
+                        <li><a href="#" id="zoomInMenu">Zoom in</a></li>
+                        <li><a href="#" id="zoomOutMenu">Zoom out</a></li>
+                        <li><a href="#" id="handMenu">Hand</a></li>
+                    </ul>
+                </li>-->
+            </ul>
+        </nav>
+    </div>
+
+    <div class="wrapper_panel">
+        <nav class="dark">
+            <ul class="clear">
+                <li><img id="draw" src="images/draw.png"></li>
+                <li><img id="play" src="images/play.png"></li>
+                <li id="pause"><img src="images/pause.png"></li>
+                <li id="step"><img src="images/steps.png"></li>
+                <li id="hand"><img src="images/plus.png"></li>
+                <li>
+                    <div id="wrap">
+                        <p>Zoom</p>
+                        <input type="range" id="rangeinput" min="0.5" max="1.5" step="0.01" value="1"/><br>
+                        <output id="rangevalue">1</output>
+                    </div>
+                </li>
+                <li>
+                    <div id="wrap">
+                        <p>Speed </p>
+                        <input type="range" id="rangeinput1" min="0.01" max="0.6" step="0.01" value="0.3"/><br>
+                        <output id="rangevalue1">0.3</output>
+                    </div>
+                </li>
+            </ul>
+        </nav>
+    </div>
 
     <div id="canvasOut" >
         <div id="wCanvas">
@@ -151,11 +116,8 @@ begin
   until x*y=0;
   write(x+y);
 end.
-
-
         </textarea>
         <input type="text" id="errorPanel" value="">
     </div>
-
 </body>
 </html>
