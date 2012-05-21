@@ -117,13 +117,13 @@ nav.dark .dropdown {
     width: 7px;
     height: 5px;
     background: url(../images/drop-down.png) no-repeat;
-    margin: -20px 15px 0px 12px;
+    margin: -15px 15px 0px 12px;
 }
 
 nav.dark li ul {
     opacity: 0;
     position: absolute;
-    top: 45px;
+    top: 40px;
     left: -26px;
     padding: 12px 15px;
     border-radius: 3px;

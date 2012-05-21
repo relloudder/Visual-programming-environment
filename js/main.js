@@ -18,8 +18,12 @@ function runInterface() {
         var lex = new LexicalAnalyzer(textProgram,errorProgram);
         lex.getProgram();
         app.tree.treeLocation(app.width,app.height);
-		app.tree.treeStatment[0].putPosition([500,10])
-		app.draw();
+        app.tree.treeStatment[0].putPosition([500,10]);
+        document.getElementById("rangeinput").value = 1;
+        document.getElementById("rangevalue").value = 1;
+        document.getElementById("rangeinput1").value = 0.3;
+        document.getElementById("rangevalue1").value = 0.3;
+        app.draw();
     });
 
     $('#new, #reset').click(function() {

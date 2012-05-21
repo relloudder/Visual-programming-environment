@@ -362,6 +362,386 @@ begin
   writeln('s=',s);
 end.
 
+{Напечатать в возрастающем порядке все трехзначные числа, в десятичной записи которых нет одинаковых цифр (деление не использовать)}
+
+var
+  i,j,k:integer;
+
+begin
+  write('числа, состоящие из разных цифр');
+  for i:=1 to 9 do
+    for j:=0 to 9 do
+      for k:=0 to 9 do
+        if (i<>j) and (i<>k) and (j<>k) then
+          writeln(i*100+j*10+k, ' ');
+end.
+
+{Выяснить, можно или нет натуральное число n представить в виде суммы трех полных квадратов}
+
+var
+  n, x,y,z:integer;
+  fl:boolean;
+
+begin
+  writeln('Представить n в виде трех полных квадратов');
+  read(n);
+  if n<=0 then writeln('error number ',n)
+  else begin
+    fl:=true;{предположим, что число представить нельзя}
+    for x:=1 to n do
+      for y:=x to n do
+        for z:= y to n do
+          if (x*x+y*y+z*z) = n then begin
+            fl:=false; {число представить можно}
+            writeln(n, '=',x, '^2+',y,'^2+',z, '^2');
+          end;
+    if fl=true then writeln('number is not sum sqr');
+  end;
+end.
+
+{Даны n-натуральное и вещественные пары (x1,y1),...,(xn,yn). Определить радиус наименьшего круга с центром в начале координат, внутрь которого попадают эти точки}
+
+var
+  i,n:integer;
+  max, x, y, r:real;
+
+begin
+  writeln('радиус наименьшего круга');
+  read(n);
+  if n<=0 then writeln('error number ',n)
+  else begin
+    max:=0;
+    for i:=1 to n do begin
+      read(x);
+      read(y);
+      r:= sqrt(x*x+y*y);
+      if max<r then
+        max:=r;
+    end;
+    writeln('max r=',max);
+  end;
+end.
+
+{Дано 10 чисел. Определить, сколько из них принимает наибольшее значение}
+
+var
+  i,n:integer;
+  x,max: real;
+
+begin
+  writeln('число чисел, принимающих максимальное значение’);
+  read(x);
+  max:=x;
+  n:=1;
+  for i:=2 to 10 do begin
+    read(x);
+    if max=x then
+      n:=n+1
+    else if max<x then begin
+      max:=x;
+      n:=1;
+    end;
+  end;
+  writeln('max= ',max, ' n=',n);
+end.
+
+{Дано не менее двух различных чисел, за которыми следует нуль. Определить два наибольших числа среди них}
+
+var
+  i: integer;
+  x,max1,max2:real;
+  fl:boolean;
+
+begin
+  writeln('2 max');
+  read(max1);
+  read(x);
+  {если второе число больше первого, то max1 –второе число, max2 – первое число. В противном случае - наоборот}
+  if x>max1 then begin
+     max2:=max1;
+     max1:= x;
+  end
+  else max2:=x;
+  {по условию оба введенных числа не должны быть равными 0}
+  if (max1=0) or (max2=0) then
+    writeln('error, <2 number')
+  else begin
+    i:=2;
+    while  x<>0 do begin
+      i:=i+1;
+      read(x);
+      if  x>max1 then begin
+        max2:=max1;
+        max1:= x;
+      end
+      else
+        if x>max2 then
+          max2:=x;
+    end;
+    writeln('max1=',max1, ' max2=',max2);
+  end;
+end.
+
+{Вычислить: sqrt(3+sqrt(6+...+sqrt(96+sqrt(99))))}
+
+var
+  sum:real;
+  n,i:integer;
+
+begin
+  writeln('sqrt(3+sqrt(6+sqrt(9+...+sqrt(99)))');
+  n:=99;
+  sum:=0;
+  for i:=1 to 33 do begin
+    sum:=sqrt(sum+n);
+    n:=n-3;
+  end;
+  writeln('y=',sum:8:6)
+end.
+
+{Дано n вещественных чисел. Определить, образуют ли они возрастающую последовательность}
+
+var
+  n,i: integer;
+  x,a1:real;
+  fl:boolean;
+
+begin
+  writeln('возрастающая последовательность');
+  read(n);
+  if n<=0 then writeln('error number ',n)
+  else begin
+    fl:=true; {предполагаем, что последовательность упорядоченная}
+    read(а1);
+    for i:=2 to n do begin
+      read(x);
+      if x<a1 then
+      {очередное число нарушает упорядоченность}
+        fl:=false
+      else a1:=x;{запоминаем очередное число}
+    end;
+    if fl=true then
+      writeln('sort')
+    else writeln('no sort’);
+  end;
+end.
+
+{Вычислить y=sin(1)+sin(1.1)+...+sin(2)}
+
+var
+  sum:real;
+  i:integer;
+
+begin
+  writeln('y=sin(1)+sin(1.1)+...+sin(2)');
+  sum:=0;
+  for i:=0 to 10 do
+    sum:=sum+sin(1+0.1*i);
+  writeln('y=',sum);
+end.
+
+{Подобрать всевозможные варианты размена произвольной >7 руб. суммы с помощью 3-х и 5-ти рублевых купюр}
+
+var
+  s,x,y:integer;
+
+begin
+  writeln('s=3x+5y');
+  read(s);
+  if s<8 then writeln('нельзя разменять ',s)
+  else
+    for x:=1 to s div 3 do
+      for y:=i to s div 5 do
+        if (x*3+y*5)=s then
+          writeln(s, '=3*',x, '+5*',y);
+end.
+
+{Даны натуральные числа n и k вычислить: S= 1^k+2^k+...+n^k}
+
+var
+  k,n,s,i,j,r:integer;
+
+begin
+  writeln('sum=1^k+2^k+3^k+...+n^k');
+  read(k);
+  read(n);
+  if (k<=0) or (n<=0) then writeln('error number ',k,' or ',n)
+  else begin
+    s:=0;
+    for i:=1 to n do begin
+      r:=1;
+      {считаем очередной член ряда: i^k}
+      for j:=1 to k do
+        r:=r*i;
+      s:=s+r;
+    end;
+    writeln('sum=',s);
+  end;
+end.
+
+{Дано натуральное число n. Вычислить: S=1⋅2+2⋅3⋅4+...+n⋅ (n+1) ⋅...⋅ 2n}
+
+var
+  n,sum,i,j,r:integer;
+
+begin
+  writeln('s=1*2+2*3*4+...+n*(n+1)*...*2n');
+  read(n);
+  if n<=0 then writeln('error number ',n)
+  else begin
+    sum:=0;
+    for i:=1 to n do begin
+      r:=1;
+      {находим произведение чисел от i до 2i}
+      for j:=i to 2*i do
+        r:=r*j;
+      sum:=sum+r;
+    end;
+    writeln('sum=',sum);
+  end;
+end.
+
+{Дано n вещественных чисел. Определить сколько из них больше своих «соседей», то есть предыдущего и последующего числа}
+
+var
+  i,n:integer;
+  num,pred,sled,p:real;
+
+begin
+  writeln('количество чисел больших своих соседей');
+  read(n);
+  if n<=0 then writeln('error number ',n)
+  else begin
+    p:=0;
+    for i:=1 to n do begin
+     {читаем очередное число и заносим его в переменную sled}
+      read(sled);
+      if i=1 then
+        {число – первое, запоминаем его как предыдущее}
+        pred:=sled
+      else
+        if i=2 then
+          {число – второе, запоминаем его как текущее}
+          num:=sled
+        else begin
+          {сравниваем текущее число с предыдущим и следующим}
+          if (num>pred) and (num>sled) then
+            p:=p+1;
+          {запоминаем предыдущее и текущее число для следующего сравнения}
+          pred:=num;
+          num:=sled;
+        end;
+    end;
+    writeln('k=',p);
+  end;
+end.
+
+{Дано натуральное число k. Можно ли его представить в виде суммы двух полных квадратов?}
+
+var
+  k, x, y:integer;
+  fl:boolean;
+
+begin
+  writeln('Можно ли представить число k в виде суммы двух полных квадратов');
+  read(k);
+  if k<0 then writeln('error number ',k)
+  else begin
+    fl:=true;
+    for x:=1 to k do
+      for y:=x to k do
+        if (x*x+y*y)=k then begin
+          fl:=false;
+          writeln(k, '=',x, '^2+',y, '^2');
+        end;
+    if fl=true then writeln('number is not sum sqr');
+  end;
+
+{Получить все числа Амстронга, состоящие из трех и четырех цифр. Натуральное число из n цифр является числом Амстронга, если сумма его цифр, возведенных в n-ю степень, равна самому числу (например 153=1^3+5^3+3^3)}
+
+var
+  k,sum,a,i,j:integer;
+
+begin
+  writeln('числа Амстронга, трех и четырехзначные');
+  for i:=100 to 999 do begin
+    k:=i;
+    sum:=0;
+    {разбиваем число на цифры и находим сумму их кубов}
+    while k<>0 do begin
+      a:=k mod 10;
+      k:=k div 10;
+      sum:=sum+a*a*a;
+    end;
+    if i=sum then
+      writeln(i);
+  end;
+  for i:=1000 to 9999 do begin
+    k:=i;
+    sum:=0;
+    while k<>0 do begin
+      a:=k mod 10;
+      k:=k div 10;
+      sum:=sum+a*a*a*a;
+    end;
+    if i=sum then
+      writeln(i);
+  end;
+end.
+
+{Найти натуральное число от 1 до n с максимальной суммой делителей}
+
+var
+  i,n,p,max,j,k: integer;
+
+begin
+  writeln('число с наибольшим количеством делителей');
+  read(n);
+  if n<=0 then writeln('error number ',n)
+  else begin
+    max:=0;
+    for i:=1 to n do begin
+      p:=0;
+      {находим p - сумму делителей числа i}
+      for j:=1 to i do
+        if (i mod j)=0 then
+          p:=p+j;
+        {число делителей p больше максимума}
+        if p>max then begin
+          max:=p;
+          {запоминаем число i, у которого пока больше всех делителей}
+          k:=i;
+        end;
+      end;
+    writeln('k=',k, ' max=',max);
+  end;
+end.
+
+{Найти все числа Пифагора, то есть натуральные решения уравнения n^2+m^2=k^2 в интервале [p,10p]. Решения, которые получаются перестановкой n и m, считать совпадающими}
+
+var
+  p,sum,a,n,m,k,i,j:integer;
+  fl: boolean;
+
+begin
+  writeln('числа Пифагора в интервале от p до 10p');
+  read(p);
+  i:=1;
+  j:=1;
+  if p<0 then writeln('error number ',p)
+  else begin
+    fl:=true;
+    for n:=p to 10*p do
+      for m:=i to 10*p do
+        for k:= j to 10*p do
+          if (n*n+m*m=k*k) then begin
+            fl:=false;
+            writeln(n, '^2+',m, '^2=',k, '^2');
+          end;
+    if fl=true then
+      writeln('no number in [', p, ',', 10*p, ']');
+  end;
+end.
 
 ------------------------------
 
