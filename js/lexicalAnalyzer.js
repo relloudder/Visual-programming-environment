@@ -6,7 +6,7 @@ Exception = new Class({
     textProgram: null,
     errorProgram: null,
     error: function(error,currentLexeme) {
-        this.textProgram.get(0).setSelectionRange(currentLexeme.currentLexemePos,currentLexeme.nextLexemePos);
+	    editor.setSelection(editor.posFromIndex(currentLexeme.currentLexemePos), editor.posFromIndex(currentLexeme.nextLexemePos));
         this.errorProgram.val(error);
         jQuery.error();
     }
@@ -14,7 +14,7 @@ Exception = new Class({
 
 LexicalAnalyzer = new Class ({
     initialize: function(textProgram,errorProgram) {
-        Scanner.init(textProgram.val());
+        Scanner.init(textProgram.getValue());
         this.exception = new Exception(textProgram,errorProgram);
         this.currentLexeme = Scanner.next(0);
     },

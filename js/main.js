@@ -1,5 +1,6 @@
 var app, xOld = 0, yOld = 0;
 var expression;
+var editor;
 
 $(function() {
     initApplication();
@@ -12,10 +13,9 @@ function runInterface() {
         var zoom = app.tools.scale;
         initApplication();
         app.speed = sp;
-        var textProgram = $('#programPanel');
         var errorProgram = $('#errorPanel');
         var outputProgram = $('#outputPanel');
-        var lex = new LexicalAnalyzer(textProgram,errorProgram);
+        var lex = new LexicalAnalyzer(editor,errorProgram);
         lex.getProgram();
         app.tree.treeLocation(app.width,app.height);
         app.tree.treeStatment[0].putPosition([500,10]);
@@ -101,16 +101,17 @@ function runInterface() {
     });
 
     $("#play, #playMenu").click(function() {
-        if (app.showInput) return;
-        app.byStep = false;
-        app.pause = false;
-        app.visualStatments = app.tree.treeStatment[0];
-        app.nextStatmentForVis().visualization(app.ctx,app.tools);
-    });
+       if (app.showInput) return;
+       if (app.byStep == false) app.visualStatments = app.tree.treeStatment[0];
+       app.byStep = false;
+       app.pause = false;
+       app.nextStatmentForVis().visualization(app.ctx,app.tools);
+   });
 
     $('#pause, #pauseMenu').click(function() {
         if (app.showInput) return;
         app.pause = true;
+        app.byStep = true;
     });
 
     /*$("#SpeedMin").click(function() {

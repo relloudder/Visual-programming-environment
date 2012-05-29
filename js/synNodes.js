@@ -185,6 +185,7 @@ SynExpr = new Class({
                 else if (symCallFunction.name == 'delete') result = part[0].substr(0,part[1])+part[0].substr(part[1]*1+part[2]*1);
                 else if (symCallFunction.name == 'length') result = part[0].length;
                 else if (symCallFunction.name == 'pos') result = part[1].indexOf(part[0])+1;
+                else if (symCallFunction.name == 'abs') result = Math.abs(part[0]);
                 else {
                     var name = (symCallFunction.name == 'trunc')?'floor':symCallFunction.name;
                     result = eval('Math.'+name+'('+part[0]+')');
@@ -571,8 +572,8 @@ Statment = new Class ({
         this.symbolName = new SymbolName(0,0,'');
         this.symStatment = symStatment;
         if (pos instanceof Array) {
-            var program = $('#programPanel');
-            this.symStatment.value = this.clearText(program.val().substr(this.selectPos[0],this.selectPos[1]-this.selectPos[0]));
+            var program = editor.getValue();
+            this.symStatment.value = this.clearText(program.substr(this.selectPos[0],this.selectPos[1]-this.selectPos[0]));
         }
     },
     parentStatment: null,
@@ -636,9 +637,8 @@ Statment = new Class ({
     },
     visualization: function(ctx,tools) {
         var y = this.selectPos[1];
-        var program = $('#programPanel');
-        while (program.val()[y-1] == ' ') y--;
-        program.get(0).setSelectionRange(this.selectPos[0],y);
+        while (editor.getValue[y-1] == ' ') y--;
+        editor.setSelection(editor.posFromIndex(this.selectPos[0]),editor.posFromIndex(y));
     },
     goStatment: function() {
         this.symStatment.color =  'rgba(102,204,153,1)';
@@ -1031,6 +1031,7 @@ StmtRead = new Class ({
     },
     visualization: function(ctx,tools) {
         var k, varBeg, varGo, st;
+        this.parent(ctx,tools);
         with (this) {
             k = app.insertRowVis();
             st = new SymChangeStatment(this,0.4,1);

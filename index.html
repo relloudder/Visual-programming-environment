@@ -4,7 +4,7 @@
     <title>Visualization</title>
     <link href="css/style.css" rel="stylesheet" type="text/css">
     <link href="css/navbar.css" rel="stylesheet" type="text/css">
-    <script type="text/javascript"  src="js/lib/mootools-1.2.4-base.js"></script>
+    <script type="text/javascript" src="js/lib/mootools-1.2.4-base.js"></script>
     <script type="text/javascript" src="js/lib/jquery-1.4.3.min.js"></script>
     <script type="text/javascript" src="js/libraryDraw.js"></script>
     <script type="text/javascript" src="js/symNodes.js"></script>
@@ -15,6 +15,9 @@
 	<script type="text/javascript" src="js/animation.js"></script>
 	<script type="text/javascript" src="js/synNodes.js"></script>
 	<script type="text/javascript" src="js/symStatment.js"></script>
+    <link rel="stylesheet" href="lib/codemirror.css">
+    <script src="lib/codemirror.js"></script>
+    <script src="lib/pascal.js"></script>
 </head>
 
 <link rel="stylesheet" href="css/navbar.css">
@@ -103,20 +106,35 @@ $(document).ready(function() {
 	    <textarea cols=30 rows=40 id="outputPanel"></textarea>
     </div>
     <div id='input'><input type="text" id="editInput" value=""></div>
-    <div id="code">
-        <textarea cols=30 rows=40 id="programPanel">
+    <div id="code_panel">
+        <div id="tarea"><textarea id="code" name="code">
 var
-x,y: integer;
+  k, sum, a: integer;
 
 begin
-  read(x,y);
-  repeat
-    if x>y then x:= x mod y
-    else y:=y mod x;
-  until x*y=0;
-  write(x+y);
+  writeln('сумма цифр натурального числа');
+  read(k);
+  if k<=0 then writeln('error number ',k)
+  else begin
+    sum:=0;
+    while k<>0 do begin
+      a:=k mod 10;
+      k:=k div 10;
+      sum:=sum+a;
+    end;
+    writeln('sum= ',sum);
+    end;
 end.
-        </textarea>
+        </textarea></div>
+
+<script>
+    editor = CodeMirror.fromTextArea(document.getElementById("code"), {
+        lineNumbers: true,
+        matchBrackets: true,
+        mode: "text/x-pascal"
+    });
+</script>
+
         <input type="text" id="errorPanel" value="">
     </div>
 </body>

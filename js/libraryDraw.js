@@ -196,14 +196,8 @@ var DrawForVis = function(ctx) {
             colorText(0,0,r,'#000');
 	        //размещение числового значения в шарике
             var stringVal = val.toString(10);
-            if (stringVal.indexOf('.') >= 0) {
-                val = Math.ceil(val*10)/10;
-                stringVal = val.toString(10);
-            }
             if (type == 'boolean') stringVal = (val == 'true') ? 'T' : 'F';
             if (type == 'real' && stringVal.indexOf('.') < 0 && Number(val) == val)
-                stringVal += '.0';
-            if (type == 'real' && stringVal.indexOf('.') < 0)
                 stringVal += '.0';
             var lengthVal = stringVal.length;
             if ((val != 'delete') && (val != 'copy') && (val != 'random')){
@@ -593,4 +587,3 @@ var DrawForVis = function(ctx) {
         }
     };
 }
-

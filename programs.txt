@@ -1,5 +1,7 @@
 {test programs}
 
+{циклы}
+
 {Подсчитать сумму цифр  в десятичной записи целого неотрицательного числа k}
 
 var
@@ -48,7 +50,7 @@ var
 
 begin
   read(n);
-  if n<=0 then writeln ('error ',n)
+  if n<=0 then writeln ('number must be >0')
   else begin
     f:=1;
     for i:=2 to n do
@@ -429,7 +431,7 @@ var
   x,max: real;
 
 begin
-  writeln('число чисел, принимающих максимальное значение’);
+  writeln('число чисел, принимающих максимальное значение');
   read(x);
   max:=x;
   n:=1;
@@ -522,7 +524,7 @@ begin
     end;
     if fl=true then
       writeln('sort')
-    else writeln('no sort’);
+    else writeln('no sort');
   end;
 end.
 
@@ -743,7 +745,389 @@ begin
   end;
 end.
 
+{Дано натуральное число k. Можно ли его представить в виде суммы двух простых чисел?}
+
+var
+  k, code,sum,a,i,j,i1:integer;
+  fl,fl1:boolean;
+
+begin
+  writeln('Можно ли представить число в виде суммы двух простых чисел');
+  read(k);
+  if k<0 then writeln('error number ',k)
+  else begin
+    fl1:=false;
+    for i:=2 to (k div 2)+1 do begin
+      fl:=false;
+      i1:=1;
+      repeat
+        i1:=i1+1;
+      until (i mod i1)=0;
+      if i1=i then fl:=true;
+      j:=k-i;
+      i1:=1;
+      repeat
+        i1:=i1+1;
+      until (j mod i1)=0;
+      if (i1=j) and (fl=true) then begin
+        fl1:=true;
+        writeln(k, '=',i, '+',j);
+      end;
+    end;
+    if (fl1=false) then writeln('number is not sum of simple');
+  end;
+end.
+
+{Подсчитать произведение цифр  в десятичной записи целого неотрицательного числа k}
+
+var
+  k, mult,a:integer;
+
+begin
+  writeln('Найти  произведение цифр натурального числа');
+  read(k);
+  if k<=0 then writeln('error number ',k)
+  else begin
+    mult:=1;
+    while k<>0 do begin
+      a:=k mod 10;
+      k:=k div 10;
+      mult:=mult*a;
+    end;
+    writeln('mult= ',mult);
+  end;
+end.
+
+{Вычислить s-сумму всех чисел Фибоначчи, которые не превосходят 1000.  Числа Фибоначчи  u1, u2, ...,un вычисляются по формулам: u0=0, u1=1, uk=uk-1+uk-2}
+
+var
+  a1,a2,sum,a: integer;
+
+begin
+  writeln('сумма чисел Фибоначчи, непревосходящих 1000');
+  a1:=0;
+  a2:=1;
+  sum:=a1+a2;
+  write(a1, ' ',a2, ' ');
+  repeat
+    a:=a1+a2;
+    if a<1000 then begin
+      write(a,' ');
+      sum:=sum+a;
+    end;
+    a1:=a2;
+    a2:=a;
+  until a>1000;
+  writeln('sum=',sum);
+end.
+
+{Найти все автоморфные числа, принадлежащие отрезку [n,m]. Автоморфным называется целое число, которое равно последним числам своего квадрата. Например: 25^2=625}
+
+var
+  n,m,i,k,p,a,a1:integer;
+  fl,yes:boolean;
+
+begin
+  read(m);
+  read(n);
+  if (n<=0) or (m<=0) or (n<m) then
+    writeln('error ',m, ' or ',n)
+  else begin
+    yes:=false;
+    for i:=m to n do begin
+      fl:=true;
+      k:=i;
+      p:=i*i;
+      while k<>0 do begin
+        a:=k mod 10;
+        a1:=p mod 10;
+        if a<>a1 then
+          fl:=false;
+        k:=k div 10;
+        p:=p div 10;
+      end;
+      if (fl=true) then begin
+        yes:=true;
+        writeln(i, '^2=',i*i);
+      end;
+    end;
+    if (yes=false) then
+      writeln('no number in [',m, ',', n, ']');
+  end;
+end.
+
+{Пусть дан прямоугольник, длины сторон которого a и b – натуральные числа. На сколько квадратов, стороны которого выражены натуральными числами, можно разрезать данный прямоугольник, если от него каждый раз отрезать квадрат максимально возможной площади?}
+
+var
+  a,b,n:integer;
+
+begin
+  read(a);
+  read(b);
+  if (a<=0) or (b<=0) then
+    writeln('error ',a,' or ',b)
+  else begin
+    n:=0;
+    repeat
+      n:=n+1;
+      if a>b then a:=a-b
+      else b:=b-a;
+    until a*b=0;
+    writeln('n=',n);
+  end;
+end.
+
+{Напишите программу для вычисления корня n-ой степени из положительного числа a, пользуясь последовательными приближениями Xk-1=(n-1)/n*Xk+a/(n*Xk^(n-1)) k=0,1,2,3… до совпадений с точностью e, если задано начальное приближение x0=1}
+
+var
+  x,e,a,x0,p:real;
+  n,i:integer;
+
+begin
+  read(a);
+  read(n);
+  read(e);
+  if (a<=0) or (n<=0) or (e<=0) then writeln('error input')
+  else begin
+    x:=1;
+    repeat
+      x0:=x;
+      p:=1;
+      for i:=1 to n-1 do
+        p:=p/x0;
+      x:=(n-1)/n*x0+a/n*p;
+    until abs(x0-x)<=e;
+    writeln(a, '^1/',n, '=',x);
+  end;
+end.
+
+{Каждая бактерия делится на две в течение одной минуты. В начальный момент времени имеется 1 бактерия. Составьте программу для расчета количества бактерий через целое количество минут n}
+
+var
+  n,k,i:integer;
+
+begin
+  read(n);
+  if n<=0 then writeln('error ',n)
+  else begin
+    k:=1;
+    for i:=1 to n do
+      k:=k*2;
+    writeln('k=',k);
+  end;
+end.
+
+{Выведите таблицу значений функции y=f(x). Таблица должна иметь две колонки: в первую заносятся значения xi,  а во вторую - yi.
+f(x)=(x^2-3x+2)/sqrt(2x^3-1), xi=1+i*h, i=0,1,2,..,n
+h, n – вводятся с клавиатуры}
+
+var
+  y,x,h:real;
+  n,i:integer;
+
+begin
+  read(n);
+  read(h);
+  if n<=0 then writeln('error ',n)
+  else begin
+    writeln('----------------------');
+    writeln('|  xi   |    f(xi)   |');
+    writeln('----------------------');
+    for i:=0 to n do begin
+      x:=1+i*h;
+      if (2*x*x*x-1)>0 then begin
+        y:=(x*x-3*x+2)/sqrt(2*x*x*x-1);
+        writeln('|',x, '|', y, '|');
+      end
+      else writeln('|',x, '|    error   |');
+    end;
+    writeln('----------------------');
+  end;
+end.
+
+{Выведите таблицу значений функции y=f(x). Таблица должна иметь две колонки: в первую заносятся значения xi,  а во вторую - yi.
+f(x)=cos(sqrt(2)*x), xi=a+(b-a)/n*i, i=0,1,2..n
+n, a, b – вводятся с клавиатуры}
+
+var
+  y,x,a,b:real;
+  n,i:integer;
+
+begin
+  read(n);
+  read(a);
+  read(b);
+  if n<=0 then writeln('error ',n)
+  else begin
+    writeln('----------------------');
+    writeln('|  xi   |    f(xi)   |');
+    writeln('----------------------');
+    for i:=0 to n do begin
+      x:=a+(b-a)/n*i;
+      y:=cos(sqrt(2)*x);
+      writeln('|',x, '|', y, '|');
+    end;
+    writeln('----------------------');
+  end;
+end.
+
+
+
+{Пусть дано натуральное число n. Выбросите из записи этого числа цифры 3 и 7, оставив прежним порядок следования цифр. Например, из числа 3 432 7887 должно получиться 4 288}
+
+var
+  n,a,k,s:integer;
+
+begin
+  read(n);
+  if n<=0 then writeln('error ',n)
+  else begin
+    k:=0;
+    s:=1;
+    while n>0 do begin
+      a:=n mod 10;
+      n:=n div 10;
+      if (a<>7) and (a<>3) then begin
+        k:=a*s+k;
+        s:=s*10;
+      end;
+    end;
+    writeln('new k=',k);
+  end;
+end.
+
+{Пусть дано целое число m>1. Получите наибольшее целое k, при котором 4^k<m.}
+
+var
+  m,k,p:integer;
+
+begin
+  read(m);
+  if m<=1 then writeln('error ',m)
+  else begin
+    p:=1;
+    k:=0;
+    while p<m do begin
+      p:=p*4;
+      k:=k+1;
+    end;
+    writeln('k=',k-1, ': 4^',(k-1), '=',p div 4,' < ',m);
+  end;
+end.
+
+{Определить, является ли целое неотрицательное число симметричным}
+
+var
+  s:string;
+  k, code,sum,a,i:integer;
+  fl:boolean;
+
+begin
+  writeln('определить, является ли число симметричным');
+  read(s);
+  fl:=true;
+  for i:=1 to length(s) div 2 do
+    if s[i]<>s[length(s)+1-i] then
+      fl:=false;
+  if fl=true then
+    writeln(s, ' - simmetr')
+  else writeln(s, ' - no simmetr');
+end.
+
+{массивы}
+
+{Ввести с клавиатуры массив A и вывести его на экран в одну строку}
+
+var
+  a:array [1..10] of real;
+  n,i:integer;
+
+begin
+  read(n);
+  if (n<=0) or (n>10) then writeln('error ', n)
+  else begin
+    for i:=1 to n do
+      read(a[i]);
+    for i:=1 to n do
+      write(a[i]);
+  end;
+end.
+
+{Заполнить массив A целыми случайными числами в интервале от x до y, массив B вещественными числами (после запятой 2 знака) в том же интервале}
+
+var
+  a:array [1..5] of integer;
+  b:array [1..5] of real;
+  n,i,x,y:integer;
+
+begin
+  read(n);
+  read(x);
+  read(y);
+  if (n<=0) or (n>5) then writeln('error ', n)
+  else if x>y then writeln('error ', x,' or ',y)
+  else begin
+    for i:=1 to n do
+      a[i]:=x+random(y-x+1);
+    for i:=1 to n do
+      b[i]:=x+random((y-x+1)*100)/100;
+    writeln('a:');
+    for i:=1 to n do
+      write(a[i], ' ');
+    writeln('b:');
+    for i:=1 to n do
+      write(b[i], ' ');
+  end;
+end.
+
+{Найти максимальный элемент в массиве A}
+
+var
+  a:array [1..5] of real;
+  n,i:integer;
+  max:real;
+
+begin
+  read(n);
+  if (n<=0) or (n>5) then writeln('error ', n)
+  else begin
+    for i:=1 to n do
+      read(a[i]);
+    max:= a[1];
+    for i:=2 to n do
+      if max<a[i] then
+        max:=a[i];
+    writeln('max=',max);
+  end;
+end.
+
+{Найти максимальный элемент в массиве A и его место в массиве}
+
+var
+  a:array [1..5] of real;
+  n,i,k:integer;
+  max:real;
+
+begin
+  read(n);
+  if (n<=0) or (n>5) then writeln('error ', n)
+  else begin
+    for i:=1 to n do
+      read(a[i]);
+    max:=a[1];
+    k:=1;
+    for i:=2 to n do
+      if max<a[i] then begin
+        max:=a[i];
+        k:=i;
+      end;
+    writeln('max=',max,' k=',k);
+  end;
+end.
+
 ------------------------------
+
+{на мастер-классе}
 
 {Найти максимум из двух чисел}
 Var

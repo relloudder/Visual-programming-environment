@@ -115,7 +115,7 @@ input[type="range"]:hover ~ #rangevalue,input[type="range"]:active ~ #rangevalue
    height: 100%;
 }
 
-#code {
+#code_panel {
    float: right;
    width: 30%;
    height: 89%;
@@ -143,7 +143,7 @@ canvas {
     box-shadow: 1px 1px 8px gray;
 }
 
-textarea {
+#tarea {
     width: 100%;
     height: 90%;
     line-height: 130%;

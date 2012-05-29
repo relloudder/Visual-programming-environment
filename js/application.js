@@ -12,6 +12,7 @@ VariableTree = new Class({
         this.treeVar.push(new SymFunction(0,0,'real','sqrt',['real']));
         this.treeVar.push(new SymFunction(0,0,'int','trunc',['real']));
         this.treeVar.push(new SymFunction(0,0,'int','round',['real']));
+        this.treeVar.push(new SymFunction(0,0,'real','abs',['real']));
         this.treeVar.push(new SymFunction(0,0,'real','sin',['real']));
         this.treeVar.push(new SymFunction(0,0,'real','cos',['real']));
         this.treeVar.push(new SymFunction(0,0,'real','tan',['real']));
@@ -68,19 +69,21 @@ VariableTree = new Class({
             var w = this.treeStatment[i].symStatment.width;
             var wNew = this.treeStatment[i].getWidth();
             if (w < wNew) this.treeStatment[i].symStatment.width = wNew;
-	    }
+        }
         for (var i = 0; i < this.treeStatment.length; i++) {
             this.treeStatment[i].treeLocation();
         }
-        var length = this.treeVar.length;
-        if (length/2 != Math.ceil(length/2)) {
-            length++;
-        }
-        var sizeX = width/12, sizeY = height/length*2;
-        var k = 0;
+        var length = this.treeVar.length-12;
+        if (length >6)
+            if (length/2 != Math.ceil(length/2)) {
+                length++;
+                length=length/2;
+            }
+        var sizeX = width/12, sizeY = height/length;
+        var k = 12;
         for(var i = 0; i < 2; i++) {
-            for(var j = 0; j < length/2; j++) {
-                this.treeVar[k].setPosX(i*sizeX + sizeX/2);
+            for(var j = 0; j < length; j++) {
+                this.treeVar[k].setPosX(i*sizeX + sizeX);
                 this.treeVar[k].setPosY(j*sizeY + sizeY/2);
                 this.treeVar[k].inputRandom(0);
                 k++;
@@ -199,13 +202,13 @@ Application = new Class({
     },
     draw: function() {
         DrawForVis(this.ctx).back('#202020','#aaa',this.width,this.height);
-        //DrawForVis(ctx).back("#FFFFFF","#FFFFFF",width,height);
+        //DrawForVis(this.ctx).back("#FFFFFF","#FFFFFF",this.width,this.height);
         this.tree.draw(this.ctx,this.tools,this.width,this.height);
     },
     drawTreeVis: function() {
         if (this.showInput) return;
         DrawForVis(this.ctx).back('#202020','#aaa',this.width,this.height);
-        //DrawForVis(ctx).back("#FFFFFF","#FFFFFF",width,height);
+        //DrawForVis(this.ctx).back("#FFFFFF","#FFFFFF",this.width,this.height);
         this.tree.draw(this.ctx,this.tools,this.width,this.height);
         var stopPaint = 0;
         if (this.treeVis[0] != null) {
@@ -225,8 +228,8 @@ Application = new Class({
                 var selfNew = this;
                 this.idTimer = setInterval(function() { selfNew.drawTreeVis(); }, this.dTime);
             } else if (this.byStep == false) {
-                if (this.pause) return;
                 var next = this.nextStatmentForVis();
+                if (this.pause) return;
                 if (next instanceof SynStop) {
                     next.visualization(this.ctx,this.tools);
                     clearInterval(this.idTimer);

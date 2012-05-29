@@ -307,7 +307,7 @@ SymArray = new Class({
             }
             else DrawForVis(ctx).nullString(tools.getAdjustedX(posX-rVar),tools.getAdjustedY(posY),tools.getAdjustedR(rVar),colVar);
 		    if (typeof(this.name) != 'number') {
-                 DrawForVis(ctx).flag(tools.getAdjustedX(posX-rVar),tools.getAdjustedY(posY),tools.getAdjustedR(rVar/5),6,colVar,name,
+                 DrawForVis(ctx).flag(tools.getAdjustedX(posX-rVar/2),tools.getAdjustedY(posY),tools.getAdjustedR(rVar/5),tools.getAdjustedR(6),colVar,name,
                      tools.getAdjustedR(rVar),155*Math.PI/180);
             }
 	    }
@@ -569,4 +569,3 @@ SymFunction = new Class({
         return new SymFunction(this.posX,this.posY,this.type,this.name,this.listParam);
     }
 });
-

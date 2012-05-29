@@ -96,7 +96,7 @@ SymEnd = new Class ({
         with(this) {
             DrawForVis(ctx).roundedRect(tools.getAdjustedX(posX)-tools.getAdjustedR(this.r*4/3),tools.getAdjustedY(posY),
                 tools.getAdjustedR(this.r*3),tools.getAdjustedR(this.r),tools.getAdjustedR(this.h/2),color,"#C8C8C8",tools.getAdjustedR(this.h/2));
-            DrawForVis(ctx).textStatment("end",tools.getAdjustedX(this.posX)-tools.getAdjustedR(this.r*1.5),tools.getAdjustedY(this.posY)+tools.getAdjustedR(this.r*2/3),
+            DrawForVis(ctx).textStatment("end",tools.getAdjustedX(this.posX)-tools.getAdjustedR(this.r*0.5),tools.getAdjustedY(this.posY)+tools.getAdjustedR(this.r*2/3),
                 tools.getAdjustedR(this.h*3),tools.getAdjustedR(this.h*3),tools.getAdjustedR(this.r*3));
         }
     },
