@@ -2,25 +2,25 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>Visualization</title>
-    <link href="css/style.css" rel="stylesheet" type="text/css">
-    <link href="css/navbar.css" rel="stylesheet" type="text/css">
-    <script type="text/javascript" src="lib/mootools-1.2.4-base.js"></script>
-    <script type="text/javascript" src="lib/jquery-1.4.3.min.js"></script>
-    <script type="text/javascript" src="js/libraryDraw.js"></script>
-    <script type="text/javascript" src="js/symNodes.js"></script>
-	<script type="text/javascript" src="js/main.js"></script>
-	<script type="text/javascript" src="js/application.js"></script>
-	<script type="text/javascript" src="js/lexicalAnalyzer.js"></script>
-	<script type="text/javascript" src="js/scanner.js"></script>
-	<script type="text/javascript" src="js/animation.js"></script>
-	<script type="text/javascript" src="js/synNodes.js"></script>
-	<script type="text/javascript" src="js/symStatment.js"></script>
-    <link rel="stylesheet" href="lib/codemirror.css">
-    <script src="lib/codemirror.js"></script>
-    <script src="lib/pascal.js"></script>
+    <link href="{{ STATIC_URL }}css/style.css" rel="stylesheet" type="text/css">
+    <link href="{{ STATIC_URL }}css/navbar.css" rel="stylesheet" type="text/css">
+    <script type="text/javascript" src="{{ STATIC_URL }}lib/mootools-1.2.4-base.js"></script>
+    <script type="text/javascript" src="{{ STATIC_URL }}lib/jquery-1.4.3.min.js"></script>
+    <script type="text/javascript" src="{{ STATIC_URL }}js/libraryDraw.js"></script>
+    <script type="text/javascript" src="{{ STATIC_URL }}js/symNodes.js"></script>
+    <script type="text/javascript" src="{{ STATIC_URL }}js/main.js"></script>
+    <script type="text/javascript" src="{{ STATIC_URL }}js/application.js"></script>
+    <script type="text/javascript" src="{{ STATIC_URL }}js/lexicalAnalyzer.js"></script>
+    <script type="text/javascript" src="{{ STATIC_URL }}js/scanner.js"></script>
+    <script type="text/javascript" src="{{ STATIC_URL }}js/animation.js"></script>
+    <script type="text/javascript" src="{{ STATIC_URL }}js/synNodes.js"></script>
+    <script type="text/javascript" src="{{ STATIC_URL }}js/symStatment.js"></script>
+    <link rel="stylesheet" href="{{ STATIC_URL }}lib/codemirror.css">
+    <script src="{{ STATIC_URL }}lib/codemirror.js"></script>
+    <script src="{{ STATIC_URL }}lib/pascal.js"></script>
 </head>
 
-<link rel="stylesheet" href="css/navbar.css">
+<link rel="stylesheet" href="{{ STATIC_URL }}css/navbar.css">
 
 <script type="text/javascript">
 $(document).ready(function() {
@@ -43,7 +43,7 @@ $(document).ready(function() {
     <div class="wrapper">
         <nav class="dark">
             <ul class="clear">
-                <li><a href="#">Vizual Programming Environment</a></li>
+                <li><a href="#">Programmm.me</a></li>
                 <li><a href="#">File</a>
                     <ul>
                         <li><a href="#">New</a></li>
@@ -76,11 +76,11 @@ $(document).ready(function() {
     <div class="wrapper_panel">
         <nav class="dark">
             <ul class="clear">
-                <li><img id="draw" src="images/draw.png"></li>
-                <li><img id="play" src="images/play.png"></li>
-                <li id="pause"><img src="images/pause.png"></li>
-                <li id="step"><img src="images/steps.png"></li>
-                <li id="hand"><img src="images/plus.png"></li>
+              <li><img id="draw" src="{{ STATIC_URL }}images/draw.png"></li>
+              <li><img id="play" src="{{ STATIC_URL }}images/play.png"></li>
+              <li id="pause"><img src="{{ STATIC_URL }}images/pause.png"></li>
+              <li id="step"><img src="{{ STATIC_URL }}images/steps.png"></li>
+              <li id="hand"><img src="{{ STATIC_URL }}images/plus.png"></li>
                 <li>
                     <div id="wrap">
                         <p>Zoom</p>

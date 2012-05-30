@@ -6,7 +6,7 @@ Exception = new Class({
     textProgram: null,
     errorProgram: null,
     error: function(error,currentLexeme) {
-        editor.setSelection(editor.posFromIndex(currentLexeme.currentLexemePos), editor.posFromIndex(currentLexeme.nextLexemePos));
+	    editor.setSelection(editor.posFromIndex(currentLexeme.currentLexemePos), editor.posFromIndex(currentLexeme.nextLexemePos));
         this.errorProgram.val(error);
         jQuery.error();
     }
