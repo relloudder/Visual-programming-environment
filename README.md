@@ -1,27 +1,22 @@
-# programmm.me #
-Learn Pascal programming visually
-*****
+# programmm.me
+##Learn Pascal programming visually.
 
-**Learn programming** by writing code and visualizing execution
+**Learn programming** by writing code and visualizing execution.
 
 This free educational application allows teachers and students to write Pascal programs directly in the web browser, execute them and view the real-time visualization of the program.
 
-**Programmm.me** provides a rich visualization of variables and operators.
-*****
-*****
+#####Programmm.me provides a rich visualization of variables and operators.
 
-##Supported browsers##
+##Supported browsers
 
 The following browsers are able to run programmm.me:
 
 * Safari 5 or higher
 * Chrome 19 or higher
-*****
-*****
 
-##Supported language constructs##
+##Supported language constructs
 
-###Data types:###
+###Data types:
 
 * integer
 * real
@@ -30,21 +25,19 @@ The following browsers are able to run programmm.me:
 * array/two-dimensional array
 * record
 * string
-***
 
-###Statements:###
+###Statements:
 
 * assignment
 * read
 * write/writeln
 * structured statements
- * If..then..else statement
- * For..to/downto..do statement
- * Repeat..until statement
- * While..do statement
-***
+ * if..then..else statement
+ * for..to/downto..do statement
+ * repeat..until statement
+ * while..do statement
 
-###Standard Functions:###
+###Standard Functions:
 
 * sin
 * cos
@@ -57,6 +50,3 @@ The following browsers are able to run programmm.me:
 * pos
 * length
 * delete
-
-*****
-*****
