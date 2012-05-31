@@ -392,7 +392,7 @@ var DrawForVis = function(ctx) {
             ctx.lineTo(-2*k*r,r);
             ctx.fill();
             ctx.closePath();
-            this.textStatment(val,-r*k*1.2,0,r*2.4,r*2,3*r*k);
+            this.textStatment(val,-r*k*1.2,0,r*2.4,r*1.8,3*r*k);
             ctx.restore();
         },
 
@@ -427,7 +427,7 @@ var DrawForVis = function(ctx) {
             ctx.lineTo(0,r*k);
             ctx.fill();
             ctx.closePath();
-            this.textStatment(val,-r*k*1.55,r/4,r*3/2.2,r*0.9,r*k*3.5);
+            this.textStatment(val,-r*k*1.55,r/4,r*3/1.9,r*1.2,r*k*3.5);
             ctx.restore();
             ctx.save();
             if (picWhile == 2) {
@@ -492,7 +492,7 @@ var DrawForVis = function(ctx) {
             ctx.lineTo(-k*r,r*k/2);
             ctx.fill();
             ctx.closePath();
-            this.textStatment(val,-r*k*1.6,r/4,r*3/2.1,r*0.9,r*k*3);
+            this.textStatment(val,-r*k*1.6,r/4,r*3/1.9,r*1.3,r*k*3);
             ctx.restore();
             ctx.save();
             lineConnection(x-width,y+height,0,width,h,col,tr);
@@ -556,7 +556,7 @@ var DrawForVis = function(ctx) {
             newText = val.substr(0,k);
             if (newText.length > maxSize) newText = val.substr(0,maxSize-1) + '~';
             ctx.fillStyle = 'black';
-            ctx.font = r + 'px Courier';
+            ctx.font = r*2/3 + 'px Arial';
             ctx.fillText(newText,x0,y0,maxPixel);
         },
 
@@ -582,7 +582,7 @@ var DrawForVis = function(ctx) {
             ctx.bezierCurveTo(r/7*6,-r/2,-r/7*6,-r/4,-r,0);
             ctx.fill();
             ctx.closePath();
-            this.textStatment(val,-r/4*3,0,r/2.1,r/3,r*1.8);
+            this.textStatment(val,-r/4*3,0,r*0.5,12,r*1.8);
             ctx.restore();
         }
     };

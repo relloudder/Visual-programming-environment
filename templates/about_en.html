@@ -1,0 +1,110 @@
+{% extends "base.html" %}
+
+{% block title %}programmm.me{% endblock %}
+
+{% block content %}
+<div id="wrapper_back">
+    <div class = "wrapper_about">
+        <a href="#">
+          <img src="{{ STATIC_URL }}images/Button_RU.png">
+        </a>
+        <h1><a href="/">Programmm.me</a></h1>
+        <h2>Learn Pascal programming visually</h2>
+    </div>
+
+    <div class="video">
+        <iframe width="420" height="315" src="http://www.youtube.com/embed/zYDiAnC9eZs" frameborder="0" allowfullscreen></iframe>
+    </div>
+
+    <div class="wrapper_about_left">
+        <h3>Learn programming by writing code and visualizing execution</h3>
+        <p>This free educational application allows teachers and students to write Pascal programs directly in the web browser, execute them and view the real-time visualization of the program.</p>
+        <p>Programmm.me provides a rich visualization of variables and operators.</p>
+        <h3>Supported Pascal language constructs (to date):</h3>
+        <div class="block">
+            <p><b>Data types:</b></p>
+            <ul>
+                <li>integer</li>
+                <li>real</li>
+                <li>boolean</li>
+                <li>char</li>
+                <li>array/two-dimensional array</li>
+                <li>record</li>
+                <li>string</li>
+            </ul>
+        </div>
+        <div class="block">
+            <p><b>Statements:</b></p>
+            <ul>
+                <li>assignment</li>
+                <li>read</li>
+                <li>write/writeln</li>
+                <li>if..then..else statement</li>
+                <li>for..to/downto..do statement</li>
+                <li>repeat..until statement</li>
+                <li>while..do statement</li>
+            </ul>
+        </div>
+        <div class="block">
+            <p><b>Standard Functions:</b></p>
+            <ul>
+                <li>sin</li>
+                <li>cos</li>
+                <li>tan</li>
+                <li>trunc</li>
+                <li>round</li>
+                <li>sqrt</li>
+                <li>random</li>
+                <li>copy</li>
+                <li>pos</li>
+                <li>length</li>
+                <li>delete</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="wrapper_about_right">
+        <h3>Supported browsers</h3>
+        <ul>
+            <li>Safari 5 or higher</li>
+            <li>Chrome 19 or higher</li>
+        </ul>
+        <h3>Controls</h3>
+        <table>
+            <tr>
+                <th>Button</th>
+                <th>Action</th>
+            </tr>
+            <tr>
+              <td><img src="{{ STATIC_URL }}images/draw_new.png"></td>
+                <td>Draw static view</td>
+            </tr>
+            <tr>
+                <td><img src="{{ STATIC_URL }}images/play_new.png"></td>
+                <td>Run visualization</td>
+            </tr>
+            <tr>
+                <td><img src="{{ STATIC_URL }}images/pause_new.png"></td>
+                <td>Pause</td>
+            </tr>
+            <tr>
+                <td><img src="{{ STATIC_URL }}images/step.png"></td>
+                <td>Step</td>
+            </tr>
+            <tr>
+                <td><img src="{{ STATIC_URL }}images/hand_new.png"></td>
+                <td>Hand</td>
+            </tr>
+        </table>
+        <h3>Getting the code</h3>
+        <p>Programmn.me can also be found on GitHub at <a href="https://github.com/relloudder/Visual-programming-environment">/relloudder/Visual-programming-environment.</a></p>
+        <h3>Contacts</h3>
+        <p><a href="mailto:relloudder@gmail.com">Contact me</a> for further information.</p>
+    </div>
+    <div class="clearfooter"></div>
+</div>
+
+<div id = "footer">
+    <p>programmm.me @2012</p>
+</div>
+{% endblock content %}

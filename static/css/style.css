@@ -5,33 +5,187 @@ html, body {
 }
 
 body {
-    /*font: 12px Arial, Helvetica, sans-serif;*/
     font: 62.5%/1 "Lucida Sans Unicode","Lucida Grande",Verdana,Arial,Helvetica,sans-serif;
     background: url(../images/bg-tile.png) repeat;
-    color: #444;
-    margin: 5px 20px;
+    margin: 0px 20px;
+    height: 100%;
 }
 
-h1 {
-    margin-left: 5 px;
-    margin-top: 10 px;
-    margin-bottom: 10 px;
-    font-size: 18px;
-    font-family: Georgia, Times New Roman, serif;
+#wrapper_back {
+    margin-left: auto;
+    margin-right: auto;
+    width: 800px;
+    min-height: 100%;
+    margin-bottom: -30px;
+    position: relative;
+}
+
+#wrapper_back h1 {
+    padding-top: 30 px;
+    padding-bottom: 10 px;
+    font-size: 30px;
+    font-family: monospace;
     font-weight: normal;
-    font-style: italic;
-    color: #777;
+    color: #fff;
+}
+
+#wrapper_back h2 {
+    padding-bottom: 10 px;
+    font-size: 20px;
+    font-family: monospace;
+    font-weight: normal;
+    color: #d5d5d5;
+}
+
+#wrapper_back h3 {
+    float: left;
+    font-size: 16px;
+    color: #0099ff;
+    font-family: monospace:normal;
+    text-decoration: overline;
+}
+
+#wrapper_back img {
+    float: right;
+    padding: 5px;
+}
+
+.video {
+    padding-left: 180px;
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+
+.wrapper_about {
+    text-align: center;
+    background: url(../images/1px_TranspBack.png) repeat;
+    padding-bottom: 10px;
+    -moz-border-radius: 15px;
+    border-bottom-right-radius: 15px;
+    border-bottom-left-radius: 15px;
+    box-shadow: 3px 3px 3px #888888;
+}
+
+.wrapper_about a {
+    color: #fff;
+    text-decoration: none;
+    border-bottom: none;
+}
+
+.wrapper_about a:hover {
+    text-decoration: none;
+    border-bottom: 1px dotted;
+}
+
+.wrapper_about_left {
+    float: left;
+    width: 70%;
+    text-align: left;
+}
+
+.wrapper_about_right {
+    float: right;
+    width: 30%;
+    text-align:left;
+}
+
+.wrapper_about_right table {
+    float: left;
+    margin-left:auto;
+    margin-right:auto;
+    position: relative;
+}
+
+.wrapper_about_right table, td, th {
+    border:1px solid #0099ff;
+}
+
+.wrapper_about_right th {
+    background-color:#0099ff;
+    color:#fff;
+}
+.wrapper_about_right td img {
+    margin-right: 8px;
+}
+
+.wrapper_about_right a {
+    color: #0099ff;
+    text-decoration: none;
+    border-bottom: none;
+}
+
+.wrapper_about_right a:hover {
+    text-decoration: none;
+    border-bottom: 1px dotted;
+}
+
+.wrapper_about_left p, .wrapper_about_right p {
+    float: left;
+    font-size: 14px;
+    color: #333333;
+    font-family: Droid Sans:bold;
+    line-height: 1.5;
+}
+
+.wrapper_about_right ul, .wrapper_about_left ul {
+    list-style-type:circle;
+    float: left;
+    font-size: 14px;
+    color: #333333;
+    padding-left: 35px;
+    font-family: Helvetica;
+    padding-right: 20px;
+    line-height: 1.5;
+}
+
+.wrapper_about_left ul {
+    width: 70%;
+}
+
+.wrapper_about_left ul li {
+    font-family: monospace;
+}
+
+.block {
+    float: left;
+    width: 70%;
+}
+
+#footer {
+    margin-left:auto;
+    margin-right:auto;
+    width:800px;
+    height: 30px;
+    position: relative;
+    text-align:center;
+    background: url(../images/1px_TranspBack.png) repeat;
+    border-top-right-radius: 15px;
+    border-top-left-radius: 15px;
+    box-shadow: 3px 3px 3px #888888;
+}
+
+.clearfooter {
+    height: 30px;
+    clear: both;
+}
+
+#footer p {
+    padding-top: 10 px;
+    font-size: 14px;
+    font-family: monospace;
+    font-weight: normal;
+    color: #d5d5d5;
 }
 
 .wrapper {
     float: left;
-    width:424px;
+    width:450px;
     margin:5px;
 }
 
 .wrapper_panel {
     float: right;
-    width:529px;
+    width:530px;
     margin:5px;
 }
 
@@ -106,7 +260,7 @@ input[type="range"]:hover ~ #rangevalue,input[type="range"]:active ~ #rangevalue
 #wCanvas {
    float: left;
    width: 100%;
-   height: 79%;
+   height: 80%;
    margin-top: 5px;
 }
 #CanvasOut {
@@ -124,7 +278,7 @@ input[type="range"]:hover ~ #rangevalue,input[type="range"]:active ~ #rangevalue
 
 #outputPanel {
     width: 100%;
-    height: 9%;
+    height: 8%;
     margin-top: 12px;
     color: black;
     border: 1px solid gray;

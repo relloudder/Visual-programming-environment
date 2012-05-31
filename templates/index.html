@@ -1,27 +1,8 @@
-<html>
-<head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Visualization</title>
-    <link href="{{ STATIC_URL }}css/style.css" rel="stylesheet" type="text/css">
-    <link href="{{ STATIC_URL }}css/navbar.css" rel="stylesheet" type="text/css">
-    <script type="text/javascript" src="{{ STATIC_URL }}lib/mootools-1.2.4-base.js"></script>
-    <script type="text/javascript" src="{{ STATIC_URL }}lib/jquery-1.4.3.min.js"></script>
-    <script type="text/javascript" src="{{ STATIC_URL }}js/libraryDraw.js"></script>
-    <script type="text/javascript" src="{{ STATIC_URL }}js/symNodes.js"></script>
-    <script type="text/javascript" src="{{ STATIC_URL }}js/main.js"></script>
-    <script type="text/javascript" src="{{ STATIC_URL }}js/application.js"></script>
-    <script type="text/javascript" src="{{ STATIC_URL }}js/lexicalAnalyzer.js"></script>
-    <script type="text/javascript" src="{{ STATIC_URL }}js/scanner.js"></script>
-    <script type="text/javascript" src="{{ STATIC_URL }}js/animation.js"></script>
-    <script type="text/javascript" src="{{ STATIC_URL }}js/synNodes.js"></script>
-    <script type="text/javascript" src="{{ STATIC_URL }}js/symStatment.js"></script>
-    <link rel="stylesheet" href="{{ STATIC_URL }}lib/codemirror.css">
-    <script src="{{ STATIC_URL }}lib/codemirror.js"></script>
-    <script src="{{ STATIC_URL }}lib/pascal.js"></script>
-</head>
+{% extends "base.html" %}
 
-<link rel="stylesheet" href="{{ STATIC_URL }}css/navbar.css">
+{% block title %}programmm.me{% endblock %}
 
+{% block js %}
 <script type="text/javascript">
 $(document).ready(function() {
     $("nav ul li").hover(function() {
@@ -37,86 +18,74 @@ $(document).ready(function() {
     $('nav ul li ul').parent().append('<span class="dropdown"></span>').addClass('drop');
 });
 </script>
+{% endblock js %}
 
-<body>
-    <!--<h1>Vizual programming environment</h1>-->
-    <div class="wrapper">
-        <nav class="dark">
-            <ul class="clear">
-                <li><b>Programmm.me</b></li>
-                <li><a href="#">Examples</a>
-                    <ul>
-                        <li><a href="#">Loops</a></li>
-                        <li><a href="#">Arrays</a></li>
-                    </ul>
-                </li>
-                <li><a href="#">Run</a>
-                    <ul>
-                        <li><a href="#" id="drawMenu">Draw</a></li>
-                        <li><a href="#" id="playMenu">Run</a></li>
-                        <li><a href="#" id="stepMenu">Step over</a></li>
-                        <li><a href="#" id="pauseMenu">Puase</a></li>
-                        <li><a href="#" id="reset">Reset</a></li>
-                    </ul>
-                </li>
-                <li><a href="#">About</a></li>
-            </ul>
-        </nav>
-    </div>
+{% block content %}
+  <div class="wrapper">
+      <nav class="dark">
+          <ul class="clear">
+              <li><b>Programmm.me</b></li>
+              <li><a href="#">Examples</a>
+                  <ul>
+                      <li><a href="#">Loops</a></li>
+                      <li><a href="#">Arrays</a></li>
+                  </ul>
+              </li>
+              <li><a href="#">Run</a>
+                  <ul>
+                      <li><a href="#" id="drawMenu">Draw</a></li>
+                      <li><a href="#" id="playMenu">Run</a></li>
+                      <li><a href="#" id="stepMenu">Step over</a></li>
+                      <li><a href="#" id="pauseMenu">Puase</a></li>
+                      <li><a href="#" id="reset">Reset</a></li>
+                  </ul>
+              </li>
+              <li><a href="/about/">About</a></li>
+          </ul>
+      </nav>
+  </div>
 
-    <div class="wrapper_panel">
-        <nav class="dark">
-            <ul class="clear">
-              <li><img id="draw" src="{{ STATIC_URL }}images/draw.png"></li>
-              <li><img id="play" src="{{ STATIC_URL }}images/play.png"></li>
-              <li id="pause"><img src="{{ STATIC_URL }}images/pause.png"></li>
-              <li id="step"><img src="{{ STATIC_URL }}images/steps.png"></li>
-              <li id="hand"><img src="{{ STATIC_URL }}images/plus.png"></li>
-                <li>
-                    <div id="wrap">
-                        <p>Zoom</p>
-                        <input type="range" id="rangeinput" min="0.5" max="1.5" step="0.01" value="1"/><br>
-                        <output id="rangevalue">1</output>
-                    </div>
-                </li>
-                <li>
-                    <div id="wrap">
-                        <p>Speed </p>
-                        <input type="range" id="rangeinput1" min="0.01" max="0.6" step="0.01" value="0.3"/><br>
-                        <output id="rangevalue1">0.3</output>
-                    </div>
-                </li>
-            </ul>
-        </nav>
-    </div>
+  <div class="wrapper_panel">
+      <nav class="dark">
+          <ul class="clear">
+            <li><img id="draw" src="{{ STATIC_URL }}images/draw_new.png"></li>
+            <li><img id="play" src="{{ STATIC_URL }}images/play_new.png"></li>
+            <li id="pause"><img src="{{ STATIC_URL }}images/pause_new.png"></li>
+            <li id="step"><img src="{{ STATIC_URL }}images/step.png"></li>
+            <li id="hand"><img src="{{ STATIC_URL }}images/hand_new.png"></li>
+              <li>
+                  <div id="wrap">
+                      <p>Zoom</p>
+                      <input type="range" id="rangeinput" min="0.5" max="1.5" step="0.01" value="1"/><br>
+                      <output id="rangevalue">1</output>
+                  </div>
+              </li>
+              <li>
+                  <div id="wrap">
+                      <p>Speed </p>
+                      <input type="range" id="rangeinput1" min="0.01" max="0.6" step="0.01" value="0.3"/><br>
+                      <output id="rangevalue1">0.3</output>
+                  </div>
+              </li>
+          </ul>
+      </nav>
+  </div>
 
-    <div id="canvasOut" >
-        <div id="wCanvas">
-            <canvas id="canvas"></canvas>
-        </div>
-	    <textarea cols=30 rows=40 id="outputPanel"></textarea>
-    </div>
-    <div id='input'><input type="text" id="editInput" value=""></div>
-    <div id="code_panel">
-        <div id="tarea"><textarea id="code" name="code">
+  <div id="canvasOut" >
+      <div id="wCanvas">
+          <canvas id="canvas"></canvas>
+      </div>
+      <textarea cols=30 rows=40 id="outputPanel"></textarea>
+  </div>
+  <div id='input'><input type="text" id="editInput" value=""></div>
+  <div id="code_panel">
+      <div id="tarea"><textarea id="code" name="code">
 var
-  k, sum, a: integer;
 
 begin
-  writeln('сумма цифр натурального числа');
-  read(k);
-  if k<=0 then writeln('error number ',k)
-  else begin
-    sum:=0;
-    while k<>0 do begin
-      a:=k mod 10;
-      k:=k div 10;
-      sum:=sum+a;
-    end;
-    writeln('sum= ',sum);
-    end;
+
 end.
-        </textarea></div>
+      </textarea></div>
 
 <script>
     editor = CodeMirror.fromTextArea(document.getElementById("code"), {
@@ -126,7 +95,6 @@ end.
     });
 </script>
 
-        <input type="text" id="errorPanel" value="">
-    </div>
-</body>
-</html>
+      <input type="text" id="errorPanel" value="">
+  </div>
+{% endblock content %}

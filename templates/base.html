@@ -1,0 +1,29 @@
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>{% block title%}{% endblock %}</title>
+    <link href="{{ STATIC_URL }}css/style.css" rel="stylesheet" type="text/css">
+    <link href="{{ STATIC_URL }}css/navbar.css" rel="stylesheet" type="text/css">
+    <script type="text/javascript" src="{{ STATIC_URL }}lib/mootools-1.2.4-base.js"></script>
+    <script type="text/javascript" src="{{ STATIC_URL }}lib/jquery-1.4.3.min.js"></script>
+    <script type="text/javascript" src="{{ STATIC_URL }}js/libraryDraw.js"></script>
+    <script type="text/javascript" src="{{ STATIC_URL }}js/symNodes.js"></script>
+    <script type="text/javascript" src="{{ STATIC_URL }}js/main.js"></script>
+    <script type="text/javascript" src="{{ STATIC_URL }}js/application.js"></script>
+    <script type="text/javascript" src="{{ STATIC_URL }}js/lexicalAnalyzer.js"></script>
+    <script type="text/javascript" src="{{ STATIC_URL }}js/scanner.js"></script>
+    <script type="text/javascript" src="{{ STATIC_URL }}js/animation.js"></script>
+    <script type="text/javascript" src="{{ STATIC_URL }}js/synNodes.js"></script>
+    <script type="text/javascript" src="{{ STATIC_URL }}js/symStatment.js"></script>
+    <link rel="stylesheet" href="{{ STATIC_URL }}lib/codemirror.css">
+    <script src="{{ STATIC_URL }}lib/codemirror.js"></script>
+    <script src="{{ STATIC_URL }}lib/pascal.js"></script>
+    <link rel="stylesheet" href="{{ STATIC_URL }}css/navbar.css">
+
+   {% block js %}{% endblock js %}
+</head>
+
+<body>
+  {% block content %}{% endblock %}
+</body>
+</html>

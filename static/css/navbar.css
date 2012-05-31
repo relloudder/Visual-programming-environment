@@ -15,9 +15,9 @@ html[xmlns] .clear {
 }
 
 nav.dark {
-    border-top: 1px solid #282c2f;
+    /*border-top: 1px solid #282c2f;
     border-bottom: 1px solid #121317;
-    border-radius: 3px; display:
+    border-radius: 3px; display:*/
     block!important;
 }
 
