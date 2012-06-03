@@ -22,7 +22,7 @@ begin
     end;
 end.
 
-{Получить число, полученное выписыванием в обратном порядке цифр  целого неотрицательного числа k}
+{Получить число, полученное выписыванием в обратном порядке цифр целого неотрицательного числа k}
 
 var
   k,n,a: integer;
@@ -804,12 +804,12 @@ var
   a1,a2,sum,a: integer;
 
 begin
-  writeln('сумма чисел Фибоначчи, непревосходящих 1000');
+  writeln('The sum of the fibonacci sequence not exceed n');
   a1:=0;
   a2:=1;
   sum:=a1+a2;
   write(a1, ' ',a2, ' ');
-  repeat
+  while a<n do begin
     a:=a1+a2;
     if a<1000 then begin
       write(a,' ');
@@ -817,7 +817,7 @@ begin
     end;
     a1:=a2;
     a2:=a;
-  until a>1000;
+  end;
   writeln('sum=',sum);
 end.
 
@@ -970,8 +970,6 @@ begin
     writeln('----------------------');
   end;
 end.
-
-
 
 {Пусть дано натуральное число n. Выбросите из записи этого числа цифры 3 и 7, оставив прежним порядок следования цифр. Например, из числа 3 432 7887 должно получиться 4 288}
 
@@ -1130,7 +1128,7 @@ end.
 {Найти сумму элементов массива A}
 
 var
- a:array [1..5] of real;
+  a:array [1..5] of real;
   n,i:integer;
   sum:real;
 
@@ -1341,6 +1339,84 @@ begin
   if fl=true then writeln('no number')
   else writeln('min=',min);
 end.
+
+{Найти заданный элемент в массиве А}
+
+var
+  a: array [1..5] of integer;
+  j,n,x,i: integer;
+
+begin
+  read(n);
+  for i:=1 to n do
+    read(a[i]);
+  read(x);
+  {заносим искомый элемент после последнего элемента массива А}
+  a[n+1]:=x;
+  {ищем X в массиве}
+  j:=1;
+  while a[j]<> x do
+    j:=j+1;
+  if j=(n+1) then
+    writeln('элемент ',x,' не найден')
+  else writeln('элемент ',x,' найден на ',j, 'месте ');
+end.
+
+{Отсортировать массив А по возрастанию методом «пузырька»}
+
+var
+  a: array [1..5] of real;
+  i,k,n: integer;
+  wp:real;
+
+begin
+  read(n);
+  for i:=1 to n do
+    read(a[i]);
+  for i:=1 to n-1 do
+     for k:=1 to n-i do
+       if a[k]>a[k+1] then begin
+          wp:=a[k+1];
+          a[k+1]:=a[k];
+          a[k]:=wp;
+        end;
+  writeln('new array : ');
+  for i:=1 to n do
+    write(a[i]);
+end.
+
+{Отсортировать массив А по возрастанию методом перестановки}
+
+var
+  a: array [1..5] of real;
+  i,k,j,n: integer;
+  min:real;
+
+begin
+  read(n);
+  for i:=1 to n do
+    read(a[i]);
+  for i:=1 to n-1 do begin
+      min:=a[i];
+      k:=i; {фиксируем место в массиве, начиная с которого будем искать минимальный элемент }
+      for j:=i to n do
+        if a[j]>min then begin
+          min:=a[j];
+          k:=j; {  фиксируем место нового min }
+        end;
+      {меняем местами очередной и минимальный элементы }
+      a[k]:=a[i];
+      a[i]:=min;
+    end;
+  writeln('new array: ');
+  for i:=1 to n do
+    write(a[i]);
+end.
+
+
+
+
+
 
 ------------------------------
 
