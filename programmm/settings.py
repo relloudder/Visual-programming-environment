@@ -26,7 +26,6 @@ LANGUAGE_CODE = 'ru'
 
 USE_I18N = True
 USE_L10N = True
-USE_TZ = True
 
 MEDIA_ROOT = os.path.join(ROOT_DIR, 'media')
 MEDIA_URL = '/media/'
@@ -63,7 +62,6 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'django.core.context_processors.media',
     'django.core.context_processors.static',
     'django.core.context_processors.request',
-    'django.core.context_processors.tz',
     'django.contrib.messages.context_processors.messages',
 )
 
