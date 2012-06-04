@@ -22,11 +22,12 @@ function runInterface() {
         var lex = new LexicalAnalyzer(editor,errorProgram);
         lex.getProgram();
         app.tree.treeLocation(app.width,app.height);
-        app.tree.treeStatment[0].putPosition([500,10]);
+        app.tree.treeStatment[0].putPosition([500,50]);
         document.getElementById("one").value = 1;
         document.getElementById("uno").value = 1;
         document.getElementById("two").value = 0.3;
         document.getElementById("dos").value = 0.3;
+        app.translation = true;
         app.draw();
     });
 
@@ -44,9 +45,9 @@ function runInterface() {
         if (app.showInput) return;
         app.tools.scale -= 0.01;
         app.draw();
-    });*/
+    });
 
-    /*$("#rangeinput").change(function() {
+    $("#rangeinput").change(function() {
         document.getElementById("rangevalue").value = (Math.round(this.value*100)/100).toFixed(2);
         app.tools.scale = (Math.round(this.value*100)/100).toFixed(2);
         app.draw();
@@ -111,12 +112,16 @@ function runInterface() {
     });
 
     $("#play, #playMenu").click(function() {
-       if (app.showInput) return;
-       if (app.byStep == false) app.visualStatments = app.tree.treeStatment[0];
-       app.byStep = false;
-       app.pause = false;
-       app.nextStatmentForVis().visualization(app.ctx,app.tools);
-   });
+        if (!app.translation) {
+            alert('Draw program, please');
+            return;
+        }
+        if (app.showInput) return;
+        if (app.byStep == false) app.visualStatments = app.tree.treeStatment[0];
+        app.byStep = false;
+        app.pause = false;
+        app.nextStatmentForVis().visualization(app.ctx,app.tools);
+    });
 
     $('#pause, #pauseMenu').click(function() {
         if (app.showInput) return;
@@ -134,9 +139,9 @@ function runInterface() {
         app.speed += 0.01;
         $("#SpeedMax").html('Speed (' + Math.ceil(app.speed*100)/100+')');
         $("#SpeedMin").html('Speed (' + Math.ceil(app.speed*100)/100+')');
-    });*/
+    });
 
-    /*$("#rangeinput1").change(function() {
+    $("#rangeinput1").change(function() {
         document.getElementById("rangevalue1").value = (Math.round(this.value*100)/100).toFixed(2);
         app.speed = (Math.round(this.value*100)/100).toFixed(2);
     })*/
@@ -147,6 +152,10 @@ function runInterface() {
     })
 
     $("#step, #stepMenu").click(function() {
+        if (!app.translation) {
+            alert('Draw program, please');
+            return;
+        }
         if (app.showInput) return;
         app.pause = false;
         if (app.byStep == false)
