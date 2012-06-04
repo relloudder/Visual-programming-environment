@@ -204,14 +204,14 @@ var DrawForVis = function(ctx) {
                 if((type == 'char') || (type == 'string'))
                     stringVal = "'" + stringVal + "'";
                 var lengthVal = stringVal.length;
-                if (lengthVal > 5) {
-                    stringVal = stringVal.substring(0,5);
-                    lengthVal = 5;
+            if (lengthVal > 7) {
+                    stringVal = stringVal.substring(0,6)+'~';
+                    lengthVal = 7;
                 }
             }
-            var arrFont = new Array(0,1,1,4/5,2.5/4,1.5/3,0.45);
-            var arrR = new Array(0,0.35,0.5,0.65,0.6,0.65,0.6);
-            var arrPos = new Array(0,1/2,1/2,1/2,1/4,1/4,1/5);
+            var arrFont = new Array(0,1,1,4/5,2.5/4,1.5/3,0.45,0.4,0.35);
+            var arrR = new Array(0,0.35,0.5,0.65,0.6,0.8,0.8,0.8,0.8);
+            var arrPos = new Array(0,1/2,1/2,1/2,1/4,1/4,1/5,1/6,1/6);
             if (type == 'binOp') r = r*0.65;
             ctx.font = 'bold ' + arrFont[lengthVal]*r + 'px Courier New';
             if (stringVal != '') ctx.fillText(stringVal,-arrR[lengthVal]*r,arrPos[lengthVal]*r);
@@ -587,3 +587,4 @@ var DrawForVis = function(ctx) {
         }
     };
 }
+
