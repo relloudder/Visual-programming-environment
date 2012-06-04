@@ -28,6 +28,7 @@ LexicalAnalyzer = new Class ({
             var main = this.getBlock(app.tree.treeVar,'end');
             main.push(new SynStop([this.currentLexeme.currentLexemePos-3,this.currentLexeme.currentLexemePos]));
             main.mainBlock = true;
+			main.symStatment.height = 0;
             app.tree.treeStatment.push(main);
             if (this.currentLexeme.name!='.')
                 this.exception.error('expect . ',this.currentLexeme);
@@ -363,15 +364,18 @@ LexicalAnalyzer = new Class ({
         return left;
     },
     parseTerm: function(treeVar,endLexeme) {
+        var div = false;
         var left = this.parseFactor(treeVar,endLexeme);
         while ((this.currentLexeme.name == '*') || (this.currentLexeme.name == '/')||
             (this.currentLexeme.name == 'and') || (this.currentLexeme.name == 'div')
             || (this.currentLexeme.name == 'mod')) {
                 if ((left.type == 'string') || (left.type == 'char'))
                     this.exception.error('invalid operation '+this.currentLexeme.name,this.currentLexeme);
+            if (this.currentLexeme.name == '/') div = true;
             var binOp = new SymBinOp(this.currentLexeme.name,0,0,'#5500ff',Math.random()-0.5);
             this.currentLexeme = Scanner.next(this.currentLexeme.nextLexemePos);
             left = new SynBinOp(binOp,left,this.parseFactor(treeVar,endLexeme));
+            if (div) left.type = 'real';
             if (left.errorType != '') {
                 this.exception.error(left.errorType,this.currentLexeme);
             }
