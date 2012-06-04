@@ -5,6 +5,10 @@ var editor;
 $(function() {
     initApplication();
     runInterface();
+    document.getElementById("one").value = 1;
+    document.getElementById("uno").value = 1;
+    document.getElementById("two").value = 0.3;
+    document.getElementById("dos").value = 0.3;
 });
 
 function runInterface() {
@@ -19,10 +23,10 @@ function runInterface() {
         lex.getProgram();
         app.tree.treeLocation(app.width,app.height);
         app.tree.treeStatment[0].putPosition([500,10]);
-        document.getElementById("rangeinput").value = 1;
-        document.getElementById("rangevalue").value = 1;
-        document.getElementById("rangeinput1").value = 0.3;
-        document.getElementById("rangevalue1").value = 0.3;
+        document.getElementById("one").value = 1;
+        document.getElementById("uno").value = 1;
+        document.getElementById("two").value = 0.3;
+        document.getElementById("dos").value = 0.3;
         app.draw();
     });
 
@@ -42,8 +46,14 @@ function runInterface() {
         app.draw();
     });*/
 
-    $("#rangeinput").change(function() {
+    /*$("#rangeinput").change(function() {
         document.getElementById("rangevalue").value = (Math.round(this.value*100)/100).toFixed(2);
+        app.tools.scale = (Math.round(this.value*100)/100).toFixed(2);
+        app.draw();
+    })*/
+
+    $("#one").change(function() {
+        document.getElementById('uno').innerHTML = 'Zoom: '+(Math.round(this.value*100)/100).toFixed(2);
         app.tools.scale = (Math.round(this.value*100)/100).toFixed(2);
         app.draw();
     })
@@ -126,8 +136,13 @@ function runInterface() {
         $("#SpeedMin").html('Speed (' + Math.ceil(app.speed*100)/100+')');
     });*/
 
-    $("#rangeinput1").change(function() {
+    /*$("#rangeinput1").change(function() {
         document.getElementById("rangevalue1").value = (Math.round(this.value*100)/100).toFixed(2);
+        app.speed = (Math.round(this.value*100)/100).toFixed(2);
+    })*/
+
+    $("#two").change(function() {
+        document.getElementById('dos').innerHTML = 'Speed: '+(Math.round(this.value*100)/100).toFixed(2);
         app.speed = (Math.round(this.value*100)/100).toFixed(2);
     })
 
