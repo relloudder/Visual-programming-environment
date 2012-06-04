@@ -7,8 +7,8 @@ html, body {
 body {
     font: 62.5%/1 "Lucida Sans Unicode","Lucida Grande",Verdana,Arial,Helvetica,sans-serif;
     background: url(../images/bg-tile.png) repeat;
-    margin: 0px 20px;
     height: 100%;
+    margin: 0px 20px;
 }
 
 #wrapper_back {
@@ -18,10 +18,20 @@ body {
     min-height: 100%;
     margin-bottom: -30px;
     position: relative;
+    margin-top: 0px;
 }
 
-#wrapper_back h1 {
-    padding-top: 30 px;
+.wrapper_about {
+    text-align: center;
+    background: url(../images/1px_TranspBack.png) repeat;
+    padding-bottom: 20px;
+    padding-top: 30px;
+    border-bottom-right-radius: 15px;
+    border-bottom-left-radius: 15px;
+    box-shadow: 3px 3px 3px #888888;
+}
+
+h1 {
     padding-bottom: 10 px;
     font-size: 30px;
     font-family: monospace;
@@ -29,8 +39,7 @@ body {
     color: #fff;
 }
 
-#wrapper_back h2 {
-    padding-bottom: 10 px;
+h2 {
     font-size: 20px;
     font-family: monospace;
     font-weight: normal;
@@ -54,16 +63,6 @@ body {
     padding-left: 120px;
     padding-top: 20px;
     padding-bottom: 20px;
-}
-
-.wrapper_about {
-    text-align: center;
-    background: url(../images/1px_TranspBack.png) repeat;
-    padding-bottom: 10px;
-    -moz-border-radius: 15px;
-    border-bottom-right-radius: 15px;
-    border-bottom-left-radius: 15px;
-    box-shadow: 3px 3px 3px #888888;
 }
 
 .wrapper_about a {
@@ -158,6 +157,8 @@ body {
     height: 30px;
     position: relative;
     text-align:center;
+    padding-bottom: 10px;
+    padding-top: 10px;
     background: url(../images/1px_TranspBack.png) repeat;
     border-top-right-radius: 15px;
     border-top-left-radius: 15px;
@@ -170,7 +171,7 @@ body {
 }
 
 #footer p {
-    padding-top: 10 px;
+    vertical-align:center;
     font-size: 14px;
     font-family: monospace;
     font-weight: normal;
