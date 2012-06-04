@@ -173,7 +173,7 @@ SymVarName = new Class({
     },
     draw: function(ctx,tools) {
         var dY = 0;
-        if (this.jump) dY = 3;
+        if (this.jump) dY = 1;
         var y = -dY + Math.ceil(Math.random()*2*dY);
         if (this.input) {
             app.showInput = true;

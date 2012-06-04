@@ -734,7 +734,7 @@ StmtAssignment = new Class ({
                 var setVal = aRight.operation(false,aLeft.type);
                 if (aLeft.type == 'string') aLeft.getSymbol().setNewString(setVal);
                 else aLeft.setValue(setVal);
-                symStatment.color = 'rgba(49,79,79,1)';
+                symStatment.color = 'rgba(76, 125, 126,1)';
             }
         }
         app.paint();
@@ -854,7 +854,7 @@ StmtIf = new Class({
                 app.insertElementVis(k,st);
             } else {
                 result = exprIf.operation(false,'int');
-                symStatment.color = 'rgba(49,79,79,1)';
+                symStatment.color = 'rgba(76, 125, 126,1)';
                 symStatment.angleOfRotation = Math.PI/25;
                 var d = Math.abs(Math.tan(symStatment.angleOfRotation ))*symStatment.width;
                 stmtThen.symStatment.height = begThenHeight;
@@ -1127,7 +1127,7 @@ StmtWrite = new Class ({
                 }
                 if (ln == false) text = new SymVarWrite(str,'string',false,n);
                 else text = new SymVarWrite(str,'string',true,n);
-                symStatment.color = 'rgba(49,79,79,1)';
+                symStatment.color = 'rgba(76, 125, 126,1)';
                 k = app.insertRowVis();
                 app.insertElementVis(k,text);
             }
@@ -1159,9 +1159,9 @@ StmtFor = new Class({
         this.synAssign = synAssign;
         this.downto = downto;
         this.symStatment.value = this.symStatment.value.replace('for','');
-        this.symStatment.value = this.symStatment.value.replace('downto','..')
-        this.symStatment.value = this.symStatment.value.replace('to','..');
-        this.symStatment.value = this.symStatment.value.replace(' .. ','..');
+        //this.symStatment.value = this.symStatment.value.replace('downto','..')
+        //this.symStatment.value = this.symStatment.value.replace('to','..');
+        //this.symStatment.value = this.symStatment.value.replace(' .. ','..');
         this.synEndFor = exprIf;
     },
     synAssign: null,
@@ -1174,14 +1174,14 @@ StmtFor = new Class({
             result = this.synAssign.aRight.operation(false,'int');
             this.synAssign.aLeft.getSymbol().setValue(result);
             result1 = this.synEndFor.operation(false,'int');
-            this.symStatment.value = this.synAssign.aLeft.getSymbol().name+':='+result+'..'+result1;
+            this.symStatment.value = this.synAssign.aLeft.getSymbol().name+':='+result+' to '+result1;
             var binOp;
             if (this.downto) binOp = new SymBinOp('>=',0,0,'#5500ff',Math.random()-0.5);
             else binOp = new SymBinOp('<=',0,0,'#5500ff',Math.random()-0.5);
             this.exprIf = new SynBinOp(binOp,this.synAssign.aLeft,new SynConstInt(result1));
             this.exprIf.putPosition([this.symStatment.posX,this.symStatment.posY-this.symStatment.r*2.4]);
-            this.synAssign.aLeft.getSymbol().setPosX(this.symStatment.posX-this.symStatment.r);
-            this.synAssign.aLeft.getSymbol().setPosY(this.symStatment.posY+this.symStatment.r*3.5);
+            //this.synAssign.aLeft.getSymbol().setPosX(this.symStatment.posX-this.symStatment.r);
+            //this.synAssign.aLeft.getSymbol().setPosY(this.symStatment.posY+this.symStatment.r*3.5);
             this.init = false;
         } else if (this.downto) this.synAssign.aLeft.getSymbol().setValue(this.synAssign.aLeft.getSymbol().getValue()*1-1);
         else this.synAssign.aLeft.getSymbol().setValue(this.synAssign.aLeft.getSymbol().getValue()*1+1);

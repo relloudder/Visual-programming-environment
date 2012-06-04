@@ -170,6 +170,7 @@ Application = new Class({
         this.byStep = false;
         this.exception = new ExceptionForApplication();
     },
+    translation : false,
     pause : false,
     showInput: false,
     flagMove: false,
@@ -232,6 +233,7 @@ Application = new Class({
                 if (this.pause) return;
                 if (next instanceof SynStop) {
                     next.visualization(this.ctx,this.tools);
+                    this.translation = false;
                     clearInterval(this.idTimer);
                     return
                 }

@@ -183,7 +183,7 @@ SymChangeStatment = new Class ({
                 if (dr < 0) transp -= 0.01;
                 return 1;
             } else {
-                synChange.symStatment.color = 'rgba(49,79,79,1)';
+                synChange.symStatment.color = 'rgba(76, 125, 126,1)';
                 return 0;
             }
         }
