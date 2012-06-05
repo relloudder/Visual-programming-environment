@@ -392,7 +392,7 @@ var DrawForVis = function(ctx) {
             ctx.lineTo(-2*k*r,r);
             ctx.fill();
             ctx.closePath();
-            this.textStatment(val,-r*k*1.2,0,r*2.4,r*1.8,3*r*k);
+            this.textStatment(val,-r*k*0.95,0,r*2.4,r*1.8,2.5*r*k);
             ctx.restore();
         },
 
@@ -427,7 +427,7 @@ var DrawForVis = function(ctx) {
             ctx.lineTo(0,r*k);
             ctx.fill();
             ctx.closePath();
-            this.textStatment(val,-r*k*1.55,r/4,r*3/1.9,r*1.2,r*k*3.5);
+            this.textStatment(val,-r*k*1.55,r/4,r*3/1.9,r*1.2,r*k*3.2);
             ctx.restore();
             ctx.save();
             if (picWhile == 2) {
@@ -557,20 +557,24 @@ var DrawForVis = function(ctx) {
             if (newText.length > maxSize) newText = val.substr(0,maxSize-1) + '~';
             ctx.fillStyle = 'black';
             ctx.font = r*2/3 + 'px Arial';
-            ctx.fillText(newText,x0,y0,maxPixel);
+            var t = (maxPixel - ctx.measureText(newText).width)/2;
+            ctx.fillText(newText,x0+t,y0,maxPixel);
         },
 
         oval: function(x0,y0,r,k,h,col,val,alpha,tr,vis) {
+            h=h*1.2;
             ctx.save();
             ctx.translate(x0,y0);
             ctx.rotate(alpha);
             ctx.beginPath();
             if (!vis) tr = 0.55;
             ctx.moveTo(-r,0);
-            ctx.lineTo(-r,h);
-            ctx.bezierCurveTo(-r/7*6,r/2+h,r/7*6,r/4+h,+r,h);
-            ctx.lineTo(r,0);
-            ctx.bezierCurveTo(r/7*6,-r/2,-r/7*6,-r/4,-r,0);
+            //ctx.lineTo(-r,h);
+            ctx.bezierCurveTo(-r,-r*0.5,r*0.75,-r*0.5,r,0);
+            ctx.lineTo(r,h);
+            //ctx.bezierCurveTo(-r/8*6,r/2+h,r/7*6,r/4+h,+r,h);
+            ctx.bezierCurveTo(r,r*0.5,-r*0.75+h,r*0.5+h,-r,h);
+            ctx.lineTo(-r,0);
             ctx.fillStyle = 'rgba(250,200,200,'+tr+')';
             ctx.fill();
             ctx.closePath();
@@ -578,13 +582,12 @@ var DrawForVis = function(ctx) {
             col = col.substr(0,col.length-3)+','+tr+')';
             colorFigure(col,getGradient(col,tr),r*3/4,r*3/4);
             ctx.moveTo(-r,0);
-            ctx.bezierCurveTo(-r/7*6,r/2,r/7*6,r/4,+r,0);
-            ctx.bezierCurveTo(r/7*6,-r/2,-r/7*6,-r/4,-r,0);
+            ctx.bezierCurveTo(-r,-r*0.5,r*0.75,-r*0.5,r,0);
+            ctx.bezierCurveTo(r,r*0.5,-r*0.75,r*0.5,-r,0);
             ctx.fill();
             ctx.closePath();
-            this.textStatment(val,-r/4*3,0,r*0.5,12,r*1.8);
+            this.textStatment(val,-r,h/2,r*0.5,13,r*2);
             ctx.restore();
         }
     };
 }
-
