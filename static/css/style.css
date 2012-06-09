@@ -107,13 +107,13 @@ h2 {
     margin-right: 8px;
 }
 
-.wrapper_about_right a {
+.wrapper_about_right a, .wrapper_about_left a {
     color: #0099ff;
     text-decoration: none;
     border-bottom: none;
 }
 
-.wrapper_about_right a:hover {
+.wrapper_about_right a:hover, .wrapper_about_left a:hover {
     text-decoration: none;
     border-bottom: 1px dotted;
 }
