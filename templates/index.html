@@ -27,12 +27,12 @@ $(document).ready(function() {
       <nav class="dark">
           <ul class="clear">
               <li><b>Programmm.me</b></li>
-              <!--<li><a href="#">Examples</a>
+              <li><a href="#">Examples</a>
                   <ul>
-                      <li><a href="#">Loops</a></li>
-                      <li><a href="#">Arrays</a></li>
+                      <li><a href="#" id="loops">Loops</a></li>
+                      <li><a href="#" id="arrays">Arrays</a></li>
                   </ul>
-              </li>-->
+              </li>
               <li><a href="#">Run</a>
                   <ul>
                       <li><a href="#" id="drawMenu">Draw</a></li>
@@ -97,6 +97,12 @@ end.
         matchBrackets: true,
         mode: "text/x-pascal"
     });
+    document.getElementById("loops").onclick = function()  {
+        editor.setValue("//sum of digits of a natural number\n\nvar\n  k, sum, a: integer;\n\nbegin\n  writeln('sum of digits of a natural number');\n  read(k);\n  sum:=0;\n  while k<>0 do begin\n    a:=k mod 10;\n    a:=k mod 10;\n    k:=k div 10;\n    sum:=sum+a;\n  end;\n  writeln('sum= ',sum);\nend.");
+    }
+    document.getElementById("arrays").onclick = function()  {
+        editor.setValue("//find max in array\n\nvar\n  a:array [1..5] of real;\n  n,i:integer;\n  max:real;\n\nbegin\n  read(n);\n  for i:=1 to n do\n    read(a[i]);\n  max:= a[1];\n  for i:=2 to n do\n    if max<a[i] then\n      max:=a[i];\n  writeln('max=',max);\nend.");
+    }
 </script>
 
       <input type="text" id="errorPanel" value="">
